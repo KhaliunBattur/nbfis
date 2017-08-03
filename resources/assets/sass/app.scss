@@ -1,0 +1,23 @@
+
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+
+// Variables
+@import "variables";
+
+// Bootstrap
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "node_modules/font-awesome-sass/assets/stylesheets/font-awesome";
+@import "node_modules/ionicons/dist/scss/ionicons";
+
+// Admin LTE
+@import "node_modules/admin-lte-sass/build/scss/AdminLTE";
+@import "node_modules/admin-lte-sass/plugins/datepicker/datepicker3";
+@import "node_modules/admin-lte-sass/plugins/datatables/dataTables.bootstrap";
+
+// Sweet Alert
+@import "node_modules/sweetalert/dev/sweetalert";
+
+// Plugins
+@import "./plugins/select2";
+
