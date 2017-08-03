@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router'
 
+// Удирдлагын routes
 import Dashboard from './components/Dashboard.vue'
 
 // Хэрэглэгчийн routes
