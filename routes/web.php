@@ -16,11 +16,15 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
-Route::group(['prefix' => 'api', 'middleware' => ['auth'], 'as' => 'api.'], function() {
+Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' => 'api.'], function() {
 
     Route::group(['namespace' => 'User'], function (){
         Route::resource('users', 'UserController', ['except' => ['create', 'show']]);
         Route::patch('user/{id}/changePassword', ['as' => 'change.password', 'uses' => 'UserController@changePassword']);
+
+        Route::resource('roles', 'RoleController');
+        Route::resource('roles.permission', 'PermissionController', ['only' => ['store', 'destroy']]);
+        Route::get('permission/search', ['as' => 'permission.search', 'uses' => 'PermissionController@search']);
     });
 
 });

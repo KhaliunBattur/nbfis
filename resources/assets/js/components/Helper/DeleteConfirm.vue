@@ -30,10 +30,10 @@
                         {
                             swal({
                                 title: 'Амжилттай!',
-                                text: 'Хэрэглэгч амжилттай устгагдлаа',
+                                text: 'Aмжилттай устгагдлаа',
                                 type: 'success'
                             }, function(){
-                                self.$emit('destroyed', item);
+                                self.$emit('destroyed');
                             })
                         }
                     }).catch(function(error) {

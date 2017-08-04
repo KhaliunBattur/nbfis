@@ -24,5 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('App\User\UserRepositoryInterface', 'App\User\UserRepository');
+        $this->app->singleton('App\User\RoleRepositoryInterface', 'App\User\RoleRepository');
+        $this->app->singleton('App\User\PermissionRepositoryInterface', 'App\User\PermissionRepository');
     }
 }

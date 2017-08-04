@@ -64,7 +64,7 @@
                                     <td></td>
                                     <td>
                                         <router-link v-bind:to="'/users/' + user.id + '/edit'" class="btn btn-xs btn-warning"><i class="fa fa-pencil-square"></i></router-link>
-                                        <delete-confirm :item="user" :url="'/api/users/' + user.id" v-on:destroyed="destroy"></delete-confirm>
+                                        <delete-confirm :item="user" :url="'/api/users/' + user.id" v-on:destroyed="destroy(user)"></delete-confirm>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -179,8 +179,8 @@
                 axios.get('/api/users?search='+ JSON.stringify(this.query.search) +'&per_page=' + this.query.per_page + '&column='+this.query.column+'&direction='+this.query.direction+'&page='+this.query.page).then(response => {
                     this.model = response.data.model;
                     this.loading = false;
-                }).then(errors => {
-                    this.loading = false;
+                }).catch(errors => {
+                    this.$router.push('/')
                 })
             },
             destroy(user)

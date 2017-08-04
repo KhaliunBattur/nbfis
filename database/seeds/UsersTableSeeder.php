@@ -16,7 +16,14 @@ class UsersTableSeeder extends Seeder
     {
         $faker = Factory::create();
 
-        User::truncate();
+        User::create([
+            'first_name' => 'Chimedbazar',
+            'name' => 'Munkhsaikhan',
+            'email' => 'chmunkhsaikhan@gmail.com',
+            'phone_number' => '99017534',
+            'address' => null,
+            'password' => \Hash::make('root')
+        ]);
 
         foreach (range(1, 40) as $i)
         {

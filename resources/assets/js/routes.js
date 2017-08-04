@@ -11,7 +11,7 @@ import UserCreate from './components/User/Create.vue'
 import UserEdit from './components/User/Edit.vue'
 
 //Хэрэглэгчийн эрхийн routes
-import Roles from './components/Roles.vue'
+import Roles from './components/Role/Roles.vue'
 
 Vue.use(VueRouter)
 
@@ -38,7 +38,7 @@ const router = new VueRouter({
         {
             path: '/roles',
             component: Roles
-        }
+        },
     ]
 })
 

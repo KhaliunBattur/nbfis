@@ -7,6 +7,7 @@ use App\User\User;
 use App\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -138,6 +139,11 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function changePassword($id, Request $request)
     {
         $this->validate($request, [
