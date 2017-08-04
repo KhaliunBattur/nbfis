@@ -17,11 +17,9 @@ class UsersTableSeeder extends Seeder
         $faker = Factory::create();
 
         User::create([
-            'first_name' => 'Chimedbazar',
-            'name' => 'Munkhsaikhan',
-            'email' => 'chmunkhsaikhan@gmail.com',
-            'phone_number' => '99017534',
-            'address' => null,
+            'first_name' => 'Woovoo',
+            'name' => 'Woovoo',
+            'email' => 'admin@woovoo.com',
             'password' => \Hash::make('root')
         ]);
 
