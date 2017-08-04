@@ -138,6 +138,19 @@ class UserController extends Controller
         ]);
     }
 
+    public function changePassword($id, Request $request)
+    {
+        $this->validate($request, [
+            'password' => 'required|same:confirm_password'
+        ]);
+
+        $user = $this->userRepository->findById($id);
+
+        $user->password = \Hash::make($request->get('password'));
+
+        return response()->json(['result' => $user->save()]);
+    }
+
     /**
      * @param $request
      */

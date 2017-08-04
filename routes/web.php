@@ -20,6 +20,7 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth'], 'as' => 'api.'], func
 
     Route::group(['namespace' => 'User'], function (){
         Route::resource('users', 'UserController', ['except' => ['create', 'show']]);
+        Route::patch('user/{id}/changePassword', ['as' => 'change.password', 'uses' => 'UserController@changePassword']);
     });
 
 });

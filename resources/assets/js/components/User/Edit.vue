@@ -88,7 +88,7 @@
                         </div>
                     </div>
                     <div class="box-footer">
-                        <div class="btn-group pull-right"><button type="button" class="btn btn-sm btn-success">Хадгалах</button></div>
+                        <div class="btn-group pull-right"><button type="button" class="btn btn-sm btn-success" @click="changePassword">Хадгалах</button></div>
                     </div>
                 </div>
             </div>
@@ -134,6 +134,25 @@
                     Vue.delete(this.user, 'updated_at');
                 }).catch(function (response) {
                     swal('Уучлаарай!', 'Хэрэглэгчийн мэдээлэл татаж чадсангүй', 'error')
+                })
+            },
+
+            changePassword(user)
+            {
+                axios.patch('api/user/' + this.$route.params.id + '/changePassword', {password: this.password, confirm_password: this.confirm_password}).then(response => {
+                    if(response.data.result)
+                    {
+                        var self = this;
+                        swal({
+                            title: 'Ажилттай!',
+                            text: 'Хэрэглэгч мэдээлэл засварлагдлаа',
+                            type: 'success'
+                        }, function(){
+
+                        })
+                    }
+                }).catch(function(response) {
+                    swal('Уучлаарай!', 'Нууц үг солих амжилтгүй', 'error')
                 })
             },
 
