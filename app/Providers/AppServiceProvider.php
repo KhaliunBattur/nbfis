@@ -26,5 +26,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('App\User\UserRepositoryInterface', 'App\User\UserRepository');
         $this->app->singleton('App\User\RoleRepositoryInterface', 'App\User\RoleRepository');
         $this->app->singleton('App\User\PermissionRepositoryInterface', 'App\User\PermissionRepository');
+        $this->app->singleton('App\User\Workplace\WorkplaceRepositoryInterface', 'App\User\Workplace\WorkplaceRepository');
+        $this->app->singleton('App\User\Family\FamilyRepositoryInterface', 'App\User\Family\FamilyRepository');
     }
 }

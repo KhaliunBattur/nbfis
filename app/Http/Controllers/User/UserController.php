@@ -139,6 +139,11 @@ class UserController extends Controller
             unset($parameters['image']);
         }
 
+        if($user->user_type == 'customer')
+        {
+            $user->roles()->detach();
+        }
+
         return response()->json([
             'result' => $user->update($parameters)
         ]);
@@ -181,6 +186,33 @@ class UserController extends Controller
     }
 
     /**
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function saveLiveYear($id, Request $request)
+    {
+        $user = $this->userRepository->findById($id);
+
+        $user->live_year = $request->get('_year');
+
+        return response()->json([
+            'result' => $user->save()
+        ]);
+    }
+
+    public function saveOwnerType($id, Request $request)
+    {
+        $user = $this->userRepository->findById($id);
+
+        $user->owner_type = $request->get('_owner_type');
+
+        return response()->json([
+            'result' => $user->save()
+        ]);
+    }
+
+    /**
      * @param $request
      */
     private function valid($request)
@@ -190,6 +222,11 @@ class UserController extends Controller
             'name'       => 'required',
             'email'      => 'required|email|unique:users,email,'.$request->segment(3)
         ];
+
+        if($request->get('user_type') == 'customer')
+        {
+            $rules['register'] = 'required|unique:users,email,'.$request->segment(3);
+        }
 
         if($request->method() != 'PATCH')
         {

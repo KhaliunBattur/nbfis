@@ -10,17 +10,17 @@
 
                         <h3 class="profile-username text-center">{{ user.first_name }} {{ user.name }}</h3>
 
-                        <p class="text-muted text-center" v-if="user.roles > 0"><span class="text" v-for="role in user.roles">{{ role.display_name + ', ' }}</span></p>
+                        <p class="text-muted text-center" v-if="user.roles"><span class="text" v-for="role in user.roles">{{ role.display_name + ', ' }}</span></p>
 
                         <ul class="list-group list-group-unbordered">
                             <li class="list-group-item">
-                                <b>Регистр</b> <a class="pull-right">УУ87021501</a>
+                                <b>Регистр</b> <a class="pull-right">{{ user.register }}</a>
                             </li>
                             <li class="list-group-item">
-                                <b>Төрсөн он сар өдөр</b> <a class="pull-right">1987-02-15</a>
+                                <b>Төрсөн он сар өдөр</b> <a class="pull-right">{{ user.birth_day }}</a>
                             </li>
                             <li class="list-group-item">
-                                <b>Нас</b> <a class="pull-right">30</a>
+                                <b>Нас</b> <a class="pull-right">{{ user.age }}</a>
                             </li>
                             <li class="list-group-item">
                                 <b>Email</b> <a class="pull-right">{{ user.email }}</a>
@@ -37,7 +37,7 @@
                 <!-- /.box -->
 
                 <!-- About Me Box -->
-                <div class="box box-primary" v-if="user.user_type == 'staff'">
+                <div class="box box-primary" v-if="user.user_type == 'customer'">
                     <div class="box-header with-border">
                         <h3 class="box-title">Тухай</h3>
                     </div>
@@ -46,8 +46,29 @@
                         <strong><i class="fa fa-map-marker margin-r-5"></i> Одоо амьдарч буй хаяг</strong>
 
                         <p class="text-muted">{{ user.address }}</p>
-                        <p class="text-muted">5 жил амьдарч байгаа</p>
-                        <p class="text-muted">Түрээсийн</p>
+                        <p class="text-muted" v-if="!show_live">
+                            <span>{{ user.live_year === null || user.live_year === '' ? 'Амьдарсан жил тодорхойгүй' : user.live_year}}</span>
+                            <button class="btn btn-xs btn-warning" @click="changeLiveYear"><i class="fa fa-pencil"></i></button>
+                        </p>
+                        <div class="input-group input-group-sm" v-if="show_live">
+                            <input type="text" class="form-control" v-model="user.live_year" />
+                            <div class="input-group-btn">
+                                <button class="btn btn-xs btn-success" @click="saveLiveYear"><i class="fa fa-check"></i></button>
+                                <button class="btn btn-xs btn-danger" @click="changeLiveYear"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+
+                        <p class="text-muted" v-if="!show_owner">
+                            <span>{{ user.owner_type === null || user.owner_type === '' ? '' : user.owner_type}}</span>
+                            <button class="btn btn-xs btn-warning" @click="changeOwnerType"><i class="fa fa-pencil"></i></button>
+                        </p>
+                        <div class="input-group input-group-sm" v-if="show_owner">
+                            <input type="text" class="form-control" v-model="user.owner_type" />
+                            <div class="input-group-btn">
+                                <button class="btn btn-xs btn-success" @click="saveOwnerType"><i class="fa fa-check"></i></button>
+                                <button class="btn btn-xs btn-danger" @click="changeOwnerType"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
 
                         <hr>
 
@@ -180,7 +201,7 @@
                         </ul>
                     </div>
 
-                    <family></family>
+                    <family :user="user"></family>
                     <!-- /.tab-pane -->
 
                     <div class="tab-pane" id="contact">
@@ -256,6 +277,8 @@
         {
             return{
                 user: [],
+                show_live: false,
+                show_owner: false
             }
         },
 
@@ -269,15 +292,81 @@
         },
 
         methods: {
+
+            saveOwnerType()
+            {
+                axios.patch('api/user/' + this.$route.params.id + '/saveOwnerType', {_owner_type: this.user.owner_type}).then(response => {
+                    if(response.data.result)
+                    {
+                        this.show_owner = false;
+                    }
+                }).catch(function(responce) {
+
+                })
+            },
+
+            saveLiveYear()
+            {
+                axios.patch('api/user/' + this.$route.params.id + '/saveLiveYear', {_year: this.user.live_year}).then(response => {
+                    if(response.data.result)
+                    {
+                        this.show_live = false;
+                    }
+                }).catch(function(responce) {
+
+                })
+            },
+
+            changeOwnerType()
+            {
+                this.show_owner = this.show_owner == false ? true : false;
+            },
+
+            changeLiveYear()
+            {
+                this.show_live = this.show_live == false ? true: false;
+            },
             fetchUser()
             {
                 axios.get('api/users/' + this.$route.params.id).then(response => {
                     this.user = response.data.user;
                     this.user.roles = response.data.roles
+                    this.user.birth_day = null
+                    this.user.age = null
+                    this.setRegister();
                 }).catch(function (response) {
                     swal('Уучлаарай!', 'Хэрэглэгчийн мэдээлэл татаж чадсангүй', 'error')
                 })
-            }
+            },
+            setRegister()
+            {
+                try {
+                    var splits = this.user.register.match(/.{1,2}/g);
+                    if(parseInt(splits[2]) > 12)
+                    {
+                        var year = 2000 + parseInt(splits[1]);
+                        var month = parseInt(splits[2]) - 20;
+                        var birthDay = new Date(year, month - 1, parseInt(splits[3]) + 1);
+                    }
+                    else
+                    {
+                        var year = 1900 + parseInt(splits[1]);
+                        var birthDay = new Date(year, parseInt(splits[2]) - 1 , parseInt(splits[3]) + 1);
+                    }
+                    this.user.birth_day = birthDay.toISOString().substring(0, 10);
+                    this.user.age = this.getAge(birthDay);
+                }
+                catch(error)
+                {
+
+                }
+            },
+
+            getAge(d1){
+                var d2 = new Date();
+                var diff = d2.getTime() - d1.getTime();
+                return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+            },
         }
     }
 

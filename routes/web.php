@@ -21,6 +21,10 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
     Route::group(['namespace' => 'User'], function (){
         Route::resource('users', 'UserController', ['except' => ['create']]);
         Route::patch('user/{id}/changePassword', ['as' => 'change.password', 'uses' => 'UserController@changePassword']);
+        Route::patch('user/{id}/saveLiveYear', ['as' => 'change.save.live.year', 'uses' => 'UserController@saveLiveYear']);
+        Route::patch('user/{id}/saveOwnerType', ['as' => 'change.save.owner.type', 'uses' => 'UserController@saveOwnerType']);
+
+        Route::get('user/{id}/family', ['as' => 'user.family.index', 'uses' => 'FamilyController@index']);
 
         Route::resource('roles', 'RoleController', ['only' => ['index']]);
         Route::resource('roles.permission', 'PermissionController', ['only' => ['store', 'destroy']]);

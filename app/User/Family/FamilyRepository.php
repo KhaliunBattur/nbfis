@@ -6,7 +6,7 @@
  * Time: 3:06 PM
  */
 
-namespace App\User;
+namespace App\User\Family;
 
 
 use Illuminate\Database\Eloquent\Collection;
@@ -16,11 +16,12 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class FamilyRepository implements FamilyRepositoryInterface
 {
     private $model;
+
     /**
-     * ContactRepository constructor.
-     * @param Contact $model
+     * FamilyRepository constructor.
+     * @param Family $model
      */
-    public function __construct(Contact $model)
+    public function __construct(Family $model)
     {
         $this->model = $model;
     }
@@ -29,7 +30,6 @@ class FamilyRepository implements FamilyRepositoryInterface
      */
     public function findAll()
     {
-        // TODO: Implement findAll() method.
         return $this->model->all();
     }
 
@@ -61,10 +61,5 @@ class FamilyRepository implements FamilyRepositoryInterface
     public function findByList($value, $name, $ignoreId = 0)
     {
         // TODO: Implement findByList() method.
-    }
-
-    public function findByUserId($user_id)
-    {
-        return $this->model->findOrFail($user_id);
     }
 }

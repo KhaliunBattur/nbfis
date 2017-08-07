@@ -16,48 +16,48 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Овог <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" v-model="family.first_name" />
+                                    <input type="text" class="form-control" v-model="member.first_name" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Нэр <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" v-model="family.last_name" />
+                                    <input type="text" class="form-control" v-model="member.last_name" />
                                 </div>
                             </div>
                             <hr />
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Таны хэн болох <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" v-model="family.relation" />
+                                    <input type="text" class="form-control" v-model="member.relation" />
                                 </div>
                             </div>
                             <hr />
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Ажил/Сургууль/<label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" v-model="family.job" />
+                                    <input type="text" class="form-control" v-model="member.job" />
                                 </div>
                             </div>
                             <hr />
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Регистер<label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" v-model="family.register" />
+                                    <input type="text" class="form-control" v-model="member.register" />
                                 </div>
                             </div>
                             <hr />
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Нэр <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" v-model="family.monthBudged" />
+                                    <input type="text" class="form-control" v-model="member.monthBudged" />
                                 </div>
                             </div>
                             <hr />
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Утас</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" v-model="family.phone" />
+                                    <input type="text" class="form-control" v-model="member.phone" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -77,9 +77,9 @@
                         </div>
                     </div>
                 </div>
+                    </div>
+                </div>
             </div>
-          </div>
-         </div>
         </div>
     </section>
     </div>
@@ -94,8 +94,9 @@
         data()
         {
             return {
-                family: {
-                    firts_name: '',
+                family: [],
+                member: {
+                    first_name: '',
                     last_name: '',
                     relation: '',
                     job: '',
@@ -106,8 +107,21 @@
             }
         },
 
-        methods: {
+        created()
+        {
+            this.fetchFamily();
+        },
 
+        methods: {
+            fetchFamily()
+            {
+                console.log(this.user);
+//                axios.get('api/user/' + this.user.id + '/family').then(response => {
+//                    this.family = response.data.family;
+//                }).catch(function (error) {
+//                    console.log(error);
+//                })
+            }
         }
 
     }
