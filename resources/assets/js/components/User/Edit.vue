@@ -33,10 +33,29 @@
                                 </div>
                             </div>
                             <hr />
+                            <div class="form-group" v-if="user.user_type === 'customer'">
+                                <label class="col-sm-2 control-label">Регистр</label>
+                                <div class="col-sm-10">
+                                    <masked-input v-model="user.register" mask="AA11111111" placeholder="АА00000000" @input="setRegister" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group" v-if="user.user_type === 'customer'">
+                                <label class="col-sm-2 control-label">Төрсөн огноо</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" v-model="user.birth_day" readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="form-group" v-if="user.user_type === 'customer'">
+                                <label class="col-sm-2 control-label">Нас</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" v-model="user.age" readonly="readonly" />
+                                </div>
+                            </div>
+                            <hr v-if="user.user_type === 'customer'" />
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Утас</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" v-model="user.phone_number" />
+                                    <masked-input v-model="user.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -116,9 +135,15 @@
 
 <script>
 
+    import MaskedInput from 'vue-masked-input'
+
     export default {
 
         props: ['roles'],
+
+        components: {
+            'masked-input': MaskedInput
+        },
 
         data()
         {
@@ -131,6 +156,9 @@
                     address: '',
                     email: '',
                     user_type: '',
+                    register: null,
+                    birth_day: null,
+                    age: null,
                     roles: []
                 },
                 profile_picture: '',
@@ -146,6 +174,36 @@
 
         methods: {
 
+            setRegister()
+            {
+                try {
+                    var splits = this.user.register.match(/.{1,2}/g);
+                    if(parseInt(splits[2]) > 12)
+                    {
+                        var year = 2000 + parseInt(splits[1]);
+                        var month = parseInt(splits[2]) - 20;
+                        var birthDay = new Date(year, month - 1, parseInt(splits[3]) + 1);
+                    }
+                    else
+                    {
+                        var year = 1900 + parseInt(splits[1]);
+                        var birthDay = new Date(year, parseInt(splits[2]) - 1 , parseInt(splits[3]) + 1);
+                    }
+                    this.user.birth_day = birthDay.toISOString().substring(0, 10);
+                    this.user.age = this.getAge(birthDay);
+                }
+                catch(error)
+                {
+
+                }
+            },
+
+            getAge(d1){
+                var d2 = new Date();
+                var diff = d2.getTime() - d1.getTime();
+                return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+            },
+
             getUser()
             {
                 axios.get('api/users/' + this.$route.params.id + '/edit').then(response => {
@@ -155,6 +213,7 @@
                     this.user.image = null;
                     Vue.delete(this.user, 'created_at');
                     Vue.delete(this.user, 'updated_at');
+                    this.setRegister();
                 }).catch(function (response) {
                     swal('Уучлаарай!', 'Хэрэглэгчийн мэдээлэл татаж чадсангүй', 'error')
                 })

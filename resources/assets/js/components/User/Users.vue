@@ -10,7 +10,7 @@
                 <li class="active">Хэрэглэгч</li>
             </ol>
         </section>
-        <transition name="fade">
+        <transition name="slide">
             <router-view :roles="roles"></router-view>
         </transition>
     </div>

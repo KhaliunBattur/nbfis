@@ -13,7 +13,7 @@
                         </div>
                     </div>
                     <div class="box-body">
-                        <div v-bind:class="loading ? 'table-responsive loading' : 'table-responsive'">
+                        <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
                             <div class="input-group input-group-sm input-small with-margin-bottom">
                                 <input type="text" v-model="query.per_page" class="form-control" />
                                 <div class="input-group-btn">
