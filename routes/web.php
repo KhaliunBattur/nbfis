@@ -19,7 +19,7 @@ Auth::routes();
 Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' => 'api.'], function() {
 
     Route::group(['namespace' => 'User'], function (){
-        Route::resource('users', 'UserController', ['except' => ['create', 'show']]);
+        Route::resource('users', 'UserController', ['except' => ['create']]);
         Route::patch('user/{id}/changePassword', ['as' => 'change.password', 'uses' => 'UserController@changePassword']);
 
         Route::resource('roles', 'RoleController', ['only' => ['index']]);

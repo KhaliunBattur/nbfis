@@ -10,6 +10,8 @@ import UserLists from './components/User/Lists.vue'
 import UserCreate from './components/User/Create.vue'
 import UserEdit from './components/User/Edit.vue'
 
+import UserProfile from './components/User/Profile/Profile.vue'
+
 //Хэрэглэгчийн эрхийн routes
 import Roles from './components/Role/Roles.vue'
 
@@ -32,6 +34,9 @@ const router = new VueRouter({
                 },
                 {
                     path: ':id/edit', component: UserEdit
+                },
+                {
+                    path: ':id/profile', component: UserProfile
                 }
             ]
         },

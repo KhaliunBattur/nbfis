@@ -79,6 +79,20 @@ class UserController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
+    public function show($id)
+    {
+        $user = $this->userRepository->findById($id);
+
+        return response()->json([
+            'user' => $user,
+            'roles' => $user->roles
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function edit($id)
     {
         $user = $this->userRepository->findById($id);

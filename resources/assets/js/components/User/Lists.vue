@@ -65,6 +65,7 @@
                                         <label class="text" v-for="role in user.roles">{{ role.display_name + ', ' }}</label>
                                     </td>
                                     <td>
+                                        <router-link v-bind:to="'/users/' + user.id + '/profile'" class="btn btn-xs btn-info"><i class="fa fa-eye"></i></router-link>
                                         <router-link v-bind:to="'/users/' + user.id + '/edit'" class="btn btn-xs btn-warning"><i class="fa fa-pencil-square"></i></router-link>
                                         <delete-confirm :item="user" :url="'/api/users/' + user.id" v-on:destroyed="destroy(user)"></delete-confirm>
                                     </td>
