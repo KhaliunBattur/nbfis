@@ -75,6 +75,7 @@ class UserRepository implements UserRepositoryInterface
                 $query->where('phone_number', 'LIKE', $search['phone_number'] . '%');
             }
         })->orderBy($params['column'], $params['direction'])
+            ->with('roles')
             ->paginate($howMany);
     }
 

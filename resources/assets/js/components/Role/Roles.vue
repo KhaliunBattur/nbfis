@@ -3,11 +3,11 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Ажилтаны эрхийн зохицуулалт
+                Хэрэглэгчийн эрхийн зохицуулалт
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Dashboard</li>
+                <li><router-link to="/"><i class="fa fa-dashboard"></i> Удирдлага</router-link></li>
+                <li class="active">Эрхийн зохицуулалт</li>
             </ol>
         </section>
 

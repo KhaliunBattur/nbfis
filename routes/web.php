@@ -22,7 +22,7 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::resource('users', 'UserController', ['except' => ['create', 'show']]);
         Route::patch('user/{id}/changePassword', ['as' => 'change.password', 'uses' => 'UserController@changePassword']);
 
-        Route::resource('roles', 'RoleController');
+        Route::resource('roles', 'RoleController', ['only' => ['index']]);
         Route::resource('roles.permission', 'PermissionController', ['only' => ['store', 'destroy']]);
         Route::get('permission/search', ['as' => 'permission.search', 'uses' => 'PermissionController@search']);
     });

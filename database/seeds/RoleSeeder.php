@@ -13,7 +13,7 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        $user = \App\User\User::where('email', 'chmunkhsaikhan@gmail.com')->first();
+        $user = \App\User\User::where('email', 'admin@woovoo.com')->first();
 
         $role = Role::create([
             'name' => 'admin',

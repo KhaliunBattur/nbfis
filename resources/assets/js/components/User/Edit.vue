@@ -21,13 +21,13 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Овог</label>
+                                <label class="col-sm-2 control-label">Овог <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" v-model="user.first_name" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Нэр</label>
+                                <label class="col-sm-2 control-label">Нэр <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" v-model="user.name" />
                                 </div>
@@ -47,9 +47,27 @@
                             </div>
                             <hr />
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Email</label>
+                                <label class="col-sm-2 control-label">Email <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" v-model="user.email" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-10 col-sm-offset-2">
+                                    <div class="radio-inline">
+                                        <input type="radio" v-model="user.user_type" value="staff" /> Ажилтан
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" v-model="user.user_type" value="customer" /> Харилцагч
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" v-if="user.user_type === 'staff'">
+                                <label class="col-sm-2 control-label">Албан тушаал</label>
+                                <div class="col-sm-10">
+                                    <select v-model="user.roles" multiple="multiple" class="form-control">
+                                        <option v-for="role in roles" :value="role.id" :selected="isSelected(role)">{{ role.display_name }}</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -74,13 +92,13 @@
                     <div class="form-horizontal">
                         <div class="box-body">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Нууц үг</label>
+                                <label class="col-sm-2 control-label">Нууц үг <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
                                     <input type="password" class="form-control" v-model="password" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Нууц үг батлах</label>
+                                <label class="col-sm-2 control-label">Нууц үг батлах <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
                                     <input type="password" class="form-control" v-model="confirm_password" />
                                 </div>
@@ -100,6 +118,8 @@
 
     export default {
 
+        props: ['roles'],
+
         data()
         {
             return {
@@ -110,6 +130,8 @@
                     phone_number: '',
                     address: '',
                     email: '',
+                    user_type: '',
+                    roles: []
                 },
                 profile_picture: '',
                 password: '',
@@ -127,8 +149,9 @@
             getUser()
             {
                 axios.get('api/users/' + this.$route.params.id + '/edit').then(response => {
-                    this.user = response.data.user
-                    this.profile_picture = this.user.image
+                    this.user = response.data.user;
+                    this.user.roles = response.data.roles
+                    this.profile_picture = this.user.image;
                     this.user.image = null;
                     Vue.delete(this.user, 'created_at');
                     Vue.delete(this.user, 'updated_at');
@@ -216,6 +239,11 @@
 
             removeImage: function (e) {
                 this.user.image = '';
+            },
+
+            isSelected(role)
+            {
+                return this.user.roles.indexOf(role.id) === -1 ? false : true
             }
         }
 

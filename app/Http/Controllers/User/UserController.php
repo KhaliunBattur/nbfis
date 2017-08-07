@@ -68,6 +68,8 @@ class UserController extends Controller
 
         $user = User::create($parameters);
 
+        $user->roles()->attach($request->get('roles'));
+
         return response()->json([
             'result' => !is_null($user)
         ]);
@@ -81,7 +83,10 @@ class UserController extends Controller
     {
         $user = $this->userRepository->findById($id);
 
-        return response()->json(['user' => $user]);
+        return response()->json([
+            'user' => $user,
+            'roles' => $user->roles()->pluck('id')
+        ]);
     }
 
     /**
@@ -94,6 +99,10 @@ class UserController extends Controller
         $this->valid($request);
 
         $user = $this->userRepository->findById($id);
+
+        $user->roles()->detach();
+
+        $user->roles()->attach($request->get('roles'));
 
         $parameters = $request->all();
 
