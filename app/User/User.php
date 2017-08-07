@@ -2,6 +2,8 @@
 
 namespace App\User;
 
+use App\User\Family\Family;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
@@ -27,4 +29,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * @return HasMany
+     */
+    public function family()
+    {
+        return $this->hasMany(Family::class, 'user_id');
+    }
 }

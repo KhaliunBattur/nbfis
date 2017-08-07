@@ -24,6 +24,8 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::patch('user/{id}/saveLiveYear', ['as' => 'change.save.live.year', 'uses' => 'UserController@saveLiveYear']);
         Route::patch('user/{id}/saveOwnerType', ['as' => 'change.save.owner.type', 'uses' => 'UserController@saveOwnerType']);
 
+        Route::get('user/{id}/family', ['as' => 'user.family.index', 'uses' => 'FamilyController@index']);
+
         Route::resource('roles', 'RoleController', ['only' => ['index']]);
         Route::resource('roles.permission', 'PermissionController', ['only' => ['store', 'destroy']]);
         Route::get('permission/search', ['as' => 'permission.search', 'uses' => 'PermissionController@search']);
