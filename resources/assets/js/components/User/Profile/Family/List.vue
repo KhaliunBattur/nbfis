@@ -1,0 +1,213 @@
+<template>
+    <div class="tab-pane" id="FamilyList">
+    <section class="content">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="box-title">
+                            Жагсаалт
+                        </div>
+                        <div class="box-tools">
+                            <router-link to="/users/create" class="btn btn-sm btn-default">Шинээр нэмэх</router-link>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
+                            <div class="input-group input-group-sm input-small with-margin-bottom">
+                                <input type="text" v-model="query.per_page" class="form-control" />
+                                <div class="input-group-btn">
+                                    <button class="btn" @click="changePerPage()">-р хуудаслах</button>
+                                </div>
+                            </div>
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <sort :column="'first_name'" :query="query" :text="'Овог'" v-on:sorted="sort"></sort>
+                                    <sort :column="'last_name'" :query="query" :text="'Нэр'" v-on:sorted="sort"></sort>
+                                    <sort :column="'relation'" :query="query" :text="'Хэн болох'" v-on:sorted="sort"></sort>
+                                    <sort :column="'phone'" :query="query" :text="'Утас'" v-on:sorted="sort"></sort>
+                                    <th>Албан тушаал</th>
+                                    <th class="action-controls-sm" v-if="!advancedSearch">
+                                        <button class="btn btn-info btn-sm" @click="toggleAdvancedSearch">Дэлгэрэнгүй хайлт</button>
+                                    </th>
+                                </tr>
+                                <tr v-if="advancedSearch">
+                                    <th>
+                                        <input type="text" class="form-control input-sm" v-model="query.search.first_name" />
+                                    </th>
+                                    <th>
+                                        <input type="text" class="form-control input-sm" v-model="query.search.last_name" />
+                                    </th>
+                                    <th>
+                                        <input type="text" class="form-control input-sm" v-model="query.search.relation" />
+                                    </th>
+                                    <th>
+                                        <input type="text" class="form-control input-sm" v-model="query.search.phone" />
+                                    </th>
+                                    <th colspan="2">
+                                        <button class="btn btn-sm btn-info" @click="search()">
+                                            <i class="fa fa-search"></i> Хайх
+                                        </button>
+                                        <button class="btn btn-sm btn-danger">
+                                            <i class="fa fa-close" @click="toggleAdvancedSearch"></i>
+                                        </button>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="family in members.data">
+                                    <td>{{ family.first_name }}</td>
+                                    <td>{{ family.last_name }}</td>
+                                    <td>{{ family.relation }}</td>
+                                    <td>{{ family.phone }}</td>
+                                    <!--<td>-->
+                                        <!--<router-link v-bind:to="'/users/' + user.id + '/profile'" class="btn btn-xs btn-info"><i class="fa fa-eye"></i></router-link>-->
+                                        <!--<router-link v-bind:to="'/users/' + user.id + '/edit'" class="btn btn-xs btn-warning"><i class="fa fa-pencil-square"></i></router-link>-->
+                                        <!--<delete-confirm :item="user" :url="'/api/users/' + user.id" v-on:destroyed="destroy(user)"></delete-confirm>-->
+                                    <!--</td>-->
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="pull-left">
+                                            <span>Нийт: {{ members.total }} мөр бичлэгийн {{ members.from }} -с {{ members.to }} харуулж байна</span>
+                                        </div>
+                                        <div class="pull-right">
+                                            <a @click="prev()" v-if="members.prev_page_url" class="btn btn-default btn-xs"><i class="fa fa-arrow-left"></i> Өмнөх</a>
+                                            <a @click="next()" v-if="members.next_page_url" class="btn btn-default btn-xs">Дараах <i class="fa fa-arrow-right"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>
+</template>
+
+<script>
+
+    import Sort from '../../../Helper/Sort.vue';
+    import DeleteConfirm from '../../../Helper/DeleteConfirm.vue';
+
+    export default {
+
+        props: ['user'],
+
+        data() {
+            return {
+                loading: true,
+                advancedSearch: false,
+                members: {},
+                query: {
+                    page: 1,
+                    column: 'first_name',
+                    direction: 'asc',
+                    per_page: 10,
+                    search: {
+                        first_name: null,
+                        last_name: null,
+                        relation: null,
+                        job: null,
+                        register: null,
+                        monthBudged: null,
+                        phone: null,
+
+                    }
+                }
+            }
+        },
+
+        components: {
+            'sort' : Sort,
+            'delete-confirm': DeleteConfirm
+        },
+
+        created()
+        {
+//            this.fetchUser();
+            this.fetchFamily();
+        },
+
+        methods: {
+            fetchFamily()
+            {
+                axios.get('api/user/' + this.$route.params.id + '/family').then(response => {
+                    this.family = response.data.family;
+                }).catch(function (error) {
+                    console.log(error);
+                })
+            },
+            changePerPage()
+            {
+                this.fetchFamily();
+            },
+            search()
+            {
+                this.fetchFamily();
+            },
+            toggleAdvancedSearch()
+            {
+                if(this.advancedSearch)
+                {
+                    this.advancedSearch = false
+                    this.query.search = {
+                        first_name: null,
+                        last_name: null,
+                        relation: null,
+                        job: null,
+                        register: null,
+                        monthBudged: null,
+                        phone: null,
+                    }
+                    this.fetchFamily();
+                }else
+                {
+                    this.advancedSearch = true
+                }
+            },
+            sort(query)
+            {
+                this.query = query;
+
+                this.fetchFamily();
+            },
+            next()
+            {
+                if(this.members.next_page_url) {
+                    this.query.page++
+                    this.fetchFamily()
+                }
+            },
+            prev()
+            {
+                if(this.members.prev_page_url) {
+                    this.query.page--
+                    this.fetchFamily()
+                }
+            },
+//            fetchUser()
+//            {
+//                this.loading = true;
+//                axios.get('/api/users?search='+ JSON.stringify(this.query.search) +'&per_page=' + this.query.per_page + '&column='+this.query.column+'&direction='+this.query.direction+'&page='+this.query.page).then(response => {
+//                    this.model = response.data.model;
+//                    this.loading = false;
+//                }).catch(errors => {
+//                    this.$router.push('/')
+//                })
+//            },
+            destroy(user)
+            {
+                this.members.data.splice(this.members.data.indexOf(user), 1);
+                this.members.total = this.members.total - 1;
+            }
+        }
+    }
+</script>

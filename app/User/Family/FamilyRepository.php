@@ -39,7 +39,7 @@ class FamilyRepository implements FamilyRepositoryInterface
      */
     public function findById($id)
     {
-        // TODO: Implement findById() method.
+        return $this->model->findOrFail($id);
     }
 
     /**
@@ -49,7 +49,7 @@ class FamilyRepository implements FamilyRepositoryInterface
      */
     public function findByPaginate($howMany, $params = [])
     {
-        // TODO: Implement findByPaginate() method.
+
     }
 
     /**
@@ -60,6 +60,6 @@ class FamilyRepository implements FamilyRepositoryInterface
      */
     public function findByList($value, $name, $ignoreId = 0)
     {
-        // TODO: Implement findByList() method.
+
     }
 }

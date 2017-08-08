@@ -101,7 +101,7 @@
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#timeline" data-toggle="tab">Timeline</a></li>
-                    <li><a href="#Family" data-toggle="tab">Гэр бүлийн мэдээлэл</a></li>
+                    <li><a href="#familyList" data-toggle="tab">Гэр бүлийн мэдээлэл</a></li>
                     <li><a href="#contact" data-toggle="tab">Холбоо барих</a></li>
                 </ul>
                 <div class="tab-content">
@@ -201,7 +201,7 @@
                         </ul>
                     </div>
 
-                    <family :user="user"></family>
+                    <familyList :user="user"></familyList>
                     <!-- /.tab-pane -->
 
                     <div class="tab-pane" id="contact">
@@ -270,7 +270,8 @@
 
 <script>
 
-    import Family from './Family.vue'
+//    import Family from './Create.vue'
+    import FamilyList from './Family/List.vue'
 
     export default {
         data()
@@ -283,7 +284,7 @@
         },
 
         components: {
-            'family' : Family
+            'familyList' : FamilyList
         },
 
         created()
