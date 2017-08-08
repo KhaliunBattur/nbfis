@@ -49,7 +49,7 @@ class FamilyRepository implements FamilyRepositoryInterface
      */
     public function findByPaginate($howMany, $params = [])
     {
-
+        return $this->model->paginate($howMany);
     }
 
     /**

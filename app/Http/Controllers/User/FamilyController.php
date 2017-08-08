@@ -29,12 +29,12 @@ class FamilyController extends Controller
         $this->userRepository = $userRepository;
     }
 
-    public function index($id)
+    public function index($id, Request $request)
     {
-        $user = $this->userRepository->findById($id);
+        $family = $this->familyRepository->findByPaginate($request->get('per_page'), $request->all());
 
         return response()->json([
-            'members' => $user->family
+            'members' => $family
         ]);
     }
 }
