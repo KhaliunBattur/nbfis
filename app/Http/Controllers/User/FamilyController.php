@@ -31,14 +31,10 @@ class FamilyController extends Controller
 
     public function index($id)
     {
-        dd($id);
-
         $user = $this->userRepository->findById($id);
 
-        dd($user);
-
         return response()->json([
-            'family' => $user->family
+            'members' => $user->family
         ]);
     }
 }

@@ -115,12 +115,11 @@
         methods: {
             fetchFamily()
             {
-                console.log(this.user);
-//                axios.get('api/user/' + this.user.id + '/family').then(response => {
-//                    this.family = response.data.family;
-//                }).catch(function (error) {
-//                    console.log(error);
-//                })
+                axios.get('api/user/' + this.$route.params.id + '/family').then(response => {
+                    this.family = response.data.family;
+                }).catch(function (error) {
+                    console.log(error);
+                })
             }
         }
 
