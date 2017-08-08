@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Events\UserCreated;
+use App\Events\UserUpdated;
 use App\Support\FileType;
 use App\User\User;
 use App\User\UserRepositoryInterface;
@@ -68,6 +70,8 @@ class UserController extends Controller
 
         $user = User::create($parameters);
 
+        event(new UserCreated($user, 'хэрэглэгч шинээр бүртгэв', 'info'));
+
         $user->roles()->attach($request->get('roles'));
 
         return response()->json([
@@ -112,6 +116,8 @@ class UserController extends Controller
     {
         $this->valid($request);
 
+        $result = false;
+
         $user = $this->userRepository->findById($id);
 
         $user->roles()->detach();
@@ -139,13 +145,19 @@ class UserController extends Controller
             unset($parameters['image']);
         }
 
-        if($user->user_type == 'customer')
+        if($request->get('user_type') == 'customer')
         {
             $user->roles()->detach();
         }
 
+        if($user->update($parameters))
+        {
+            event(new UserUpdated($user, 'хэрэглэгчийн мэдээлэл засварлав', 'info'));
+            $result = true;
+        }
+
         return response()->json([
-            'result' => $user->update($parameters)
+            'result' => $result
         ]);
     }
 
@@ -201,11 +213,32 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function saveOwnerType($id, Request $request)
     {
         $user = $this->userRepository->findById($id);
 
         $user->owner_type = $request->get('_owner_type');
+
+        return response()->json([
+            'result' => $user->save()
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function saveAddress($id, Request $request)
+    {
+        $user = $this->userRepository->findById($id);
+
+        $user->address = $request->get('_address');
 
         return response()->json([
             'result' => $user->save()

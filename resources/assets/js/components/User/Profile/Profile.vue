@@ -45,28 +45,30 @@
                     <div class="box-body">
                         <strong><i class="fa fa-map-marker margin-r-5"></i> Одоо амьдарч буй хаяг</strong>
 
-                        <p class="text-muted">{{ user.address }}</p>
-                        <p class="text-muted" v-if="!show_live">
-                            <span>{{ user.live_year === null || user.live_year === '' ? 'Амьдарсан жил тодорхойгүй' : user.live_year}}</span>
-                            <button class="btn btn-xs btn-warning" @click="changeLiveYear"><i class="fa fa-pencil"></i></button>
+                        <p class="text-muted">
+                            <textarea class="form-control" v-model="user.address"></textarea>
+                            <button class="btn btn-success btn-sm" style="margin-top: 5px" @click="saveAddress">
+                                <i class="fa fa-check"></i> Хадгалах
+                            </button>
                         </p>
-                        <div class="input-group input-group-sm" v-if="show_live">
-                            <input type="text" class="form-control" v-model="user.live_year" />
+
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" v-model="user.live_year" v-if="show_live" />
+                            <input type="text" class="form-control" v-model="user.live_year" readonly="readonly" v-if="!show_live" />
                             <div class="input-group-btn">
-                                <button class="btn btn-xs btn-success" @click="saveLiveYear"><i class="fa fa-check"></i></button>
-                                <button class="btn btn-xs btn-danger" @click="changeLiveYear"><i class="fa fa-close"></i></button>
+                                <button class="btn btn-xs btn-success" v-if="show_live" @click="saveLiveYear"><i class="fa fa-check"></i></button>
+                                <button class="btn btn-xs btn-danger" v-if="show_live" @click="changeLiveYear"><i class="fa fa-close"></i></button>
+                                <button class="btn btn-xs btn-warning" v-if="!show_live" @click="changeLiveYear"><i class="fa fa-pencil"></i></button>
                             </div>
                         </div>
-
-                        <p class="text-muted" v-if="!show_owner">
-                            <span>{{ user.owner_type === null || user.owner_type === '' ? '' : user.owner_type}}</span>
-                            <button class="btn btn-xs btn-warning" @click="changeOwnerType"><i class="fa fa-pencil"></i></button>
-                        </p>
-                        <div class="input-group input-group-sm" v-if="show_owner">
-                            <input type="text" class="form-control" v-model="user.owner_type" />
+                        <br />
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" v-model="user.owner_type" v-if="show_owner" />
+                            <input type="text" class="form-control" v-model="user.owner_type" readonly="readonly" v-if="!show_owner" />
                             <div class="input-group-btn">
-                                <button class="btn btn-xs btn-success" @click="saveOwnerType"><i class="fa fa-check"></i></button>
-                                <button class="btn btn-xs btn-danger" @click="changeOwnerType"><i class="fa fa-close"></i></button>
+                                <button class="btn btn-xs btn-success" v-if="show_owner" @click="saveOwnerType"><i class="fa fa-check"></i></button>
+                                <button class="btn btn-xs btn-danger" v-if="show_owner" @click="changeOwnerType"><i class="fa fa-close"></i></button>
+                                <button class="btn btn-xs btn-warning" v-if="!show_owner" @click="changeOwnerType"><i class="fa fa-pencil"></i></button>
                             </div>
                         </div>
 
@@ -272,7 +274,6 @@
 
 <script>
 
-//    import Family from './Create.vue'
     import FamilyList from './Family/List.vue'
 
     export default {
@@ -315,6 +316,15 @@
                     {
                         this.show_live = false;
                     }
+                }).catch(function(responce) {
+
+                })
+            },
+
+            saveAddress()
+            {
+                axios.patch('api/user/' + this.$route.params.id + '/saveAddress', {_address: this.user.address}).then(response => {
+
                 }).catch(function(responce) {
 
                 })

@@ -206,7 +206,7 @@
 
             getUser()
             {
-                axios.get('api/users/' + this.$route.params.id + '/edit').then(response => {
+                axios.get('/api/users/' + this.$route.params.id + '/edit').then(response => {
                     this.user = response.data.user;
                     this.user.roles = response.data.roles
                     this.profile_picture = this.user.image;
@@ -221,7 +221,7 @@
 
             changePassword(user)
             {
-                axios.patch('api/user/' + this.$route.params.id + '/changePassword', {password: this.password, confirm_password: this.confirm_password}).then(response => {
+                axios.patch('/api/user/' + this.$route.params.id + '/changePassword', {password: this.password, confirm_password: this.confirm_password}).then(response => {
                     if(response.data.result)
                     {
                         var self = this;

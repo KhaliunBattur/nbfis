@@ -14,10 +14,21 @@
                     </div>
                     <div class="box-body">
                         <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
-                            <div class="input-group input-group-sm input-small with-margin-bottom">
+                            <div class="input-group input-group-sm input-small with-margin-bottom pull-left">
                                 <input type="text" v-model="query.per_page" class="form-control" />
                                 <div class="input-group-btn">
                                     <button class="btn" @click="changePerPage()">-р хуудаслах</button>
+                                </div>
+                            </div>
+                            <div class="pull-right">
+                                <div class="radio-inline">
+                                    <input type="radio" v-model="query.user_type" value="all" /> Бүгд
+                                </div>
+                                <div class="radio-inline">
+                                    <input type="radio" v-model="query.user_type" value="staff" /> Ажилтан
+                                </div>
+                                <div class="radio-inline">
+                                    <input type="radio" v-model="query.user_type" value="customer" /> Харилцагч
                                 </div>
                             </div>
                             <table class="table table-bordered table-hover">
@@ -100,6 +111,13 @@
 
     export default {
 
+        watch: {
+            type()
+            {
+                this.fetchUser();
+            }
+        },
+
         data() {
             return {
                 loading: true,
@@ -110,6 +128,7 @@
                     column: 'first_name',
                     direction: 'asc',
                     per_page: 10,
+                    user_type: 'all',
                     search: {
                         first_name: null,
                         name: null,
@@ -123,6 +142,12 @@
         components: {
             'sort' : Sort,
             'delete-confirm': DeleteConfirm
+        },
+
+        computed: {
+            type() {
+                return this.query.user_type;
+            }
         },
 
         created()
@@ -179,7 +204,7 @@
             fetchUser()
             {
                 this.loading = true;
-                axios.get('/api/users?search='+ JSON.stringify(this.query.search) +'&per_page=' + this.query.per_page + '&column='+this.query.column+'&direction='+this.query.direction+'&page='+this.query.page).then(response => {
+                axios.get('/api/users?search='+ JSON.stringify(this.query.search) +'&type=' + this.query.user_type + '&per_page=' + this.query.per_page + '&column='+this.query.column+'&direction='+this.query.direction+'&page='+this.query.page).then(response => {
                     this.model = response.data.model;
                     this.loading = false;
                 }).catch(errors => {
