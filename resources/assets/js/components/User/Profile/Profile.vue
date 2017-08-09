@@ -51,7 +51,7 @@
                                 <i class="fa fa-check"></i> Хадгалах
                             </button>
                         </p>
-
+                        <span>Амьдарсан хугацаа</span>
                         <div class="input-group input-group-sm">
                             <input type="text" class="form-control" v-model="user.live_year" v-if="show_live" />
                             <input type="text" class="form-control" v-model="user.live_year" readonly="readonly" v-if="!show_live" />
@@ -62,9 +62,12 @@
                             </div>
                         </div>
                         <br />
+                        <span>Эзэмшил</span>
                         <div class="input-group input-group-sm">
-                            <input type="text" class="form-control" v-model="user.owner_type" v-if="show_owner" />
-                            <input type="text" class="form-control" v-model="user.owner_type" readonly="readonly" v-if="!show_owner" />
+                            <select class="form-control" v-model="user.owner_type" v-if="show_owner">
+                                <option v-for="(type, index) in owner_type" :value="index">{{ type }}</option>
+                            </select>
+                            <input type="text" class="form-control" :value="owner_type[user.owner_type]" readonly="readonly" v-if="!show_owner" />
                             <div class="input-group-btn">
                                 <button class="btn btn-xs btn-success" v-if="show_owner" @click="saveOwnerType"><i class="fa fa-check"></i></button>
                                 <button class="btn btn-xs btn-danger" v-if="show_owner" @click="changeOwnerType"><i class="fa fa-close"></i></button>
@@ -104,7 +107,7 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#timeline" data-toggle="tab">Timeline</a></li>
                         <li><a href="#family" data-toggle="tab">Гэр бүлийн мэдээлэл</a></li>
-                        <li><a href="#contact" data-toggle="tab">Холбоо барих</a></li>
+                        <li><a href="#workplace" data-toggle="tab">Ажлын газрын мэдээлэл</a></li>
                     </ul>
                     <div class="tab-content">
 
@@ -208,58 +211,8 @@
                         </div>
                         <!-- /.tab-pane -->
 
-                        <div class="tab-pane" id="contact">
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <label for="inputName" class="col-sm-2 control-label">Name</label>
-
-                                    <div class="col-sm-10">
-                                        <input type="email" class="form-control" id="inputName" placeholder="Name">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputEmail" class="col-sm-2 control-label">Email</label>
-
-                                    <div class="col-sm-10">
-                                        <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputName" class="col-sm-2 control-label">Name</label>
-
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="inputName" placeholder="Name">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputExperience" class="col-sm-2 control-label">Experience</label>
-
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputSkills" class="col-sm-2 control-label">Skills</label>
-
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <button type="submit" class="btn btn-danger">Submit</button>
-                                    </div>
-                                </div>
-                            </form>
+                        <div class="tab-pane" id="workplace">
+                            <workplace-list :user="user"></workplace-list>
                         </div>
                         <!-- /.tab-pane -->
                     </div>
@@ -275,11 +228,13 @@
 <script>
 
     import FamilyList from './Family/List.vue'
+    import WorkplaceList from './Workplace/List.vue'
 
     export default {
         data()
         {
             return{
+                owner_type: null,
                 user: null,
                 show_live: false,
                 show_owner: false
@@ -287,7 +242,8 @@
         },
 
         components: {
-            'familyList' : FamilyList
+            'familyList' : FamilyList,
+            'workplace-list': WorkplaceList
         },
 
         created()
@@ -343,9 +299,10 @@
             {
                 axios.get('api/users/' + this.$route.params.id).then(response => {
                     this.user = response.data.user;
-                    this.user.roles = response.data.roles
-                    this.user.birth_day = null
-                    this.user.age = null
+                    this.user.roles = response.data.roles;
+                    this.owner_type= response.data.owner_type;
+                    this.user.birth_day = null;
+                    this.user.age = null;
                     this.setRegister();
                 }).catch(function (response) {
                     swal('Уучлаарай!', 'Хэрэглэгчийн мэдээлэл татаж чадсангүй', 'error')

@@ -14,4 +14,14 @@ use Illuminate\Database\Eloquent\Model;
 class Workplace extends Model
 {
 
+    /**
+     * @var string
+     */
+    protected $table = 'workplace';
+
+    /**
+     * @var array
+     */
+    protected $fillable = ['user_id', 'organization', 'date_employment', 'position', 'activity', 'address', 'worker_count'];
+
 }

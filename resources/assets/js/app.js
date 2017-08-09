@@ -17,6 +17,19 @@ window.Vue = require('vue');
 
 import Router from './routes'
 
+Vue.directive('pick', {
+    "twoWay": true,
+    bind: function(el, binding, vnode) {
+        $(el).datepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+            todayHighlight: true
+        }).on('changeDate', function(e) {
+            el.dispatchEvent(new Event('input', { target: e.target }))
+        });
+    },
+});
+
 const app = new Vue({
     el: '#app',
     router: Router

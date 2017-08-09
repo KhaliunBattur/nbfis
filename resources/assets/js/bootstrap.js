@@ -27,6 +27,13 @@ require('./../../../node_modules/admin-lte-sass/plugins/datepicker/bootstrap-dat
 require('./../../../node_modules/sweetalert/dist/sweetalert.min');
 
 /**
+ * Jquery tree view table
+ */
+
+require('./../../../node_modules/jquery-treegrid/js/jquery.treegrid.min');
+require('./../../../node_modules/jquery-treegrid/js/jquery.treegrid.bootstrap3');
+
+/**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.

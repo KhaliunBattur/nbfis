@@ -89,7 +89,8 @@ class UserController extends Controller
 
         return response()->json([
             'user' => $user,
-            'roles' => $user->roles
+            'roles' => $user->roles,
+            'owner_type' => \Config::get('enums.owner_type')
         ]);
     }
 
