@@ -24,12 +24,13 @@ class WorkplaceController extends Controller
     }
 
     /**
+     * @param $id
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index($id, Request $request)
     {
-        $users = $this->workplaceRepository->findByPaginate($request->get('per_page'), $request->all());
+        $users = $this->workplaceRepository->findByUserPaginate($id, $request->get('per_page'), $request->all());
 
         return response()->json([
             'model' => $users

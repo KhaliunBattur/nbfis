@@ -66,4 +66,15 @@ class WorkplaceRepository implements WorkplaceRepositoryInterface
     {
         return $this->model->where('id', '!=', $ignoreId)->pluck($name, $value);
     }
+
+    /**
+     * @param $id
+     * @param $limit
+     * @param $search
+     * @return Collection
+     */
+    public function findByUserPaginate($id, $limit, $search = [])
+    {
+        return $this->model->where('user_id', $id)->paginate($limit);
+    }
 }
