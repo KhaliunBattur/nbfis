@@ -65,7 +65,7 @@
 
                 <div class="box-footer">
                     <div class="btn-group">
-                        <router-link to="/users" class="btn btn-sm btn-danger">Буцах</router-link>
+                        <a @click="back()" class="btn btn-sm btn-danger">Буцах</a>
                     </div>
                     <div class="btn-group pull-right">
                         <button type="button" class="btn btn-sm btn-success" @click="save()">Хадгалах</button>
@@ -93,7 +93,7 @@
                     job: '',
                     register: '',
                     monthBudged: '',
-                    phone: 'customer',
+                    phone: '',
                 }
             }
         },
@@ -104,6 +104,40 @@
         },
 
         methods: {
+            reset()
+            {
+              this.family = {
+                  first_name: null,
+                  last_name: null,
+                  relation: null,
+                  job: null,
+                  register: null,
+                  monthBudged: null,
+                  phone: null
+              }
+            },
+            back()
+            {
+              this.$emit('closed');
+            },
+            save()
+            {
+              var self = this;
+              axios.post('/api/user/' + this.user.id + '/family',this.member).then(response=>{
+                  if(response.data.result)
+                  {
+                      swal({
+                          title: 'Ажилттай',
+                          text: 'Бүртгэгдлээ',
+                          type: 'success'
+                      }, function(){
+                          self.reset();
+                      });
+                  }
+              }).catch(errors=>{
+                  swal('Уучлаарай', 'Амжилтгүй боллоо', 'error');
+              })
+            },
             fetchFamily()
             {
                 axios.get('api/user/' + this.$route.params.id + '/family').then(response => {

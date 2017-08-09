@@ -26,6 +26,9 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::patch('user/{id}/saveAddress', ['as' => 'change.save.address', 'uses' => 'UserController@saveAddress']);
 
         Route::get('user/{id}/family', ['as' => 'user.family.index', 'uses' => 'FamilyController@index']);
+        Route::post('user/{id}/family', ['as' => 'user.family.store', 'uses' => 'FamilyController@store']);
+        Route::patch('user/{id}/family/{family}', ['as' => 'user.family.update', 'uses' => 'FamilyController@update']);
+        Route::delete('user/{id}/family/{family}/destroy', ['as' => 'user.family.destroy', 'uses' => 'FamilyController@destroy']);
 
         Route::get('user/{id}/workplace', ['as' => 'user.workplace.index', 'uses' => 'WorkplaceController@index']);
         Route::post('user/{id}/workplace', ['as' => 'user.workplace.store', 'uses' => 'WorkplaceController@store']);
