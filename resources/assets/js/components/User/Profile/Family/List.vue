@@ -8,14 +8,14 @@
             <div class="box-tools">
                 <!--<router-link v-bind:to="'/users/' + user.id + '/family/create'" class="btn btn-sm btn-default">Шинээр нэмэх</router-link>-->
                 <!--<a href="#family-create" class="btn btn-sm btn-default">Шинээр нэмэх</a>-->
-                <button @click="toggleFamilyCreate" class="btn btn-sm btn-default">
+                <button @click="FamilyCreate" class="btn btn-sm btn-default" v-if="view == 'list'">
                     Шинээр нэмэх</button>
             </div>
         </div>
-        <div class="box-body">
-            <div v-if="familyCreate" >
-                <family-create></family-create>
-            </div>
+        <family-create v-if="view == 'family-create'" :user="user"  v-on:closed="closeForm"></family-create>
+        <family-edit v-if="view == 'family-edit'" :family="family" :user="user" v-on:closed="closeForm"></family-edit>
+        <div class="box-body" v-if="view =='list'">
+
             <div v-if="familyList">
                 <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
                 <div class="input-group input-group-sm input-small with-margin-bottom">
@@ -66,7 +66,7 @@
                         <td>{{ family.phone }}</td>
                         <td>
                             <router-link v-bind:to="'/users/' + user.id + '/profile'" class="btn btn-xs btn-info"><i class="fa fa-eye"></i></router-link>
-                            <router-link v-bind:to="'/users/' + user.id + '/edit'" class="btn btn-xs btn-warning"><i class="fa fa-pencil-square"></i></router-link>
+                            <a  class="btn btn-xs btn-warning" @click="EditFamily(family)"><i class="fa fa-pencil-square"></i></a>
                             <delete-confirm :item="user" :url="'/api/users/' + user.id" v-on:destroyed="destroy(user)"></delete-confirm>
                         </td>
                     </tr>
@@ -96,12 +96,14 @@
     import Sort from '../../../Helper/Sort.vue';
     import DeleteConfirm from '../../../Helper/DeleteConfirm.vue';
     import FamilyCreate from './Create.vue'
+    import FamilyEdit from './Edit.vue'
     export default {
 
         props: ['user'],
 
         data() {
             return {
+                view: 'list',
                 loading: true,
                 familyCreate:false,
                 advancedSearch: false,
@@ -129,6 +131,7 @@
             'sort' : Sort,
             'delete-confirm': DeleteConfirm,
             'family-create': FamilyCreate,
+            'family-edit':FamilyEdit
         },
 
         mounted()
@@ -137,6 +140,20 @@
         },
 
         methods: {
+            closeForm()
+            {
+              this.view = 'list';
+              this.fetchFamily();
+            },
+            FamilyCreate()
+            {
+               this.view = 'family-create';
+            },
+            EditFamily(family)
+            {
+                this.family = family;
+                this.view='family-edit';
+            },
              fetchFamily()
             {
                 axios.get('api/user/' + this.$route.params.id + '/family').then(response => {
@@ -175,17 +192,6 @@
                     this.advancedSearch = true
                 }
             },
-            toggleFamilyCreate()
-            {
-                if(this.familyCreate)
-                {
-                    this.familyList=true;
-                    this.familyCreate=false;
-                }
-                else
-                    this.familyList=false;
-                    this.familyCreate=true;
-            },
             sort(query)
             {
                 this.query = query;
@@ -206,9 +212,9 @@
                     this.fetchFamily()
                 }
             },
-            destroy(user)
+            destroy(family)
             {
-                this.members.data.splice(this.members.data.indexOf(user), 1);
+                this.members.data.splice(this.members.data.indexOf(family), 1);
                 this.members.total = this.members.total - 1;
             }
         }
