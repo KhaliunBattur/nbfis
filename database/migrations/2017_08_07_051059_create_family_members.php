@@ -15,14 +15,13 @@ class CreateFamilyMembers extends Migration
     {
         Schema::create('family_members', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->integer('user_id')->index()->unsigned();
+            $table->string('name');
             $table->string('relation');
             $table->string('job');
             $table->string('register');
-            $table->string('monthBudged');
-            $table->string('phone');
+            $table->decimal('budged', 18, 2);
+            $table->string('phone_number');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');

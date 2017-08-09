@@ -108,6 +108,7 @@
                         <li class="active"><a href="#timeline" data-toggle="tab">Timeline</a></li>
                         <li><a href="#family" data-toggle="tab">Гэр бүлийн мэдээлэл</a></li>
                         <li><a href="#workplace" data-toggle="tab">Ажлын газрын мэдээлэл</a></li>
+                        <li><a href="#emergency" data-toggle="tab">Холбоо барих хүмүүс</a></li>
                     </ul>
                     <div class="tab-content">
 
@@ -215,6 +216,11 @@
                             <workplace-list :user="user"></workplace-list>
                         </div>
                         <!-- /.tab-pane -->
+
+                        <div class="tab-pane" id="emergency">
+                            <emergency :user="user"></emergency>
+                        </div>
+                        <!-- /.tab-pane -->
                     </div>
                     <!-- /.tab-content -->
                 </div>
@@ -229,6 +235,7 @@
 
     import FamilyList from './Family/List.vue'
     import WorkplaceList from './Workplace/List.vue'
+    import Emergency from './Emergency/List.vue'
 
     export default {
         data()
@@ -243,7 +250,8 @@
 
         components: {
             'familyList' : FamilyList,
-            'workplace-list': WorkplaceList
+            'workplace-list': WorkplaceList,
+            'emergency': Emergency
         },
 
         created()

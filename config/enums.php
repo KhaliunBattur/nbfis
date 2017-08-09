@@ -9,4 +9,13 @@ return [
         'other' => 'Бусад'
     ],
 
+    'relation' => [
+        'father' => 'Аав',
+        'mother' => 'Ээж',
+        'brother' => 'Ах',
+        'sister' => 'Эгч',
+        'little' => 'Дүү',
+        'friend' => 'Найз'
+    ],
+
 ];

@@ -15,14 +15,13 @@ class CreateEmergencyContact extends Migration
     {
         Schema::create('emergency_contact', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->integer('user_id')->index()->unsigned();
+            $table->string('name');
             $table->string('relation');
-            $table->string('job');
-            $table->string('register');
-            $table->string('monthBudged');
-            $table->string('phone');
+            $table->string('job')->nullable()->default(null);
+            $table->string('register')->nullable()->default(null);
+            $table->decimal('budged', 18, 2)->nullable()->default(null);
+            $table->string('phone_number');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('cascade');

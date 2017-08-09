@@ -30,10 +30,10 @@ class WorkplaceController extends Controller
      */
     public function index($id, Request $request)
     {
-        $users = $this->workplaceRepository->findByUserPaginate($id, $request->get('per_page'), $request->all());
+        $workplaces = $this->workplaceRepository->findByUserPaginate($id, $request->get('per_page'), $request->all());
 
         return response()->json([
-            'model' => $users
+            'model' => $workplaces
         ]);
     }
 

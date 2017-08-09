@@ -32,9 +32,20 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::patch('user/{id}/workplace/{workplace}', ['as' => 'user.workplace.update', 'uses' => 'WorkplaceController@update']);
         Route::delete('user/{id}/workplace/{workplace}/destroy', ['as' => 'user.workplace.destroy', 'uses' => 'WorkplaceController@destroy']);
 
+        Route::get('user/{id}/emergency', ['as' => 'user.emergency.index', 'uses' => 'ContactController@index']);
+        Route::post('user/{id}/emergency', ['as' => 'user.emergency.store', 'uses' => 'ContactController@store']);
+        Route::patch('user/{id}/emergency/{emergency}', ['as' => 'user.emergency.update', 'uses' => 'ContactController@update']);
+        Route::delete('user/{id}/emergency/{emergency}/destroy', ['as' => 'user.emergency.destroy', 'uses' => 'ContactController@destroy']);
+
         Route::resource('roles', 'RoleController', ['only' => ['index']]);
         Route::resource('roles.permission', 'PermissionController', ['only' => ['store', 'destroy']]);
         Route::get('permission/search', ['as' => 'permission.search', 'uses' => 'PermissionController@search']);
+    });
+
+    Route::get('relations', function(){
+        return response()->json([
+            'relations' => \Config::get('enums.relation')
+        ]);
     });
 
 });
