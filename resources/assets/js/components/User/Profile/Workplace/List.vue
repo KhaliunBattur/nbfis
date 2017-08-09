@@ -47,10 +47,7 @@
                         <th>
                             <input type="text" class="form-control input-sm" v-model="query.search.address" />
                         </th>
-                        <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.worker_count" />
-                        </th>
-                        <th colspan="2">
+                        <th colspan="3">
                             <button class="btn btn-sm btn-info" @click="search()">
                                 <i class="fa fa-search"></i> Хайх
                             </button>
@@ -161,7 +158,15 @@
 
             fetchWorkplace()
             {
-                axios.get('api/user/' + this.$route.params.id + '/workplace').then(response => {
+                axios.get('api/user/' + this.$route.params.id + '/workplace', {
+                    params: {
+                        search: JSON.stringify(this.query.search),
+                        per_page: this.query.per_page,
+                        column: this.query.column,
+                        direction: this.query.direction,
+                        page: this.query.page
+                    }
+                }).then(response => {
                     this.workplaces = response.data.model;
                     this.loading = false;
                 }).catch(errors => {

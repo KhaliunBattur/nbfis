@@ -70,11 +70,39 @@ class WorkplaceRepository implements WorkplaceRepositoryInterface
     /**
      * @param $id
      * @param $limit
-     * @param $search
+     * @param $params
      * @return Collection
      */
-    public function findByUserPaginate($id, $limit, $search = [])
+    public function findByUserPaginate($id, $limit, $params = [])
     {
-        return $this->model->where('user_id', $id)->paginate($limit);
+
+        $query = $this->model;
+
+        $search = json_decode($params['search'], true);
+
+        return $query->where(function($query) use($search) {
+            if(array_key_exists('organization', $search) && !is_null($search['organization']))
+            {
+                $query->where('organization', 'LIKE', $search['organization'] . '%');
+            }
+            if(array_key_exists('date_employment', $search) && !is_null($search['date_employment']))
+            {
+                $query->where('date_employment', 'LIKE', $search['date_employment'] . '%');
+            }
+            if(array_key_exists('position', $search) && !is_null($search['position']))
+            {
+                $query->where('position', 'LIKE', $search['position'] . '%');
+            }
+            if(array_key_exists('activity', $search) && !is_null($search['activity']))
+            {
+                $query->where('activity', 'LIKE', $search['activity'] . '%');
+            }
+            if(array_key_exists('address', $search) && !is_null($search['address']))
+            {
+                $query->where('address', 'LIKE', $search['address'] . '%');
+            }
+        })->where('user_id', $id)
+            ->orderBy($params['column'], $params['direction'])
+            ->paginate($limit);
     }
 }
