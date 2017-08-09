@@ -272,7 +272,7 @@
 
 <script>
 
-//    import Family from './Create.vue'
+
     import FamilyList from './Family/List.vue'
 
     export default {
