@@ -3,21 +3,16 @@
     <div class="box">
         <div class="box-header with-border">
             <div class="box-title">
-                Жагсаалт
+                Гэр бүлийн мэдээлэл
             </div>
             <div class="box-tools">
-                <!--<router-link v-bind:to="'/users/' + user.id + '/family/create'" class="btn btn-sm btn-default">Шинээр нэмэх</router-link>-->
-                <!--<a href="#family-create" class="btn btn-sm btn-default">Шинээр нэмэх</a>-->
-                <button @click="FamilyCreate" class="btn btn-sm btn-default" v-if="view == 'list'">
-                    Шинээр нэмэх</button>
+                <button @click="createFamily" class="btn btn-sm btn-default" v-if="view == 'list'">Шинээр нэмэх</button>
             </div>
         </div>
         <family-create v-if="view == 'family-create'" :user="user"  v-on:closed="closeForm"></family-create>
-        <family-edit v-if="view == 'family-edit'" :family="family" :user="user" v-on:closed="closeForm"></family-edit>
+        <family-edit v-if="view == 'family-edit'" :member="member" :user="user" v-on:closed="closeForm"></family-edit>
         <div class="box-body" v-if="view =='list'">
-
-            <div v-if="familyList">
-                <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
+            <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
                 <div class="input-group input-group-sm input-small with-margin-bottom">
                     <input type="text" v-model="query.per_page" class="form-control" />
                     <div class="input-group-btn">
@@ -27,23 +22,27 @@
                 <table class="table table-bordered table-hover">
                     <thead>
                     <tr>
-                        <sort :column="'first_name'" :query="query" :text="'Овог'" v-on:sorted="sort"></sort>
-                        <sort :column="'last_name'" :query="query" :text="'Нэр'" v-on:sorted="sort"></sort>
+                        <sort :column="'name'" :query="query" :text="'Нэр'" v-on:sorted="sort"></sort>
                         <sort :column="'relation'" :query="query" :text="'Хэн болох'" v-on:sorted="sort"></sort>
+                        <sort :column="'job'" :query="query" :text="'Ажил мэргэжил'" v-on:sorted="sort"></sort>
+                        <sort :column="'register'" :query="query" :text="'Регистр'" v-on:sorted="sort"></sort>
                         <sort :column="'phone'" :query="query" :text="'Утас'" v-on:sorted="sort"></sort>
-                      <th class="action-controls-sm" v-if="!advancedSearch">
+                        <th class="action-controls-sm" v-if="!advancedSearch">
                             <button class="btn btn-info btn-sm" @click="toggleAdvancedSearch">Дэлгэрэнгүй хайлт</button>
                         </th>
                     </tr>
                     <tr v-if="advancedSearch">
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.first_name" />
-                        </th>
-                        <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.last_name" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.name" />
                         </th>
                         <th>
                             <input type="text" class="form-control input-sm" v-model="query.search.relation" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control input-sm" v-model="query.search.job" />
+                        </th>
+                        <th>
+                            <input type="text" class="form-control input-sm" v-model="query.search.register" />
                         </th>
                         <th>
                             <input type="text" class="form-control input-sm" v-model="query.search.phone" />
@@ -60,13 +59,13 @@
                     </thead>
                     <tbody>
                     <tr v-for="family in members.data">
-                        <td>{{ family.first_name }}</td>
-                        <td>{{ family.last_name }}</td>
+                        <td>{{ family.name }}</td>
                         <td>{{ family.relation }}</td>
-                        <td>{{ family.phone }}</td>
+                        <td>{{ family.job }}</td>
+                        <td>{{ family.register }}</td>
+                        <td>{{ family.phone_number }}</td>
                         <td>
-                            <router-link v-bind:to="'/users/' + user.id + '/profile'" class="btn btn-xs btn-info"><i class="fa fa-eye"></i></router-link>
-                            <a  class="btn btn-xs btn-warning" @click="EditFamily(family)"><i class="fa fa-pencil-square"></i></a>
+                            <a class="btn btn-xs btn-warning" @click="editFamily(family)"><i class="fa fa-pencil-square"></i></a>
                             <delete-confirm :item="user" :url="'/api/users/' + user.id" v-on:destroyed="destroy(user)"></delete-confirm>
                         </td>
                     </tr>
@@ -86,7 +85,6 @@
                     </tfoot>
                 </table>
             </div>
-            </div>
         </div>
     </div>
 </template>
@@ -97,6 +95,7 @@
     import DeleteConfirm from '../../../Helper/DeleteConfirm.vue';
     import FamilyCreate from './Create.vue'
     import FamilyEdit from './Edit.vue'
+
     export default {
 
         props: ['user'],
@@ -105,23 +104,20 @@
             return {
                 view: 'list',
                 loading: true,
-                familyCreate:false,
                 advancedSearch: false,
-                familyList:true,
                 members: {},
+                member: null,
                 query: {
                     page: 1,
-                    column: 'first_name',
+                    column: 'name',
                     direction: 'asc',
                     per_page: 10,
                     search: {
-                        first_name: null,
-                        last_name: null,
+                        name: null,
+                        register: null,
                         relation: null,
                         job: null,
-                        register: null,
-                        monthBudged: null,
-                        phone: null,
+                        phone: null
                     }
                 }
             }
@@ -145,21 +141,30 @@
               this.view = 'list';
               this.fetchFamily();
             },
-            FamilyCreate()
+            createFamily()
             {
                this.view = 'family-create';
             },
-            EditFamily(family)
+            editFamily(member)
             {
-                this.family = family;
+                this.member = member;
+
                 this.view='family-edit';
             },
-             fetchFamily()
+            fetchFamily()
             {
-                axios.get('api/user/' + this.$route.params.id + '/family').then(response => {
+                axios.get('api/user/' + this.$route.params.id + '/family', {
+                    params: {
+                        search: JSON.stringify(this.query.search),
+                        per_page: this.query.per_page,
+                        column: this.query.column,
+                        direction: this.query.direction,
+                        page: this.query.page
+                    }
+                }).then(response => {
                     this.members = response.data.members;
                     this.loading = false;
-                }).catch(function (error) {
+                }).catch(error => {
                     console.log(error);
                     this.loading = false;
                 })

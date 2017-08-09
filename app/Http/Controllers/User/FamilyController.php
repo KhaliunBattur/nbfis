@@ -30,17 +30,29 @@ class FamilyController extends Controller
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index($id, Request $request)
     {
-        $family = $this->familyRepository->findByPaginate($request->get('per_page'), $request->all());
+        $family = $this->familyRepository->findByUserPaginate($id, $request->get('per_page'), $request->all());
 
         return response()->json([
             'members' => $family
         ]);
     }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store($id, Request $request)
     {
         $this->valid($request);
+
         $parameters = $request->all();
 
         $parameters['user_id'] = $id;
@@ -59,6 +71,7 @@ class FamilyController extends Controller
     public function update($id, $family_id, Request $request)
     {
         $family = $this->familyRepository->findById($family_id);
+
         return response()->json([
             'result'=>$family->update($request->all())
         ]);
@@ -81,10 +94,10 @@ class FamilyController extends Controller
     private function valid($request)
     {
         $this->validate($request, [
-            'phone' => 'required',
-            'first_name' => 'required',
+            'phone_number' => 'required',
+            'name' => 'required',
             'relation' => 'required',
-            'monthBudged'=>'required'
+            'budged'=>'required'
         ]);
     }
 }

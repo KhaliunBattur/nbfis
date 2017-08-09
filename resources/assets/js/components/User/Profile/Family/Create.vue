@@ -1,23 +1,13 @@
 <template>
-    <div class="box" >
-        <div class="box-header with-border">
-            <div class="box-title">
-                Шинээр нэмэх
-            </div>
-        </div>
-        <div class="form-horizontal">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-horizontal">
             <div class="box-body">
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Овог <label class="text-danger">*</label></label>
+                    <label class="col-sm-2 control-label">Овог нэр <label class="text-danger">*</label></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="member.first_name" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Нэр <label class="text-danger">*</label></label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="member.last_name" />
+                        <input type="text" class="form-control" v-model="member.name" />
                     </div>
                 </div>
                 <hr />
@@ -43,24 +33,19 @@
                 </div>
                 <hr />
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Нэр <label class="text-danger">*</label></label>
+                    <label class="col-sm-2 control-label">Сарын орлого <label class="text-danger">*</label></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="member.monthBudged" />
+                        <input type="text" class="form-control" v-model="member.budged" />
                     </div>
                 </div>
                 <hr />
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Утас</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="member.phone" />
+                        <input type="text" class="form-control" v-model="member.phone_number" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Хаяг</label>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" rows="2"></textarea>
-                    </div>
-                </div>
+
                 <hr />
 
                 <div class="box-footer">
@@ -72,6 +57,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </template>
@@ -87,43 +73,38 @@
             return {
                 family: [],
                 member: {
-                    first_name: '',
-                    last_name: '',
-                    relation: '',
-                    job: '',
-                    register: '',
-                    monthBudged: '',
-                    phone: '',
+                    name: null,
+                    relation: null,
+                    job: null,
+                    register: null,
+                    budged: null,
+                    phone_number: null,
                 }
             }
-        },
-
-        created()
-        {
-            this.fetchFamily();
         },
 
         methods: {
             reset()
             {
               this.family = {
-                  first_name: null,
-                  last_name: null,
+                  name: null,
                   relation: null,
                   job: null,
                   register: null,
-                  monthBudged: null,
-                  phone: null
+                  budged: null,
+                  phone_number: null,
               }
             },
+
             back()
             {
               this.$emit('closed');
             },
+
             save()
             {
               var self = this;
-              axios.post('/api/user/' + this.user.id + '/family',this.member).then(response=>{
+              axios.post('/api/user/' + this.user.id + '/family', this.member).then(response=>{
                   if(response.data.result)
                   {
                       swal({
@@ -137,14 +118,6 @@
               }).catch(errors=>{
                   swal('Уучлаарай', 'Амжилтгүй боллоо', 'error');
               })
-            },
-            fetchFamily()
-            {
-                axios.get('api/user/' + this.$route.params.id + '/family').then(response => {
-                    this.family = response.data.family;
-                }).catch(function (error) {
-                    console.log(error);
-                })
             }
         }
 

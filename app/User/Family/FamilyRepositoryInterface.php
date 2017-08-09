@@ -8,4 +8,11 @@ use App\Core\Repository;
 interface FamilyRepositoryInterface extends Repository
 {
 
+    /**
+     * @param $id
+     * @param $limit
+     * @param array $search
+     * @return Collection
+     */
+    public function findByUserPaginate($id, $limit, $search = []);
 }
