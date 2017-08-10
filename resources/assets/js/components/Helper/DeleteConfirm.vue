@@ -1,5 +1,5 @@
 <template>
-    <a class="btn btn-xs btn-danger" @click="destroy(item)">
+    <a :class="styleClass === undefined ? 'btn btn-xs btn-danger' : styleClass" @click="destroy(item)">
         <i class="fa fa-trash-o"></i>
     </a>
 </template>
@@ -7,7 +7,7 @@
 <script>
 
     export default {
-        props: ['item', 'url'],
+        props: ['item', 'url', 'styleClass'],
 
         methods: {
             destroy(item)

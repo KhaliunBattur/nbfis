@@ -30,6 +30,30 @@ Vue.directive('pick', {
     },
 });
 
+Vue.directive('auto', {
+    "twoWay": true,
+    bind: function (el, binding, vnode) {
+        var type = $(el).attr('data-type');
+        var target = $(el).attr('data-target');
+        $(el).autocomplete({
+            source: function (request, resp) {
+                axios.get('/api/references/' + type, {
+                    params: {
+                        term: request.term
+                    }
+                }).then(response => {
+                    resp(response.data);
+                })
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                $(target).val(ui.item.value);
+                el.dispatchEvent(new Event('selected', {target: event.target}))
+            }
+        });
+    }
+});
+
 const app = new Vue({
     el: '#app',
     router: Router

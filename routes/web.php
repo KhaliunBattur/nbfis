@@ -11,6 +11,9 @@
 |
 */
 
+use App\Support\ReferenceText;
+use Illuminate\Http\Request;
+
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
 
@@ -40,6 +43,16 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::patch('user/{id}/emergency/{emergency}', ['as' => 'user.emergency.update', 'uses' => 'ContactController@update']);
         Route::delete('user/{id}/emergency/{emergency}/destroy', ['as' => 'user.emergency.destroy', 'uses' => 'ContactController@destroy']);
 
+        Route::get('user/{id}/budget', ['as' => 'user.budget.index', 'uses' => 'BudgetController@index']);
+        Route::post('user/{id}/budget', ['as' => 'user.budget.store', 'uses' => 'BudgetController@store']);
+        Route::patch('user/{id}/budget/{budget}', ['as' => 'user.budget.update', 'uses' => 'BudgetController@update']);
+        Route::delete('user/{id}/budget/{budget}/destroy', ['as' => 'user.budget.destroy', 'uses' => 'BudgetController@destroy']);
+
+        Route::get('user/{id}/expense', ['as' => 'user.expense.index', 'uses' => 'ExpenseController@index']);
+        Route::post('user/{id}/expense', ['as' => 'user.expense.store', 'uses' => 'ExpenseController@store']);
+        Route::patch('user/{id}/expense/{expense}', ['as' => 'user.expense.update', 'uses' => 'ExpenseController@update']);
+        Route::delete('user/{id}/expense/{expense}/destroy', ['as' => 'user.expense.destroy', 'uses' => 'ExpenseController@destroy']);
+
         Route::resource('roles', 'RoleController', ['only' => ['index']]);
         Route::resource('roles.permission', 'PermissionController', ['only' => ['store', 'destroy']]);
         Route::get('permission/search', ['as' => 'permission.search', 'uses' => 'PermissionController@search']);
@@ -49,6 +62,12 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         return response()->json([
             'relations' => \Config::get('enums.relation')
         ]);
+    });
+
+    Route::get('references/{type}', function ($type, Request $request){
+        return ReferenceText::where('type', $type)
+            ->where('text','like', '%' . $request->get('term') . '%')
+            ->pluck('text');
     });
 
 });
