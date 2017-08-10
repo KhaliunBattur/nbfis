@@ -16,12 +16,12 @@ class CreateActiveCreditInfo extends Migration
         Schema::create('active_loan_info', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->string('name_of_org');
+            $table->string('organization');
             $table->string('loan_amount');
             $table->string('loan_usage');
             $table->string('loan_date');
             $table->string('loan_interest');
-            $table->string('loan_balabce');
+            $table->string('loan_balance');
             $table->string('monthly_pay');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')

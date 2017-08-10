@@ -109,6 +109,7 @@
                         <li><a href="#family" data-toggle="tab">Гэр бүлийн мэдээлэл</a></li>
                         <li><a href="#workplace" data-toggle="tab">Ажлын газрын мэдээлэл</a></li>
                         <li><a href="#emergency" data-toggle="tab">Холбоо барих хүмүүс</a></li>
+                        <li><a href="#credit" data-toggle="tab">Идэвхтэй зээлийн мэдээлэл</a></li>
                     </ul>
                     <div class="tab-content">
 
@@ -221,6 +222,11 @@
                             <emergency :user="user"></emergency>
                         </div>
                         <!-- /.tab-pane -->
+
+                        <div class="tab-pane" id="credit">
+                            <credit :user="user"></credit>
+                        </div>
+                        <!-- /.tab-pane -->
                     </div>
                     <!-- /.tab-content -->
                 </div>
@@ -236,7 +242,7 @@
     import FamilyList from './Family/List.vue'
     import WorkplaceList from './Workplace/List.vue'
     import Emergency from './Emergency/List.vue'
-
+    import Credit from  './Credit/List.vue'
     export default {
         data()
         {
@@ -251,7 +257,8 @@
         components: {
             'familyList' : FamilyList,
             'workplace-list': WorkplaceList,
-            'emergency': Emergency
+            'emergency': Emergency,
+            'credit':Credit
         },
 
         created()

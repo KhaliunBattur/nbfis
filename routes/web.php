@@ -39,6 +39,11 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::post('user/{id}/emergency', ['as' => 'user.emergency.store', 'uses' => 'ContactController@store']);
         Route::patch('user/{id}/emergency/{emergency}', ['as' => 'user.emergency.update', 'uses' => 'ContactController@update']);
         Route::delete('user/{id}/emergency/{emergency}/destroy', ['as' => 'user.emergency.destroy', 'uses' => 'ContactController@destroy']);
+        //credit route
+        Route::get('user/{id}/credit', ['as' => 'user.credit.index', 'uses' => 'CreditController@index']);
+        Route::post('user/{id}/credit', ['as' => 'user.credit.store', 'uses' => 'CreditController@store']);
+        Route::patch('user/{id}/credit/{credit}', ['as' => 'user.credit.update', 'uses' => 'CreditController@update']);
+        Route::delete('user/{id}/credit/{credit}/destroy', ['as' => 'user.credit.destroy', 'uses' => 'CreditController@destroy']);
 
         Route::resource('roles', 'RoleController', ['only' => ['index']]);
         Route::resource('roles.permission', 'PermissionController', ['only' => ['store', 'destroy']]);
