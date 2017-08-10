@@ -9,8 +9,8 @@
                 <button @click="createFamily" class="btn btn-sm btn-default" v-if="view == 'list'">Шинээр нэмэх</button>
             </div>
         </div>
-        <family-create v-if="view == 'family-create'" :user="user"  v-on:closed="closeForm"></family-create>
-        <family-edit v-if="view == 'family-edit'" :member="member" :user="user" v-on:closed="closeForm"></family-edit>
+        <family-create v-if="view == 'family-create'" :user="user" :relations="relations" v-on:closed="closeForm"></family-create>
+        <family-edit v-if="view == 'family-edit'" :member="member" :user="user" :relations="relations" v-on:closed="closeForm"></family-edit>
         <div class="box-body" v-if="view =='list'">
             <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
                 <div class="input-group input-group-sm input-small with-margin-bottom">
@@ -66,7 +66,7 @@
                         <td>{{ family.phone_number }}</td>
                         <td>
                             <a class="btn btn-xs btn-warning" @click="editFamily(family)"><i class="fa fa-pencil-square"></i></a>
-                            <delete-confirm :item="user" :url="'/api/users/' + user.id" v-on:destroyed="destroy(user)"></delete-confirm>
+                            <delete-confirm :item="user" :url="'/api/user/' + user.id + '/family/' + family.id + '/destroy'" v-on:destroyed="destroy(family)"></delete-confirm>
                         </td>
                     </tr>
                     </tbody>
@@ -119,7 +119,8 @@
                         job: null,
                         phone: null
                     }
-                }
+                },
+                relations: null
             }
         },
 
@@ -132,6 +133,7 @@
 
         mounted()
         {
+            this.fetchRelation();
             this.fetchFamily();
         },
 
@@ -150,6 +152,12 @@
                 this.member = member;
 
                 this.view='family-edit';
+            },
+            fetchRelation()
+            {
+                axios.get('/api/relations').then(response => {
+                    this.relations = response.data.relations;
+                })
             },
             fetchFamily()
             {

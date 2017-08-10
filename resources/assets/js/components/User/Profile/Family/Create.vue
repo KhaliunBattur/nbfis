@@ -14,7 +14,9 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Таны хэн болох <label class="text-danger">*</label></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="member.relation" />
+                        <select v-model="member.relation" class="form-control">
+                            <option v-for="(relation, index) in relations" :value="index">{{ relation }}</option>
+                        </select>
                     </div>
                 </div>
                 <hr />
@@ -28,7 +30,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Регистер<label class="text-danger">*</label></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="member.register" />
+                        <masked-input v-model="member.register" mask="AA11111111" placeholder="АА00000000" class="form-control" />
                     </div>
                 </div>
                 <hr />
@@ -42,7 +44,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Утас</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="member.phone_number" />
+                        <masked-input v-model="member.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control" />
                     </div>
                 </div>
 
@@ -64,9 +66,15 @@
 
 <script>
 
+    import MaskedInput from 'vue-masked-input'
+
     export default {
 
-        props: ['user'],
+        props: ['user', 'relations'],
+
+        components: {
+            'masked-input': MaskedInput
+        },
 
         data()
         {
@@ -86,14 +94,14 @@
         methods: {
             reset()
             {
-              this.family = {
-                  name: null,
-                  relation: null,
-                  job: null,
-                  register: null,
-                  budged: null,
-                  phone_number: null,
-              }
+                this.member = {
+                    name: null,
+                    relation: null,
+                    job: null,
+                    register: null,
+                    budged: null,
+                    phone_number: null,
+                }
             },
 
             back()
