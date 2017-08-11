@@ -17,6 +17,10 @@ use Illuminate\Http\Request;
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/cv', function() {
+    return view('report.cvPDF');
+});
+
 Auth::routes();
 
 Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' => 'api.'], function() {

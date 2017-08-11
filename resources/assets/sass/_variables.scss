@@ -74,3 +74,74 @@ $panel-default-heading-bg: #fff;
 .links {
   cursor: pointer;
 }
+
+//CV table
+
+.cv {
+  position: relative;
+  margin: 0px 30px;
+}
+
+.cv-picture {
+  width: 118px; height: 157px; position: absolute; right: 0px; border: 1px solid #000
+}
+
+.cv > h1 {
+  color: #3C8DBC;
+  font-size: 24px;
+  float: left;
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.cv p {
+  padding-top: 10px;
+}
+
+.cv p.center{
+  text-align: center;
+}
+
+.cv p.left{
+  text-align: left;
+}
+
+.cv span {
+  padding: 0px 5px;
+}
+
+.cv-table {
+  height: auto;
+  float: left;
+  border: 1px solid #000;
+}
+
+.cv-table td {
+  padding: 2px 5px;
+}
+
+.cv-table tr, .cv-table td, .cv-table th {
+  border: 1px solid #000;
+}
+
+.cv-lg {
+  width: 100%;
+}
+
+.cv-md {
+  width: 48%;
+}
+
+.cv-md-margin-left
+{
+  margin-left: 4%;
+}
+
+.cv-table-margin-top
+{
+  margin-top: 10px;
+}
+
+.cv-top-border-none, .cv-top-border-none tr, .cv-top-border-none td {
+  border-top: none !important;
+}
