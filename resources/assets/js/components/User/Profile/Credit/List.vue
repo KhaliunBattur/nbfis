@@ -82,7 +82,7 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <td colspan="6">
+                        <td colspan="8">
                             <div class="pull-left">
                                 <span>Нийт: {{ credits.total }} мөр бичлэгийн {{ credits.from }} -с {{ credits.to }} харуулж байна</span>
                             </div>

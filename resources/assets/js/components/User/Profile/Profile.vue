@@ -110,7 +110,8 @@
                         <li><a href="#workplace" data-toggle="tab">Ажлын газрын мэдээлэл</a></li>
                         <li><a href="#emergency" data-toggle="tab">Холбоо барих хүмүүс</a></li>
                         <li><a href="#credit" data-toggle="tab">Идэвхтэй зээлийн мэдээлэл</a></li>
-                        <li><a href="#budged" data-toggle="tab">Өрхийн орлого</a></li>
+                        <li><a href="#budged" data-toggle="tab">Өрхийн орлого, зарлага</a></li>
+                        <li><a href="#assets" data-toggle="tab">Хөрөнгө</a></li>
                     </ul>
                     <div class="tab-content">
 
@@ -231,6 +232,10 @@
                             <view-budget :user="user"></view-budget>
                         </div>
                         <!-- /.tab-pane -->
+                        <div class="tab-pane" id="assets">
+                            <assets :user="user"></assets>
+                        </div>
+                        <!-- /.tab-pane -->
                     </div>
                     <!-- /.tab-content -->
                 </div>
@@ -248,6 +253,7 @@
     import Emergency from './Emergency/List.vue'
     import Credit from  './Credit/List.vue'
     import View from './Budget/View.vue'
+    import Assets from './Budget/Assets.vue'
 
     export default {
         data()
@@ -262,10 +268,11 @@
 
         components: {
             'familyList' : FamilyList,
-            'workplace-list': WorkplaceList,
-            'emergency': Emergency,
-            'credit':Credit
-            'view-budget': View
+            'workplace-list' : WorkplaceList,
+            'emergency' : Emergency,
+            'credit' : Credit,
+            'view-budget': View,
+            'assets' : Assets,
         },
 
         created()
@@ -277,7 +284,7 @@
 
             saveOwnerType()
             {
-                axios.patch('api/user/' + this.$route.params.id + '/saveOwnerType', {_owner_type: this.user.owner_type}).then(response => {
+                axios.patch('/api/user/' + this.$route.params.id + '/saveOwnerType', {_owner_type: this.user.owner_type}).then(response => {
                     if(response.data.result)
                     {
                         this.show_owner = false;
@@ -289,7 +296,7 @@
 
             saveLiveYear()
             {
-                axios.patch('api/user/' + this.$route.params.id + '/saveLiveYear', {_year: this.user.live_year}).then(response => {
+                axios.patch('/api/user/' + this.$route.params.id + '/saveLiveYear', {_year: this.user.live_year}).then(response => {
                     if(response.data.result)
                     {
                         this.show_live = false;
@@ -301,7 +308,7 @@
 
             saveAddress()
             {
-                axios.patch('api/user/' + this.$route.params.id + '/saveAddress', {_address: this.user.address}).then(response => {
+                axios.patch('/api/user/' + this.$route.params.id + '/saveAddress', {_address: this.user.address}).then(response => {
 
                 }).catch(function(responce) {
 
@@ -319,7 +326,7 @@
             },
             fetchUser()
             {
-                axios.get('api/users/' + this.$route.params.id).then(response => {
+                axios.get('/api/users/' + this.$route.params.id).then(response => {
                     this.user = response.data.user;
                     this.user.roles = response.data.roles;
                     this.owner_type= response.data.owner_type;

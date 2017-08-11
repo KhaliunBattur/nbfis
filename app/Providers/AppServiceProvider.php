@@ -32,5 +32,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('App\User\Credit\CreditRepositoryInterface', 'App\User\Credit\CreditRepository');
         $this->app->singleton('App\User\Budget\BudgetRepositoryInterface', 'App\User\Budget\BudgetRepository');
         $this->app->singleton('App\User\Expense\ExpenseRepositoryInterface', 'App\User\Expense\ExpenseRepository');
+        $this->app->singleton('App\User\Asset\AssetRepositoryInterface', 'App\User\Asset\AssetRepository');
     }
 }
