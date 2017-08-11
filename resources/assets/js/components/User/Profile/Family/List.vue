@@ -60,7 +60,7 @@
                     <tbody>
                     <tr v-for="family in members.data">
                         <td>{{ family.name }}</td>
-                        <td>{{ family.relation }}</td>
+                        <td><span v-if="relations">{{ relations[family.relation] }}</span></td>
                         <td>{{ family.job }}</td>
                         <td>{{ family.register }}</td>
                         <td>{{ family.phone_number }}</td>

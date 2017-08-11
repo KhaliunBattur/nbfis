@@ -31,6 +31,7 @@
                         </ul>
 
                         <router-link v-bind:to="'/users/' + user.id + '/edit'" class="btn btn-primary btn-block"><b>Мэдээлэл засварлах</b></router-link>
+                        <router-link v-bind:to="'/users/' + user.id + '/cv'" class="btn btn-warning btn-block"><b> <i class="fa fa-file-pdf-o"></i> Анкет татах</b></router-link>
                     </div>
                     <!-- /.box-body -->
                 </div>

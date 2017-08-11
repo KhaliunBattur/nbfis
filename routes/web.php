@@ -32,6 +32,8 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::patch('user/{id}/saveOwnerType', ['as' => 'change.save.owner.type', 'uses' => 'UserController@saveOwnerType']);
         Route::patch('user/{id}/saveAddress', ['as' => 'change.save.address', 'uses' => 'UserController@saveAddress']);
 
+        Route::get('user/{id}/info', ['as' => 'user.info', 'uses' => 'UserController@info']);
+
         Route::get('user/{id}/family', ['as' => 'user.family.index', 'uses' => 'FamilyController@index']);
         Route::post('user/{id}/family', ['as' => 'user.family.store', 'uses' => 'FamilyController@store']);
         Route::patch('user/{id}/family/{family}', ['as' => 'user.family.update', 'uses' => 'FamilyController@update']);

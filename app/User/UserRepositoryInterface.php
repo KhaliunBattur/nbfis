@@ -14,4 +14,9 @@ use App\Core\Repository;
 interface UserRepositoryInterface extends Repository
 {
 
+    /**
+     * @param $id
+     * @return User
+     */
+    public function findInfoById($id);
 }

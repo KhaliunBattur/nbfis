@@ -94,4 +94,15 @@ class UserRepository implements UserRepositoryInterface
     {
         return $this->model->where('id', '!=', $ignoreId)->pluck($name, $value);
     }
+
+    /**
+     * @param $id
+     * @return User
+     */
+    public function findInfoById($id)
+    {
+        return $this->model->where('id', $id)->with([
+            'family', 'workplaces', 'emergencies', 'activeLoans', 'budgets', 'assets', 'expenses'
+        ])->first();
+    }
 }

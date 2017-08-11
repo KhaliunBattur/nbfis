@@ -111,6 +111,8 @@
 
     export default {
 
+        props: ['roles'],
+
         watch: {
             type()
             {

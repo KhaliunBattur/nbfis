@@ -246,6 +246,17 @@ class UserController extends Controller
         ]);
     }
 
+    public function info($id)
+    {
+        $user = $this->userRepository->findInfoById($id);
+
+        return response()->json([
+            'user' => $user,
+            'owner_type' => \Config::get('enums.owner_type'),
+            'relations' => \Config::get('enums.relation')
+        ]);
+    }
+
     /**
      * @param $request
      */

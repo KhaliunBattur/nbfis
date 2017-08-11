@@ -3,7 +3,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Харилцагч бүртгэх
+                Зээлийн хүсэлт бүртгэх
             </h1>
             <ol class="breadcrumb">
                 <li class="active">Удирдлага</li>

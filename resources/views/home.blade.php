@@ -26,12 +26,12 @@
 
         <header class="main-header">
             <!-- Logo -->
-            <a href="index2.html" class="logo">
+            <router-link to="/" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini">ББСБ</span>
                 <!-- logo for regular state and mobile devices -->
                 <span class="logo-lg">ББСБ</span>
-            </a>
+            </router-link>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
                 <!-- Sidebar toggle button-->
@@ -85,7 +85,7 @@
                 <!-- Sidebar user panel -->
                 <div class="user-panel">
                     <div class="pull-left image">
-                        <img src="pages/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                        <img src="{{ asset(Auth::user()->image) }}" class="img-circle image-side-bar" alt="User Image">
                     </div>
                     <div class="pull-left info">
                         <p>{{ Auth::user()->name }}</p>
@@ -117,7 +117,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li>
-                                <router-link to="/new/customer"><i class="fa fa-circle-o"></i> Харилцагч бүртгэх</router-link>
+                                <router-link to="/new/customer"><i class="fa fa-circle-o"></i> Зээлийн хүсэлт бөглөх</router-link>
                             </li>
                             <li>
                                 <router-link to="/users"><i class="fa fa-circle-o"></i> Хэрэглэгчийн бүртгэл</router-link>

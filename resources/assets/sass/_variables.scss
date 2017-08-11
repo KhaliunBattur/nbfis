@@ -37,6 +37,11 @@ $input-color-placeholder: lighten($text-color, 30%);
 // Panels
 $panel-default-heading-bg: #fff;
 
+.image-side-bar {
+  width: 160px;
+  height: 160px;
+}
+
 .fade-enter-active, .fade-leave-active {
   transition-property: opacity;
   transition-duration: .50s;
@@ -96,6 +101,8 @@ $panel-default-heading-bg: #fff;
 
 .cv p {
   padding-top: 10px;
+  width: 100%;
+  float: left;
 }
 
 .cv p.center{

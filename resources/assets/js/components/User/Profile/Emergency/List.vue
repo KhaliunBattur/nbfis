@@ -63,7 +63,7 @@
                     <tbody>
                     <tr v-for="emergency in emergencies.data">
                         <td>{{ emergency.name }}</td>
-                        <td><span v-if="emergency !== null">{{ relations[emergency.relation] }}</span></td>
+                        <td><span v-if="relations">{{ relations[emergency.relation] }}</span></td>
                         <td>{{ emergency.job }}</td>
                         <td>{{ emergency.register }}</td>
                         <td>{{ emergency.budged }}</td>
