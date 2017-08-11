@@ -9,6 +9,7 @@ import Users from './components/User/Users.vue'
 import UserLists from './components/User/Lists.vue'
 import UserCreate from './components/User/Create.vue'
 import UserEdit from './components/User/Edit.vue'
+import CV from './components/User/CV.vue'
 
 import UserProfile from './components/User/Profile/Profile.vue'
 
@@ -22,6 +23,10 @@ const router = new VueRouter({
         {
             path: '/',
             component: Dashboard
+        },
+        {
+            path: '/new/customer',
+            component: CV
         },
         {
             path: '/users', component: Users,

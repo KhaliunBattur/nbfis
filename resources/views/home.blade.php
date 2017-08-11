@@ -44,12 +44,31 @@
                         <!-- Messages: style can be found in dropdown.less-->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="pages/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                                <img src="{{ asset(Auth::user()->image) }}" class="user-image" alt="User Image">
                                 <span class="hidden-xs">{{ Auth::user()->name }}</span>
                             </a>
+                            <ul class="dropdown-menu">
+                                <!-- User image -->
+                                <li class="user-header">
+                                    <img src="{{ asset(Auth::user()->image) }}" class="img-circle" alt="User Image">
+
+                                    <p>
+                                        {{ Auth::user()->name }}
+                                    </p>
+                                </li>
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <router-link to="/users/{{ Auth::user()->getKey() }}/profile" class="btn btn-default btn-flat">Хувийн мэдээлэл</router-link>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a onclick="document.getElementById('form-logout').submit()" class="btn btn-default btn-flat">Гарах</a>
+                                    </div>
+                                </li>
+                            </ul>
                         </li>
                         <li>
-                            <a onclick="document.getElementById('form-logout').submit()"><i class="fa fa-power-off"></i></a>
+                            <a onclick="document.getElementById('form-logout').submit()" class="links"><i class="fa fa-power-off"></i></a>
                             <form action="/logout" method="POST" id="form-logout">
                                 {{ csrf_field() }}
                             </form>
@@ -70,7 +89,9 @@
                     </div>
                     <div class="pull-left info">
                         <p>{{ Auth::user()->name }}</p>
-                        <a href="#">Admin</a>
+                        @foreach(Auth::user()->roles as $role)
+                            <span>{{ $role->display_name }}</span>
+                        @endforeach
                     </div>
                 </div>
                 <!-- search form -->
@@ -92,9 +113,12 @@
                     </li>
                     <li class="treeview">
                         <a href="#">
-                            <i class="fa fa-dashboard"></i> <span>Хэрэглэгч</span> <i class="fa fa-angle-left pull-right"></i>
+                            <i class="fa fa-user"></i> <span>Хэрэглэгч</span> <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
+                            <li>
+                                <router-link to="/new/customer"><i class="fa fa-circle-o"></i> Харилцагч бүртгэх</router-link>
+                            </li>
                             <li>
                                 <router-link to="/users"><i class="fa fa-circle-o"></i> Хэрэглэгчийн бүртгэл</router-link>
                             </li>
@@ -118,9 +142,9 @@
         <!-- /.content-wrapper -->
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                <b>Version</b> 2.3.2
+                <b>Version</b> BETA 1
             </div>
-            <strong>Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights
+            <strong>Copyright &copy; 2017 <a href="http://woovoo.com" target="_blank">Woovoo</a>.</strong> All rights
             reserved.
         </footer>
 
