@@ -22,6 +22,6 @@ class Asset extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'name', 'asset'];
+    protected $fillable = ['user_id', 'name', 'asset', 'asset_type', 'asset_type_id', 'description'];
 
 }
