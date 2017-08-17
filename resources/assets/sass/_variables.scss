@@ -152,3 +152,28 @@ $panel-default-heading-bg: #fff;
 .cv-top-border-none, .cv-top-border-none tr, .cv-top-border-none td {
   border-top: none !important;
 }
+
+.list-group-tree {
+  float: left;
+  width: 100%;
+  border-radius: 0px !important;
+  padding: 5px 15px !important;
+  border-bottom: none !important;
+}
+
+.list-group-header {
+  float: left;
+  width: 100%;
+  border-radius: 0px !important;
+  padding: 5px 15px !important;
+  border-bottom: 3px solid #d3e0e9 !important;
+  font-weight: bold;
+}
+
+.list-tree-view {
+  float: left; border-bottom: 1px solid #d3e0e9; width: 100%;
+}
+
+.list-tree-view-parent {
+  width: 100%; position: relative; float: left;
+}

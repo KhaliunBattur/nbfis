@@ -246,6 +246,10 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function info($id)
     {
         $user = $this->userRepository->findInfoById($id);

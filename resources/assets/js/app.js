@@ -30,6 +30,25 @@ Vue.directive('pick', {
     },
 });
 
+Vue.directive('modal', {
+    "twoWay": true,
+    bind: function(el, binding, vnode) {
+        $(el).on('shown.bs.modal', function(e) {
+            el.dispatchEvent(new Event('showModal', { target: e.target }))
+        });
+        $(el).on('hidden.bs.modal', function(e) {
+            el.dispatchEvent(new Event('hideModal', { target: e.target }))
+        });
+    },
+});
+
+Vue.directive('table', {
+    "twoWay": true,
+    bind: function(el, binding, vnode) {
+        $(el).treetable();
+    },
+});
+
 Vue.directive('auto', {
     "twoWay": true,
     bind: function (el, binding, vnode) {

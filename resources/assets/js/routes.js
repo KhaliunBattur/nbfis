@@ -12,6 +12,9 @@ import UserEdit from './components/User/Edit.vue'
 import CV from './components/User/CV.vue'
 import UserCv from './components/User/Profile/CV.vue'
 
+// Данс
+import Account from './components/Account/Account.vue'
+
 import UserProfile from './components/User/Profile/Profile.vue'
 
 //Хэрэглэгчийн эрхийн routes
@@ -48,6 +51,9 @@ const router = new VueRouter({
                     path: ':id/cv', component: UserCv
                 }
             ]
+        },
+        {
+            path: '/account', component: Account
         },
         {
             path: '/roles',

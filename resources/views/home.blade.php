@@ -127,6 +127,11 @@
                             </li>
                         </ul>
                     </li>
+                    <li>
+                        <router-link to="/account">
+                            <i class="fa fa-credit-card"></i> <span>Данс</span>
+                        </router-link>
+                    </li>
                 </ul>
             </section>
             <!-- /.sidebar -->
