@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAccountGroupTable extends Migration
+class CreateJournalTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,10 @@ class CreateAccountGroupTable extends Migration
      */
     public function up()
     {
-        Schema::create('account_group', function (Blueprint $table) {
+        Schema::create('journal', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('code')->unique();
             $table->string('name');
-            $table->integer('root_id')->index()->unsigned()->nullable()->default(null);
             $table->timestamps();
-
-            $table->foreign('root_id')->references('id')->on('account_group');
         });
     }
 
@@ -31,6 +27,6 @@ class CreateAccountGroupTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('account_group');
+        Schema::dropIfExists('journal');
     }
 }
