@@ -17,5 +17,21 @@ return [
         'little' => 'Дүү',
         'friend' => 'Найз'
     ],
-
+    'pledge_type' => [
+          'car' => 'Автомашин',
+          'apartment' => 'Байр',
+          'garage' => 'Граш',
+          'apartmentAndCar' => 'Автомашин, байр хосолсон',
+          'building' => 'Барилга',
+          'workSpace' => 'Үйлчилгээний талбай'
+    ],
+    'advertisement' => [
+           'client' => 'Харилцагчаас',
+           'internet' => 'Интернет',
+           'tv' => 'Телевиз',
+           'supplier' => 'Бэлтгэн нийлүүлэгч',
+           'fm radio' => 'ФМ радио',
+           'news paper' => 'Сонин хэвлэл',
+           'other' => 'Бусад'
+            ],
 ];

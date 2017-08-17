@@ -34,6 +34,8 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
 
         Route::get('user/{id}/info', ['as' => 'user.info', 'uses' => 'UserController@info']);
 
+        Route::resource('cv', 'CvController', ['except' => ['create']]);
+
         Route::get('user/{id}/family', ['as' => 'user.family.index', 'uses' => 'FamilyController@index']);
         Route::post('user/{id}/family', ['as' => 'user.family.store', 'uses' => 'FamilyController@store']);
         Route::patch('user/{id}/family/{family}', ['as' => 'user.family.update', 'uses' => 'FamilyController@update']);
@@ -79,6 +81,26 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
             'relations' => \Config::get('enums.relation')
         ]);
     });
+
+    Route::get('advertisements', function(){
+        return response()->json([
+            'advertisements' => \Config::get('enums.advertisement')
+        ]);
+    });
+
+    Route::get('owner_types', function(){
+        return response()->json([
+            'owner_types' => \Config::get('enums.owner_type')
+        ]);
+    });
+
+    Route::get('pledge_types', function(){
+        return response()->json([
+            'pledge_types' => \Config::get('enums.pledge_type')
+        ]);
+    });
+
+
 
     Route::get('references/{type}', function ($type, Request $request){
         return ReferenceText::where('type', $type)
