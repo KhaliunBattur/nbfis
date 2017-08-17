@@ -64,6 +64,7 @@ if (token) {
 }
 
 require('./bootstrap-filestyle.min');
+require('./jquery.treetable');
 require('./custom');
 
 /**

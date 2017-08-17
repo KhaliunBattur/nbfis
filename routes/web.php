@@ -25,6 +25,16 @@ Auth::routes();
 
 Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' => 'api.'], function() {
 
+    Route::get('currency/lists', ['as' => 'currency.lists', 'uses' => 'CurrencyController@lists']);
+    Route::get('bank/lists', ['as' => 'bank.lists', 'uses' => 'BankController@lists']);
+
+    Route::group(['namespace' => 'Account', 'as' => 'account.'], function(){
+        Route::resource('account', 'AccountController');
+        Route::resource('account/group', 'GroupController', ['except' => ['edit', 'create', 'show', 'update']]);
+        Route::get('account/group/{group}/others', ['as' => 'group.others', 'uses' => 'GroupController@others']);
+        Route::get('journal/lists', ['as' => 'journal.lists', 'uses' => 'JournalController@lists']);
+    });
+
     Route::group(['namespace' => 'User'], function (){
         Route::resource('users', 'UserController', ['except' => ['create']]);
         Route::patch('user/{id}/changePassword', ['as' => 'change.password', 'uses' => 'UserController@changePassword']);
