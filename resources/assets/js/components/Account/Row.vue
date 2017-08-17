@@ -122,7 +122,14 @@
             },
             deleteGroup(group)
             {
-                this.account.children.splice(this.account.children.indexOf(group), 1);
+                if(this.account.children)
+                {
+                    this.account.children.splice(this.account.children.indexOf(group), 1);
+                }
+                else
+                {
+                    this.$emit('destroyedGroup', group)
+                }
             }
         }
 
