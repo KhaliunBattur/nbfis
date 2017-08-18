@@ -43,7 +43,7 @@
                                     <div class="col-lg-3 col-md-3 col-sm-2">Журнал</div>
                                     <div class="col-lg-1 col-md-1 col-sm-1"></div>
                                 </div>
-                                <account-row v-for="account in accounts" v-bind:key="account.id" v-bind:account="account" :number="15"></account-row>
+                                <account-row v-for="account in accounts" v-bind:key="account.id" v-bind:account="account" :number="15" v-on:destroyedGroup="deleteGroup"></account-row>
                             </div>
                         </div>
                     </div>
@@ -138,6 +138,10 @@
                     type: 'active'
                 };
                 this.fetchAccounts();
+            },
+            deleteGroup(group)
+            {
+                this.accounts.splice(this.accounts.indexOf(group), 1);
             },
             fetchAccounts()
             {
