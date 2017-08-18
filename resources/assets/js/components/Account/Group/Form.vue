@@ -29,8 +29,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Хаах</button>
-                    <button type="button" class="btn btn-primary" @click="save()">Хадгалах</button>
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Хаах</button>
+                    <button type="button" class="btn btn-primary btn-sm" @click="save()">Хадгалах</button>
                 </div>
             </div>
         </div>
@@ -77,7 +77,7 @@
                         type: 'success',
                         timer: 3000
                     }, function(){
-                        $('#groupForm').modal('hide');
+                        $('#groupForm' + self.group.id).modal('hide');
                         self.$emit('saved');
                     })
                 }).catch(errors => {

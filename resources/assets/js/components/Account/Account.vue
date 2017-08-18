@@ -27,8 +27,8 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a @click="createGroup">Бүлэг</a></li>
-                                        <li><a @click="createAccount">Данс</a></li>
+                                        <li><a @click="createGroup" class="links">Бүлэг</a></li>
+                                        <li><a @click="createAccount" class="links">Данс</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -43,15 +43,15 @@
                                     <div class="col-lg-3 col-md-3 col-sm-2">Журнал</div>
                                     <div class="col-lg-1 col-md-1 col-sm-1"></div>
                                 </div>
-                                <account-row v-for="account in accounts" v-bind:key="account.id" v-bind:account="account" :number="15" v-on:destroyedGroup="deleteGroup"></account-row>
+                                <account-row v-for="account in accounts" v-bind:key="account.id" v-bind:account="account" :number="15" v-on:destroyedGroup="deleteGroup" v-on:saveGroup="saveGroup" v-on:saveAccount="saveAccount"></account-row>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <group-form-editor :group="group" :title="title" v-modal v-on:saved="saveGroup"></group-form-editor>
-        <account-form-editor :account="account" :title="title" v-modal v-on:saved="saveAccount"></account-form-editor>
+        <group-form-editor :group="group" :title="title" v-modal v-on:saved="saveGroup" v-on:saveGroup="saveGroup" :id="'groupForm' + group.id"></group-form-editor>
+        <account-form-editor :account="account" :title="title" v-modal v-on:saved="saveAccount" :id="'accountForm' + account.id"></account-form-editor>
     </div>
 </template>
 
@@ -106,11 +106,11 @@
         methods: {
             createGroup()
             {
-                $('#groupForm').modal('show');
+                $('#groupForm' + this.group.id).modal('show');
             },
             createAccount()
             {
-                $('#accountForm').modal('show');
+                $('#accountForm' + this.account.id).modal('show');
             },
             saveGroup()
             {
