@@ -12,18 +12,27 @@
                             <label class="col-sm-3 control-label">Харья бүлэг <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
                                 <v-select v-model="account.group" :debounce="250" :on-search="fetchGroup" :options="groups" label="name" placeholder="Харьяа бүлэг"></v-select>
+                                <div class="text-danger" v-if="errorMessages.group">
+                                    {{ errorMessages.group[0] }}
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Нэр <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" v-model="account.name" />
+                                <div class="text-danger" v-if="errorMessages.name">
+                                    {{ errorMessages.name[0] }}
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Код <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" v-model="account.code" />
+                                <div class="text-danger" v-if="errorMessages.code">
+                                    {{ errorMessages.code[0] }}
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -41,12 +50,18 @@
                             <label class="col-sm-3 control-label">Журнал <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
                                 <v-select v-model="account.journal" :debounce="250" :on-search="fetchJournal" :options="journals" label="name" placeholder="Журнал..."></v-select>
+                                <div class="text-danger" v-if="errorMessages.journal">
+                                    {{ errorMessages.journal[0] }}
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Валют <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
                                 <v-select v-model="account.currency" :debounce="250" :on-search="fetchCurrency" :options="currencies" label="name" placeholder="Валют..."></v-select>
+                                <div class="text-danger" v-if="errorMessages.currency">
+                                    {{ errorMessages.currency[0] }}
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -59,6 +74,9 @@
                             <label class="col-sm-3 control-label">Банкны дансны дугаар <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" v-model="account.bank_account_number" />
+                                <div class="text-danger" v-if="errorMessages.bank_account_number">
+                                    {{ errorMessages.bank_account_number[0] }}
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -94,7 +112,15 @@
                 currencies: [],
                 journals: [],
                 banks: [],
-                selected: null
+                selected: null,
+                errorMessages: {
+                    account_number: null,
+                    code: null,
+                    group: null,
+                    journal: null,
+                    name: null,
+                    currency: null,
+                },
             }
         },
 
@@ -156,7 +182,8 @@
                             self.$emit('saved');
                         });
                     }
-                }).catch(response => {
+                }).catch(error => {
+                    this.errorMessages = error.response.data;
                     swal('Уучлаарай', 'Бүртгэл амжилтгүй! Та дахин оролдоно уу', 'error');
                 })
             }

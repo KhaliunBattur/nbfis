@@ -43,6 +43,12 @@
                                     <div class="col-lg-3 col-md-3 col-sm-2">Журнал</div>
                                     <div class="col-lg-1 col-md-1 col-sm-1"></div>
                                 </div>
+                                <!--<div class="list-group-item list-group-tree">-->
+                                    <!--<div class="col-lg-2 col-md-2 col-sm-3">-->
+                                        <!--<input type="text" class="form-control input-sm" v-model="search.code" />-->
+                                        <!--<button class="btn btn-sm" @click="filter"></button>-->
+                                    <!--</div>-->
+                                <!--</div>-->
                                 <account-row v-for="account in accounts" v-bind:key="account.id" v-bind:account="account" :number="15" v-on:destroyedGroup="deleteGroup" v-on:saveGroup="saveGroup" v-on:saveAccount="saveAccount"></account-row>
                             </div>
                         </div>
@@ -63,11 +69,20 @@
 
     export default {
 
+        computed: {
+            filteredAccounts() {
+                return this.filter();
+            }
+        },
+
         data()
         {
             return {
                 roles: null,
                 accounts: null,
+                search: {
+                    code: ''
+                },
                 account: {
                     id: 0,
                     name: null,
@@ -104,6 +119,34 @@
         },
 
         methods: {
+            filter()
+            {
+                var self = this;
+                var exp = new RegExp(self.search.code, 'i');
+
+                function deepFilter(accounts) {
+                    return accounts.filter(item => {
+                        return item.children ? deepFilter(item.children) : accountFilter(item)
+                    })
+                }
+
+                function accountFilter(item) {
+                    if(item.accounts)
+                    {
+                        return item.accounts.filter(account => {
+                            return exp.test(account.account_number)
+                        })
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                var filtering = deepFilter(this.accounts);
+
+                return filtering;
+            },
             createGroup()
             {
                 $('#groupForm' + this.group.id).modal('show');

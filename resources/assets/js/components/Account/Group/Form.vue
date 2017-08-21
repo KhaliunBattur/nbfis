@@ -15,15 +15,21 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Нэр</label>
+                            <label class="col-sm-2 control-label">Нэр <span class="text-danger">*</span></label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" v-model="group.name" />
+                                <div class="text-danger" v-if="errorMessages.name">
+                                    {{ errorMessages.name[0] }}
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Код</label>
+                            <label class="col-sm-2 control-label">Код <span class="text-danger">*</span></label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" v-model="group.code" />
+                                <div class="text-danger" v-if="errorMessages.code">
+                                    {{ errorMessages.code[0] }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -49,7 +55,11 @@
         {
             return {
                 groups: [],
-                selected: null
+                selected: null,
+                errorMessages: {
+                    code: null,
+                    name: null
+                }
             }
         },
 
@@ -81,6 +91,7 @@
                         self.$emit('saved');
                     })
                 }).catch(errors => {
+                    this.errorMessages = errors.response.data;
                     swal('Уучлаарай', 'Амжилтгүй боллоо! Та дахин оролдоно уу', 'error')
                 })
             }
