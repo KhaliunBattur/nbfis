@@ -17,7 +17,8 @@ interface JournalRepositoryInterface extends Repository
 
     /**
      * @param $get
+     * @param int $ignore
      * @return Collection
      */
-    public function search($get);
+    public function search($get, $ignore = 0);
 }
