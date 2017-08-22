@@ -6,8 +6,9 @@ use App\User\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Events\UserCreated;
-use App\Events\UserUpdated;
+use Illuminate\Support\Facades\Storage;
 use App\Support\FileType;
+
 
 class CvController extends Controller
 {
@@ -20,6 +21,31 @@ class CvController extends Controller
     {
         //
     }
+    public  function imageUpload(Request $request)
+    {
+
+        print_r($request->all());
+        if(!$request->hasFile('file'))
+            return response()->json([
+                'error' => 'No File Uploaded'
+            ]);
+
+        $file = $request->file('file');
+
+        if(!$file->isValid())
+            return response()->json([
+                'error' => 'File is not valid!'
+            ]);;
+
+        $file->store('public/images');
+
+        return response()->json([
+            'success' => 'File Uploaded'
+        ]);
+
+
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -51,9 +77,19 @@ class CvController extends Controller
 
         $user = User::create($parameters);
 
+        $user->assets()->createMany($request->get('assets'));
+        $user->workplaces()->create($request->get('workplace'));
+        $user->family()->createMany($request->get('family'));
+        $user->emergencies()->createMany($request->get('emergencies'));
+        $user->budgets()->createMany($request->get('budgets'));
+        $user->expenses()->createMany($request->get('expenses'));
+        $user->activeLoans()->createMany($request->get('credits'));
+        $user->Request()->create($request->get('request'));
+
         event(new UserCreated($user, 'хэрэглэгч шинээр бүртгэв', 'info'));
 
         $user->roles()->attach($request->get('roles'));
+
 
         return response()->json([
             'result' => !is_null($user)

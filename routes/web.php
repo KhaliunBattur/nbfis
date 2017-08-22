@@ -45,6 +45,7 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::get('user/{id}/info', ['as' => 'user.info', 'uses' => 'UserController@info']);
 
         Route::resource('cv', 'CvController', ['except' => ['create']]);
+        Route::post('cv/imageUpload','CvController@imageUpload');
 
         Route::get('user/{id}/family', ['as' => 'user.family.index', 'uses' => 'FamilyController@index']);
         Route::post('user/{id}/family', ['as' => 'user.family.store', 'uses' => 'FamilyController@store']);

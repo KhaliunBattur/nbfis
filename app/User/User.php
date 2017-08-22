@@ -8,6 +8,7 @@ use App\User\Contact\Contact;
 use App\User\Credit\Credit;
 use App\User\Expense\Expense;
 use App\User\Family\Family;
+use App\User\LoanRequest\Request;
 use App\User\Workplace\Workplace;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
@@ -90,5 +91,9 @@ class User extends Authenticatable
     public function expenses()
     {
         return $this->hasMany(Expense::class, 'user_id');
+    }
+    public function Request()
+    {
+        return $this->hasMany(Request::class,'user_id');
     }
 }

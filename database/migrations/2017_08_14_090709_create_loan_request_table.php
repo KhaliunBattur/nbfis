@@ -23,8 +23,8 @@ class CreateLoanRequestTable extends Migration
             $table->integer('loanable_id')->nullable()->default(null);
             $table->date('expire_date')->nullable()->default(null);
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')
+                ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
