@@ -13,7 +13,7 @@
         width: 118px;
         height: 157px;
         position: absolute;
-        right: 0px;
+        right: 0;
         border: 1px solid #000;
     }
 
@@ -38,7 +38,7 @@
     }
 
     .cv span {
-        padding: 0px 5px;
+        padding: 0 5px;
     }
 
     .cv-table {

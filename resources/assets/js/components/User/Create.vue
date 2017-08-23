@@ -139,7 +139,7 @@
                     phone_number: '',
                     address: '',
                     email: '',
-                    user_type: 'customer',
+                    user_type: 'staff',
                     roles: [],
                     password: '',
                     register: null,

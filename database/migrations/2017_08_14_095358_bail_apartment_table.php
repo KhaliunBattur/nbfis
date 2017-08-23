@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRequireDocumentAttachTable extends Migration
+class BailApartmentTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateRequireDocumentAttachTable extends Migration
      */
     public function up()
     {
-        Schema::create('required_document_attach', function (Blueprint $table) {
+        Schema::create('bail_apartment', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('required_document_id')->index()->unsigned();
-            $table->string('path');
+            $table->integer('user_id')->index()->unsigned();
+            $table->date('address');
+            $table->string('apart_meter');
+            $table->string('rooms');
+            $table->decimal('price',18,2);
             $table->timestamps();
-            $table->foreign('required_document_id')->references('id')->on('required_document')->onDelete('cascade');
         });
     }
 
@@ -29,6 +31,6 @@ class CreateRequireDocumentAttachTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('required_document_attach');
+        Schema::dropIfExists('bail_apartment');
     }
 }

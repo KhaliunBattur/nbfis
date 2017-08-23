@@ -277,7 +277,7 @@ class UserController extends Controller
             $rules['register'] = 'required|unique:users,email,'.$request->segment(3);
         }
 
-        if($request->method() != 'PATCH')
+        if($request->method() != 'PATCH' )
         {
             $rules['password'] = 'required|same:confirm_password';
         }
