@@ -169,13 +169,13 @@
                             </router-link>
                         </li>
                         <li>
-                            <a href="#">
+                            <router-link to="/season">
                                 <i class="menu-icon fa fa-file-code-o bg-light-blue"></i>
 
                                 <div class="menu-info">
                                     <h4 class="control-sidebar-subheading">Эхлэл баланс</h4>
                                 </div>
-                            </a>
+                            </router-link>
                         </li>
                         <li>
                             <router-link to="/roles">

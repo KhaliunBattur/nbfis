@@ -36,6 +36,8 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::get('journal/lists', ['as' => 'journal.lists', 'uses' => 'JournalController@lists']);
     });
 
+    Route::resource('season', 'Season\SeasonController');
+
     Route::group(['namespace' => 'User'], function (){
         Route::resource('users', 'UserController', ['except' => ['create']]);
         Route::patch('user/{id}/changePassword', ['as' => 'change.password', 'uses' => 'UserController@changePassword']);
