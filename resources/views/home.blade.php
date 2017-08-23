@@ -70,10 +70,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a onclick="document.getElementById('form-logout').submit()" class="links"><i class="fa fa-power-off"></i></a>
-                            <form action="/logout" method="POST" id="form-logout">
-                                {{ csrf_field() }}
-                            </form>
+                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                         </li>
                     </ul>
                 </div>
@@ -124,9 +121,6 @@
                             <li>
                                 <router-link to="/users"><i class="fa fa-circle-o"></i> Хэрэглэгчийн бүртгэл</router-link>
                             </li>
-                            <li>
-                                <router-link to="/roles"><i class="fa fa-circle-o"></i> Эрхийн түвшин</router-link>
-                            </li>
                         </ul>
                     </li>
                     <li>
@@ -154,6 +148,61 @@
             <strong>Copyright &copy; 2017 <a href="http://woovoo.com" target="_blank">Woovoo</a>.</strong> All rights
             reserved.
         </footer>
+
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Create the tabs -->
+            <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+                <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+                <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <!-- Home tab content -->
+                <div class="tab-pane active" id="control-sidebar-home-tab">
+                    <h3 class="control-sidebar-heading">Ерөнхий тохиргоо</h3>
+                    <ul class="control-sidebar-menu">
+                        <li>
+                            <router-link to="/journal">
+                                <i class="menu-icon fa fa-file-excel-o bg-red"></i>
+
+                                <div class="menu-info">
+                                    <h4 class="control-sidebar-subheading">Журнал</h4>
+                                </div>
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link to="/season">
+                                <i class="menu-icon fa fa-file-code-o bg-light-blue"></i>
+
+                                <div class="menu-info">
+                                    <h4 class="control-sidebar-subheading">Эхлэл баланс</h4>
+                                </div>
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link to="/roles">
+                                <i class="menu-icon fa fa-user bg-yellow"></i>
+
+                                <div class="menu-info">
+                                    <h4 class="control-sidebar-subheading">Эрхийн тохиргоо</h4>
+                                </div>
+                            </router-link>
+                        </li>
+                    </ul>
+
+                </div>
+                <!-- /.tab-pane -->
+                <!-- Settings tab content -->
+                <div class="tab-pane" id="control-sidebar-settings-tab">
+
+                </div>
+                <!-- /.tab-pane -->
+            </div>
+        </aside>
+        <!-- /.control-sidebar -->
+        <!-- Add the sidebar's background. This div must be placed
+             immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
 
     </div>
     <!-- ./wrapper -->

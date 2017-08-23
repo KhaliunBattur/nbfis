@@ -53,7 +53,17 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function findByPaginate($howMany, $params = [])
     {
-        return $this->model->paginate($howMany);
+        $query = $this->model;
+        $search = json_decode($params['search'], true);
+
+        return $query->where(function($query) use($search) {
+            if(array_key_exists('name', $search) && !is_null($search['name']))
+            {
+                $query->where('name', 'LIKE', $search['name'] . '%');
+            }
+        })->orderBy($params['column'], $params['direction'])
+            ->with(['root'])
+            ->paginate($howMany);
     }
 
     /**
@@ -69,11 +79,13 @@ class JournalRepository implements JournalRepositoryInterface
 
     /**
      * @param $get
+     * @param int $ignore
      * @return Collection
      */
-    public function search($get)
+    public function search($get, $ignore = 0)
     {
         return $this->model
+            ->where('id', '!=', $ignore)
             ->where(function($query) use($get){
                 $query->where('name', 'like', '%'. $get .'%');
             })->get();

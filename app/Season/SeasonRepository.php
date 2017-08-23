@@ -2,30 +2,29 @@
 /**
  * Created by PhpStorm.
  * User: Munkhsaikhan
- * Date: 8/16/2017
- * Time: 10:54 AM
+ * Date: 8/22/2017
+ * Time: 11:37 AM
  */
 
-namespace App\Account;
+namespace App\Season;
 
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class AccountRepository implements AccountRepositoryInterface
+class SeasonRepository implements SeasonRepositoryInterface
 {
-
     /**
-     * @var Account
+     * @var Season
      */
     private $model;
 
     /**
-     * AccountRepository constructor.
-     * @param Account $model
+     * SeasonRepository constructor.
+     * @param Season $model
      */
-    public function __construct(Account $model)
+    public function __construct(Season $model)
     {
         $this->model = $model;
     }
@@ -54,7 +53,10 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function findByPaginate($howMany, $params = [])
     {
-        return $this->model->paginate($howMany);
+        return $this->model
+            ->orderBy($params['column'], $params['direction'])
+            ->with(['openUser', 'closeUser'])
+            ->paginate($howMany);
     }
 
     /**
@@ -69,10 +71,12 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @return Collection
+     * @return mixed
      */
-    public function findAllIdList()
+    public function findLastClose()
     {
-        return $this->model->pluck('id');
+        $season = $this->model->whereNotNull('close_date')->orderBy('close_date', 'desc')->first();
+
+        return is_null($season) ? 0 : $season->getKey();
     }
 }
