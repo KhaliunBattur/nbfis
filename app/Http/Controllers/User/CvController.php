@@ -17,6 +17,7 @@ class CvController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
         //
@@ -37,8 +38,8 @@ class CvController extends Controller
                 'error' => 'File is not valid!'
             ]);;
 
-        $file->store('public/images');
-
+        $file->store('public/images/temp' . date('Y-m-d-H-i-s'));
+       
         return response()->json([
             'success' => 'File Uploaded'
         ]);

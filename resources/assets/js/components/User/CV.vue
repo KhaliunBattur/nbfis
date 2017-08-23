@@ -44,7 +44,7 @@
                                         </tr>
                                         <tr>
                                             <td style="width: 15%;">Нас:</td>
-                                            <td style="width: 35%;"><input type="text" class="form-control input-sm" v-model="user.age" readonly="readonly" /></td>
+                                            <td style="width: 35%;"><input type="number" class="form-control input-sm" v-model="user.age" readonly="readonly" /></td>
                                             <td style="width: 20%;">Утасны дугаар:</td>
                                             <td style="width: 30%;"><masked-input v-model="user.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control input-sm" /></td>
                                         </tr>
@@ -76,7 +76,7 @@
                                         <tbody>
                                         <tr>
                                             <td style="width: 50%;">Тухайн хаяг дээр амьдарсан жил:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.lyears" type="text"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.lyears"  type="number" placeholder="111"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Байр нь зээлийн барьцаанд байгаа бол дэлгэрэнгүй бөглөнө үү:</td>
@@ -98,18 +98,18 @@
                                         </tr>
                                         <tr>
                                             <td style="width: 30%;">Хүсэж буй зээлийн хэмжээ:</td>
-                                            <td style="width: 70%;"><input class="form-control input-sm" v-model="user.request.loan_term" type="text"/></td>
+                                            <td style="width: 70%;"><input class="form-control input-sm" v-model.lazy="user.request.loan_term" type="text" v-money="money"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 30%;">Зээлийн эргэн төлөх хугацаа:</td>
-                                            <td style="width: 70%;"><input class="form-control input-sm" v-model="user.request.expire_date" type="text"/></td>
+                                            <td style="width: 70%;"><input class="form-control input-sm" v-model="user.request.expire_date" type="text" /></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 30%;">Сар бүрийн эргэн төлөлт хийх өдөр:</td>
-                                            <td style="width: 70%;"><input class="form-control input-sm" v-model="user.request.payment_day" type="text"/></td>
+                                            <td style="width: 70%;"><input class="form-control input-sm" v-model="user.request.payment_day" type="number"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 30%;">Зээлийн хугацаа дууах огноо:</td>
+                                            <td style="width: 30%;">Зээлийн хугацаа дуусах огноо:</td>
                                             <td style="width: 70%;"><input class="form-control input-sm" v-pick="user.request.period_time" v-model="user.request.period_time" type="text"/></td>
                                         </tr>
                                         <tr>
@@ -133,12 +133,12 @@
                                             <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_apart.address" type="text"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 50%;">Хэдэн М2::<input class="form-control input-sm" v-model="user.bail_apart.apart_meter" type="text"/></td>
-                                            <td style="width: 50%;">Хэдэн өрөө: М2:<input class="form-control input-sm" v-model="user.bail_apart.room" type="text"/></td>
+                                            <td style="width: 50%;">Хэдэн М2::<input class="form-control input-sm" v-model="user.bail_apart.apart_meter" type="number"  placeholder="111"/></td>
+                                            <td style="width: 50%;">Хэдэн өрөө: М2:<input class="form-control input-sm" v-model="user.bail_apart.room" type="number"  placeholder="11"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Зах зээлийн үнэ:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_apart.price" type="text"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-money="money" v-model.lazy="user.bail_apart.price" type="text" v-bind="money"/></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -161,7 +161,7 @@
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Зах зээлийн үнэ:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_car.price" type="text"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-money="money" v-model.lazy="user.bail_car.price" type="text" v-bind="money"/></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -177,7 +177,7 @@
                                         <tbody>
                                         <tr>
                                             <td style="width: 23.8%;">Зах зээлийн үнэ:</td>
-                                            <td style="width: 10%;"><input class="form-control input-sm" v-model="user.bail_other.price" type="text"/></td>
+                                            <td style="width: 10%;"><input class="form-control input-sm" v-money="money" v-model.lazy="user.bail_other.price" type="text" v-bind="money"/></td>
                                             <td style="width: 65%;">Тайлбар:<input class="form-control input-sm" v-model="user.bail_other.description" type="text"/> </td>
                                         </tr>
                                         </tbody>
@@ -199,7 +199,7 @@
                                             <td style="width: 16%;"><input class="form-control input-sm"  type="text" v-model="user.workplace.position"  /></td>
                                             <td style="width: 16%;"><input class="form-control input-sm" type="text" v-model="user.workplace.activity"  /></td>
                                             <td style="width: 16%;"><input class="form-control input-sm" type="text" v-model="user.workplace.address"  /></td>
-                                            <td style="width: 16%;"><input class="form-control input-sm" type="text" v-model="user.workplace.worker_count"  /></td>
+                                            <td style="width: 16%;"><input class="form-control input-sm" type="number" v-model="user.workplace.worker_count"  placeholder="1111" /></td>
                                         </tr>
 
                                         </tbody>
@@ -232,7 +232,7 @@
                                             <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="user.members.relation"  /></td>
                                             <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="user.members.job"  /></td>
                                             <td style="width: 15%;"><masked-input  mask="AA11111111" placeholder="АА00000000"class="form-control input-sm" type="text" v-model="user.members.register" /></td>
-                                            <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="user.members.budged"  /></td>
+                                            <td style="width: 15%;"><input v-money="money" v-model.lazy="user.members.budged"  class="form-control input-sm"   /></td>
                                             <td style="width: 15%;"><masked-input class="form-control input-sm" type="text" v-model="user.members.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111"  />&nbsp;</td>
                                             <td style="width: 6%"><button class="btn btn-sm btn-success" @click="addMember()"><i class="fa fa-plus-circle"></i></button></td>
                                         </tr>
@@ -242,7 +242,7 @@
                                             <td style="width: 16%;"><input class="form-control input-sm" type="text" v-model="member.relation"  /></td>
                                             <td style="width: 16%;"><input class="form-control input-sm" type="text" v-model="member.job"  /></td>
                                             <td style="width: 16%;"><masked-input mask="AA11111111" placeholder="АА00000000" class="form-control input-sm" type="text" v-model="member.register" /></td>
-                                            <td style="width: 16%;"><input class="form-control input-sm" type="text" v-model="member.budged"  /></td>
+                                            <td style="width: 16%;"><input   class="form-control input-sm" type="text" v-money="money" v-model.lazy="member.budged"  /></td>
                                             <td style="width: 16%;"><masked-input class="form-control input-sm" type="text" v-model="member.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111"  />&nbsp;</td>
                                             <td style="width: 6%">
                                                 <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyMember(member)"></button>
@@ -269,13 +269,13 @@
                                             <td style="width: 15%;">
                                                 <input class="form-control input-sm" v-auto type="text" v-model="user.emergency.name" data-target="#emergency-input" @selected="setDataEmergency(user.emergency,'#emergency-input')"/>
                                             </td>
-                                            <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="user.emergency.relation"/>
+                                            <td style="width: 18%;"><input class="form-control input-sm" type="text" v-model="user.emergency.relation"/>
                                             </td>
                                             <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="user.emergency.job"  />
                                             </td>
                                             <td style="width: 15%;"><masked-input mask="AA11111111" placeholder="АА00000000" class="form-control input-sm" type="text" v-model="user.emergency.register" />
                                             </td>
-                                            <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="user.emergency.budged"  />
+                                            <td style="width: 15%;"><input class="form-control input-sm" type="text" v-money="money" v-model.lazy="user.emergency.budged"   />
                                             </td>
                                             <td style="width: 15%;"><masked-input class="form-control input-sm" type="text" v-model="user.emergency.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111"  />
                                             </td>
@@ -290,7 +290,7 @@
                                             <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="user.emergency.relation"  /></td>
                                             <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="user.emergency.job"  /></td>
                                             <td style="width: 15%;"><masked-input mask="AA11111111" placeholder="АА00000000" class="form-control input-sm" type="text" v-model="user.emergency.register" /></td>
-                                            <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="user.emergency.budged"  /></td>
+                                            <td style="width: 15%;"><input class="form-control input-sm" type="text" v-money="money" v-model.lazy="user.emergency.budged" v-bind="money"  /></td>
                                             <td style="width: 15%;"><masked-input class="form-control input-sm" type="text" v-model="user.emergency.phone_number"  mask="\+ (976) 1111-1111" placeholder="1111-1111" /></td>
                                             <td style="width: 6%;">
                                                 <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyEmergency(emergency)"></button>
@@ -306,9 +306,9 @@
                                             <td><span class="text text-black">#</span></td>
                                             <td>
                                                 <input type="text" class="form-control input-sm" v-auto data-type="budged" v-model="user.budget.name" data-target="#budget-input" v-on:selected="setDataBudget(user.budget, '#budget-input')">
-                                                <masked-input mask="000000000000" placeholder="000000000000" type="hidden" v-model="user.budget.name" id="budget-input" />
+                                                <input  type="hidden" v-model="user.budget.name" id="budget-input" />
                                             </td>
-                                            <td><input type="text" class="form-control input-sm" v-model="user.budget.budget"></td>
+                                            <td><input type="text" class="form-control input-sm" v-money="money" v-model.lazy="user.budget.budget"></td>
                                             <td>
                                                 <button class="btn btn-sm btn-success" @click="addBudget()"><i class="fa fa-plus-circle"></i></button>
                                             </td>
@@ -320,7 +320,7 @@
                                                 <input type="text" class="form-control input-sm" v-auto data-type="budget" :data-target="'#budget-input' + b.id" :value="b.name" v-on:selected="setDataBudget(b, '#budget-input' + b.id)">
                                                 <input type="hidden" v-model="b.name" :id="'budget-input' + b.id" />
                                             </td>
-                                            <td><masked-input mask="000000000000" placeholder="000000000000" type="text" class="form-control input-sm" v-model="b.budget"/></td>
+                                            <td><input  type="text" class="form-control input-sm" v-money="money" v-model.lazy="b.budget"/></td>
                                             <td>
                                                 <div class="btn-group ">
                                                     <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyBudget(b)"></button>
@@ -338,7 +338,7 @@
                                                 <input type="text" class="form-control input-sm input-sm" v-auto data-type="user.expense" v-model="user.expense.name" data-target="#expense-input" v-on:selected="setDataExpense(user.expense, '#expense-input')">
                                                 <input type="hidden" v-model="user.expense.name" id="expense-input" />
                                             </td>
-                                            <td><input type="text" class="form-control input-sm input-sm" v-model="user.expense.expense"></td>
+                                            <td><input type="text" class="form-control input-sm input-sm" v-money="money" v-model.lazy="user.expense.expense"></td>
                                             <td>
                                                 <button class="btn btn-sm btn-success" @click="addExpense()"><i class="fa fa-plus-circle"></i></button>
                                             </td>
@@ -349,7 +349,7 @@
                                                 <input type="text" class="form-control input-sm input-sm" v-auto data-type="user.expense" :data-target="'#expense-input' + b.id" :value="b.name" v-on:selected="setDataExpense(b, '#expense-input' + b.id)">
                                                 <input type="hidden" v-model="b.name" :id="'expense-input' + b.id" />
                                             </td>
-                                            <td><input type="text" class="form-control input-sm input-sm" v-model="b.expense"></td>
+                                            <td><input type="text" class="form-control input-sm input-sm" v-money="money" v-model.lazy="b.expense"></td>
                                             <td>
                                                 <div class="btn-group">
                                                     <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyExpense(b)"></button>
@@ -368,7 +368,7 @@
                                                 <input type="text" class="form-control input-sm input-sm" v-auto data-type="user.asset" v-model="user.asset.name" data-target="#asset-input" v-on:selected="setDataAsset(user.asset, '#asset-input')">
                                                 <input type="hidden" v-model="user.asset.name" id="asset-input" />
                                             </td>
-                                            <td><input type="text" class="form-control input-sm input-sm" v-model="user.asset.asset"></td>
+                                            <td><input type="text" class="form-control input-sm input-sm" v-money="money" v-model.lazy="user.asset.asset"></td>
                                             <td>
                                                 <button class="btn btn-sm btn-success" @click="addAsset()"><i class="fa fa-plus-circle"></i></button>
                                             </td>
@@ -379,7 +379,7 @@
                                                 <input type="text" class="form-control input-sm input-sm" v-auto data-type="asset" :data-target="'#asset-input' + b.id" :value="b.name" v-on:selected="setDataAsset(b, '#asset-input' + b.id)">
                                                 <input type="hidden" v-model="b.name" :id="'asset-input' + b.id" />
                                             </td>
-                                            <td><input type="text" class="form-control input-sm input-sm" v-model="b.asset"></td>
+                                            <td><input type="text" class="form-control input-sm input-sm" v-money="money" v-model.lazy="b.asset"></td>
                                             <td>
                                                 <div class="btn-group">
                                                     <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyAsset(b)"></button>
@@ -406,12 +406,12 @@
                                         <tr>
                                             <td>№</td>
                                             <td><input class="form-control input-sm" v-auto type="text" v-model="user.credit.organization" data-target="#credit-input" @selected="setDataCredit(user.credit,'#credit-input')" /></td>
-                                            <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_amount"  /></td>
+                                            <td><input class="form-control input-sm" type="text" v-money="money" v-model.lazy="user.credit.loan_amount"  /></td>
                                             <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_usage"  /></td>
                                             <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_date"  /></td>
-                                            <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_interest"  /></td>
-                                            <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_balance"  /></td>
-                                            <td><input class="form-control input-sm" type="text" v-model="user.credit.monthly_pay"  /></td>
+                                            <td><input class="form-control input-sm" type="number" v-model="user.credit.loan_interest"   placeholder="11"/></td>
+                                            <td><input class="form-control input-sm" type="text" v-money="money" v-model.lazy="user.credit.loan_balance"  /></td>
+                                            <td><input class="form-control input-sm" type="text" v-money="money" v-model.lazy="user.credit.monthly_pay"  /></td>
                                             <td>
                                                 <button class="btn btn-sm btn-success" @click="addCredit()"><i class="fa fa-plus-circle"></i>
                                                 </button>
@@ -420,12 +420,12 @@
                                         <tr v-for="(credit, index) in user.credits">
                                             <td ><span class="text text-black">{{ index + 1 }}</span></td>
                                             <td><input class="form-control input-sm" type="text" v-model="user.credit.organization"  /></td>
-                                            <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_amount"  /></td>
+                                            <td><input class="form-control input-sm" type="text" v-money="money" v-model.lazy="user.credit.loan_amount"  /></td>
                                             <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_usage"  /></td>
                                             <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_date"  /></td>
-                                            <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_interest"  /></td>
-                                            <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_balance"  /></td>
-                                            <td><input class="form-control input-sm" type="text" v-model="user.credit.monthly_pay"  /></td>
+                                            <td><input class="form-control input-sm" type="number" v-model="user.credit.loan_interest"   placeholder="11"/></td>
+                                            <td><input class="form-control input-sm" type="text" v-money="money" v-model.lazy="user.credit.loan_balance"  /></td>
+                                            <td><input class="form-control input-sm" type="text" v-money="money" v-model.lazy="user.credit.monthly_pay"  /></td>
                                             <td>
                                                 <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyCredit(credit)"></button>
                                             </td>
@@ -625,6 +625,7 @@
 
     import MaskedInput from 'vue-masked-input'
     import Dropzone from 'vue2-dropzone'
+    import  {VMoney} from 'v-money'
     export default {
 
         components: {
@@ -636,6 +637,12 @@
         data()
         {
             return {
+                money:{
+                    decimal:'.',
+                    thousands:',',
+                     precision:2,
+                    masked:false
+                },
                 adv:[],
                 csrfHeaders: null,
                 mediaUpload: '/api/cv/imageUpload',
@@ -759,7 +766,7 @@
                 },loading: true,
             }
         },
-
+        directives: {money: VMoney},
         mounted()
         {
 
