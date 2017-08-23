@@ -27,9 +27,9 @@
                                 <div class="col-lg-2 col-md-2 col-sm-3">Дугаар</div>
                                 <div class="col-lg-4 col-md-4 col-sm-3">Нэр</div>
                                 <div class="col-lg-1 col-md-1 col-sm-1">Төлөв</div>
-                                <div class="col-lg-1 col-md-1 col-sm-2">Валют</div>
-                                <div class="col-lg-3 col-md-3 col-sm-2">Журнал</div>
-                                <div class="col-lg-1 col-md-1 col-sm-1"></div>
+                                <div class="col-lg-1 col-md-1 col-sm-1">Валют</div>
+                                <div class="col-lg-2 hidden-md hidden-sm">Журнал</div>
+                                <div class="col-lg-2 col-md-4 col-sm-3"></div>
                             </div>
                             <!--<div class="list-group-item list-group-tree">-->
                             <!--<div class="col-lg-2 col-md-2 col-sm-3">-->

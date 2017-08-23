@@ -68,6 +68,8 @@ class AccountController extends Controller
 
         $this->valid($request);
 
+        $parameters['account_number'] = $request->get('account_number');
+
         $parameters['group_id'] = $parameters['group']['id'];
         $parameters['journal_id'] = $parameters['journal']['id'];
         $parameters['currency_id'] = $parameters['currency']['id'];

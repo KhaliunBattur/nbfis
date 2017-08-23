@@ -76,21 +76,22 @@ class CvController extends Controller
 
         $parameters['password'] = \Hash::make('123');
 
-        $user = User::create($parameters);
+        $user = \DB::transaction(function() use($parameters, $request) {
+            $user = User::create($parameters);
 
-        $user->assets()->createMany($request->get('assets'));
-        $user->workplaces()->create($request->get('workplace'));
-        $user->family()->createMany($request->get('family'));
-        $user->emergencies()->createMany($request->get('emergencies'));
-        $user->budgets()->createMany($request->get('budgets'));
-        $user->expenses()->createMany($request->get('expenses'));
-        $user->activeLoans()->createMany($request->get('credits'));
-        $user->Request()->create($request->get('request'));
+            $user->assets()->createMany($request->get('assets'));
+            $user->workplaces()->create($request->get('workplace'));
+            $user->family()->createMany($request->get('family'));
+            $user->emergencies()->createMany($request->get('emergencies'));
+            $user->budgets()->createMany($request->get('budgets'));
+            $user->expenses()->createMany($request->get('expenses'));
+            $user->activeLoans()->createMany($request->get('credits'));
+            $user->Request()->create($request->get('request'));
+
+            return $user;
+        });
 
         event(new UserCreated($user, 'хэрэглэгч шинээр бүртгэв', 'info'));
-
-        $user->roles()->attach($request->get('roles'));
-
 
         return response()->json([
             'result' => !is_null($user)
