@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\Currency;
 use App\Support\CurrencyRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -26,9 +27,13 @@ class CurrencyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $currencys = $this->currencyRepository->findByPaginate($request->get('per_page'), $request->all());
+
+        return response()->json([
+            'model' => $currencys
+        ]);
     }
 
     /**
@@ -49,7 +54,23 @@ class CurrencyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->valid($request);
+        if($request->get('id') == 0)
+        {
+            $currency = Currency::create($request->all());
+
+            return response()->json([
+                'result' => !is_null($currency)
+            ]);
+
+        }else
+        {
+            $currency = $this->currencyRepository->findById($request->get('id'));
+
+            return response()->json([
+                'result' => $currency->update($request->all())
+            ]);
+        }
     }
 
     /**
@@ -94,7 +115,8 @@ class CurrencyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $currency = $this->currencyRepository->findById($id);
+        return response()->json(['result'=>$currency->delete()]);
     }
 
     /**
@@ -107,6 +129,14 @@ class CurrencyController extends Controller
 
         return response()->json([
             'lists' => $currencies
+        ]);
+    }
+    private function valid($request)
+    {
+        $this->validate($request, [
+            'name' => 'required|unique:currency,name',
+            'exchange' => 'required',
+            'marker' => 'required',
         ]);
     }
 }

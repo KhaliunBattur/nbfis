@@ -35,7 +35,7 @@ class BankRepository implements BankRepositoryInterface
      */
     public function findAll()
     {
-        // TODO: Implement findAll() method.
+
     }
 
     /**
@@ -44,7 +44,7 @@ class BankRepository implements BankRepositoryInterface
      */
     public function findById($id)
     {
-        // TODO: Implement findById() method.
+        return $this->model->findOrFail($id);
     }
 
     /**
@@ -54,7 +54,16 @@ class BankRepository implements BankRepositoryInterface
      */
     public function findByPaginate($howMany, $params = [])
     {
-        // TODO: Implement findByPaginate() method.
+        $query = $this->model;
+        $search = json_decode($params['search'], true);
+
+        return $query->where(function($query) use($search) {
+            if(array_key_exists('name', $search) && !is_null($search['name']))
+            {
+                $query->where('name', 'LIKE', $search['name'] . '%');
+            }
+        })->orderBy($params['column'], $params['direction'])
+            ->paginate($howMany);
     }
 
     /**

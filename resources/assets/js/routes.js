@@ -18,7 +18,10 @@ import Account from './components/Account/Account.vue'
 
 // Журнал
 import Journal from './components/Journal/Journal.vue'
-
+// Банк
+import Bank from './components/Bank/Bank.vue'
+// Вальют
+import Currency from './components/Currency/Currency.vue'
 //Хэрэглэгчийн эрхийн routes
 import Roles from './components/Role/Roles.vue'
 
@@ -64,6 +67,12 @@ const router = new VueRouter({
         },
         {
             path: '/journal', component: Journal
+        },
+        {
+            path: '/bank', component: Bank
+        },
+        {
+          path: '/currency', component: Currency
         },
         {
             path: '/season', component: Season,
