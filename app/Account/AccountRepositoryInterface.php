@@ -10,8 +10,13 @@ namespace App\Account;
 
 
 use App\Core\Repository;
+use Illuminate\Database\Eloquent\Collection;
 
 interface AccountRepositoryInterface extends Repository
 {
 
+    /**
+     * @return Collection
+     */
+    public function findAllIdList();
 }

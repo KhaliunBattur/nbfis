@@ -40,8 +40,14 @@ class AccountController extends Controller
         foreach ($groups as $key => $group)
         {
             $array[$key] = $group->toArray();
-            $array[$key]['children'] = $group->children->count() ? $this->recursive($group->children): null;
-            $array[$key]['accounts'] = $group->accounts->count() ? $group->accounts->toArray() : null;
+            if($group->children->count())
+            {
+                $array[$key]['children'] = $this->recursive($group->children);
+            }
+            if($group->accounts->count())
+            {
+                $array[$key]['accounts'] = $group->accounts()->with(['currency', 'journal', 'group', 'bank'])->get()->toArray();
+            }
         }
 
         return response()->json([
@@ -55,10 +61,13 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-        $this->valid($request);
 
         $parameters = $request->all();
-        $parameters['account_number'] = $parameters['group']['code'] . $parameters['code'];
+
+        $request->request->add(['account_number' => $parameters['group']['code'] . $parameters['code']]);
+
+        $this->valid($request);
+
         $parameters['group_id'] = $parameters['group']['id'];
         $parameters['journal_id'] = $parameters['journal']['id'];
         $parameters['currency_id'] = $parameters['currency']['id'];
@@ -106,8 +115,14 @@ class AccountController extends Controller
         foreach ($children as $key => $child)
         {
             $array[$key] = $child->toArray();
-            $array[$key]['children'] = $child->children->count() ? $this->recursive($child->children) : null;
-            $array[$key]['accounts'] = $child->accounts->count() ? $child->accounts()->with(['currency', 'journal', 'group', 'bank'])->get()->toArray() : null;
+            if($child->children->count())
+            {
+                $array[$key]['children'] = $this->recursive($child->children);
+            }
+            if($child->accounts->count())
+            {
+                $array[$key]['accounts'] = $child->accounts()->with(['currency', 'journal', 'group', 'bank'])->get()->toArray();
+            }
         }
 
         return $array;
@@ -121,6 +136,7 @@ class AccountController extends Controller
         $roles = [
             'name' => 'required',
             'code' => 'required|numeric',
+            'account_number' => 'required|unique:account,account_number,'.$request->get('id'),
             'journal' => 'required',
             'currency' => 'required',
             'group' => 'required'

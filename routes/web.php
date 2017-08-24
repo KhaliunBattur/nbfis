@@ -32,8 +32,11 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::resource('account', 'AccountController');
         Route::resource('account/group', 'GroupController', ['except' => ['edit', 'create', 'show', 'update']]);
         Route::get('account/group/{group}/others', ['as' => 'group.others', 'uses' => 'GroupController@others']);
+        Route::resource('journal', 'JournalController', ['except' => ['create', 'show', 'edit', 'update']]);
         Route::get('journal/lists', ['as' => 'journal.lists', 'uses' => 'JournalController@lists']);
     });
+
+    Route::resource('season', 'Season\SeasonController');
 
     Route::group(['namespace' => 'User'], function (){
         Route::resource('users', 'UserController', ['except' => ['create']]);

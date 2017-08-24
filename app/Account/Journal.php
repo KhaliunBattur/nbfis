@@ -10,6 +10,7 @@ namespace App\Account;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Journal extends Model
 {
@@ -22,6 +23,14 @@ class Journal extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'form_code', 'root_id'];
+
+    /**
+     * @return BelongsTo
+     */
+    public function root()
+    {
+        return $this->belongsTo(Journal::class, 'root_id');
+    }
 
 }

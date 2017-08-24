@@ -11,14 +11,21 @@ import UserCreate from './components/User/Create.vue'
 import UserEdit from './components/User/Edit.vue'
 import CV from './components/User/CV.vue'
 import UserCv from './components/User/Profile/CV.vue'
+import UserProfile from './components/User/Profile/Profile.vue'
 
 // Данс
 import Account from './components/Account/Account.vue'
 
-import UserProfile from './components/User/Profile/Profile.vue'
+// Журнал
+import Journal from './components/Journal/Journal.vue'
 
 //Хэрэглэгчийн эрхийн routes
 import Roles from './components/Role/Roles.vue'
+
+//Эхлэл баланс буюу улирал
+import Season from './components/Season/Season.vue'
+import List from './components/Season/List.vue'
+import Balance from './components/Season/Balance.vue'
 
 Vue.use(VueRouter)
 
@@ -54,6 +61,20 @@ const router = new VueRouter({
         },
         {
             path: '/account', component: Account
+        },
+        {
+            path: '/journal', component: Journal
+        },
+        {
+            path: '/season', component: Season,
+            children: [
+                {
+                    path: '', component: List
+                },
+                {
+                    path: ':id/balance', component: Balance
+                }
+            ]
         },
         {
             path: '/roles',

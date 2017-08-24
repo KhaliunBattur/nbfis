@@ -1,7 +1,7 @@
 <template>
     <div class="list-tree-view-parent">
 
-        <group-form-editor :group="group" :title="title" v-modal :id="'groupForm' + account.id"></group-form-editor>
+        <group-form-editor :group="group" :title="title" v-modal :id="'groupForm' + account.id" v-on:saved="saveGroup"></group-form-editor>
 
         <div class="list-group-item list-group-tree">
             <div class="col-lg-2 col-md-2 col-sm-3" v-bind:style="'padding-left: ' + number + 'px'">
@@ -44,9 +44,9 @@
                 <button class="btn btn-xs btn-warning" @click="editAccount(acc)"><i class="fa fa-pencil"></i></button>
                 <delete-confirm :item="acc" :url="'/api/account/' + acc.id" v-on:destroyed="destroyAccount(acc)"></delete-confirm>
             </div>
-            <account-form-editor :account="selectedAccount" :title="title" v-modal :id="'accountForm' + acc.id"></account-form-editor>
+            <account-form-editor :account="selectedAccount" :title="title" v-modal :id="'accountForm' + acc.id" v-on:saved="saveAccount"></account-form-editor>
         </div>
-        <account-row v-for="child in account.children" v-bind:key="child.id" v-bind:account="child" :number="number + 10" v-on:destroyedGroup="deleteGroup" v-on:destroyedAccount="deleteAccount"></account-row>
+        <account-row v-for="child in account.children" v-bind:key="child.id" v-bind:account="child" :number="number + 10" v-on:destroyedGroup="deleteGroup" v-on:destroyedAccount="deleteAccount" v-on:saveGroup="savedGroup" v-on:saveAccount="savedAccount"></account-row>
     </div>
 </template>
 
@@ -96,6 +96,22 @@
         },
 
         methods: {
+            savedAccount()
+            {
+                this.$emit('saveAccount')
+            },
+            saveAccount()
+            {
+                this.$emit('saveAccount');
+            },
+            savedGroup()
+            {
+                this.$emit('saveGroup');
+            },
+            saveGroup()
+            {
+                this.$emit('saveGroup');
+            },
             editAccount(account)
             {
                 this.selectedAccount = account;

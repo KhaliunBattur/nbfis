@@ -117,6 +117,7 @@ return [
     'attributes' => [
         'first_name'  => 'нэр',
         'last_name'   => 'овог',
+        'name'        => 'нэр',
         'email'       => 'и-мэйл',
         'start'       => 'эхлэх',
         'end'         => 'дуусах',
@@ -128,6 +129,11 @@ return [
         'address2'    => 'хаяг 2',
         'category_id' => 'төрөл',
         'password'    => 'нууц үг',
+        'group'       => 'харья бүлэг',
+        'code'        => 'код',
+        'journal'     => 'журнал',
+        'currency'    => 'валют',
+        'bank_account_number' => 'банкны дансны дугаар'
     ],
 
 ];
