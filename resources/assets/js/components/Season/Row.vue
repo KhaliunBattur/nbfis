@@ -10,13 +10,13 @@
             <div class="col-lg-1 col-md-1 col-sm-1">
 
             </div>
-            <div class="col-lg-1 col-md-1 col-sm-2">
-
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-2">
-
-            </div>
             <div class="col-lg-1 col-md-1 col-sm-1">
+
+            </div>
+            <div class="col-lg-2 hidden-md hidden-sm">
+
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-3">
 
             </div>
         </div>
@@ -33,10 +33,10 @@
             <div class="col-lg-1 col-md-1 col-sm-2">
                 {{ acc.currency.name }}
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-2">
+            <div class="col-lg-2 hidden-md hidden-sm">
                 {{ acc.journal.name }}
             </div>
-            <div class="col-lg-1 col-md-1 col-sm-1">
+            <div class="col-lg-2 col-md-4 col-sm-3">
                 <input type="text" class="input-sm form-control" v-model="acc.balance" />
             </div>
         </div>

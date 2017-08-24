@@ -14,8 +14,8 @@ class AddMoreColumnToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('live_year')->unique()->after('address')->nullable()->default(null);
-            $table->string('owner_type')->unique()->after('live_year')->nullable()->default(null);
+            $table->string('live_year')->after('address')->nullable()->default(null);
+            $table->string('owner_type')->after('live_year')->nullable()->default(null);
         });
     }
 
