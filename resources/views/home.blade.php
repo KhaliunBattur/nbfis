@@ -188,6 +188,24 @@
                                 </div>
                             </router-link>
                         </li>
+                        <li>
+                            <router-link to="/bank">
+                                <i class="menu-icon fa fa-bank bg-green"></i>
+
+                                <div class="menu-info">
+                                    <h4 class="control-sidebar-subheading">Банк тохиргоо</h4>
+                                </div>
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link to="/currency">
+                                <i class="menu-icon fa fa-dollar bg-orange"></i>
+
+                                <div class="menu-info">
+                                    <h4 class="control-sidebar-subheading">Вальют тохиргоо</h4>
+                                </div>
+                            </router-link>
+                        </li>
                     </ul>
 
                 </div>

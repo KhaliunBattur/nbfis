@@ -28,6 +28,9 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
     Route::get('currency/lists', ['as' => 'currency.lists', 'uses' => 'CurrencyController@lists']);
     Route::get('bank/lists', ['as' => 'bank.lists', 'uses' => 'BankController@lists']);
 
+    Route::resource('bank','BankController');
+    Route::resource('currency','CurrencyController');
+
     Route::group(['namespace' => 'Account', 'as' => 'account.'], function(){
         Route::resource('account', 'AccountController');
         Route::resource('account/group', 'GroupController', ['except' => ['edit', 'create', 'show', 'update']]);

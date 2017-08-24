@@ -43,7 +43,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function findById($id)
     {
-        // TODO: Implement findById() method.
+        return $this->model->findOrFail($id);
     }
 
     /**
@@ -53,7 +53,15 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function findByPaginate($howMany, $params = [])
     {
-        // TODO: Implement findByPaginate() method.
+        $query = $this->model;
+        $search = json_decode($params['search'], true);
+        return $query->where(function($query) use($search) {
+            if(array_key_exists('name', $search) && !is_null($search['name']))
+            {
+                $query->where('name', 'LIKE', $search['name'] . '%');
+            }
+        })->orderBy($params['column'], $params['direction'])
+            ->paginate($howMany);
     }
 
     /**
