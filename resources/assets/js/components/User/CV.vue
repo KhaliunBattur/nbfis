@@ -639,7 +639,7 @@
             return {
                 money:{
                     decimal:'.',
-                    thousands:',',
+                    thousands:'.',
                      precision:2,
                     masked:false
                 },
@@ -849,16 +849,7 @@
 
             reset()
             {
-//                this.user = {
-//                    image: '',
-//                    first_name: '',
-//                    name: '',
-//                    phone_number: '',
-//                    address: '',
-//                    email: '',
-//                    password: '',
-//                    confirm_password: '',
-//                }
+
                 return {
                     csrfHeaders: null,
                     mediaUpload: '/api/cv/imageUpload',
@@ -879,7 +870,6 @@
                         address: '',
                         email: '',
                         user_type: 'customer',
-                        roles: [],
                         password: '',
                         register: null,
                         birth_day: null,

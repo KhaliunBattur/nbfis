@@ -17,6 +17,10 @@ class CvController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+//    function __construct()
+//    {
+//        $this->tempFilePath = '';
+//    }
 
     public function index()
     {
@@ -39,7 +43,10 @@ class CvController extends Controller
             ]);;
 
         $file->store('public/images/temp' . date('Y-m-d-H-i-s'));
-       
+//        $TempPath=('public/images/temp' . date('Y-m-d-H-i-s'));
+
+//        session()->put('public/images/temp' . date('Y-m-d-H-i-s'));
+//       $this->store($TempPath);
         return response()->json([
             'success' => 'File Uploaded'
         ]);
@@ -53,6 +60,7 @@ class CvController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+//    public function store($TempPath,Request $request)
     public function store(Request $request)
     {
         $this->valid($request);
@@ -64,7 +72,6 @@ class CvController extends Controller
             $url = $request->get('image');
 
             $file = file_get_contents($url);
-
             $filename = '/storage/users/' . sha1(pathinfo($url, PATHINFO_FILENAME).date('H:i:s')) . '.' . FileType::getFileType($url);
 
             $destinationPath = public_path() . $filename;
@@ -78,6 +85,8 @@ class CvController extends Controller
 
         $user = User::create($parameters);
 
+//        Storage::move($TempPath,'/public/images');
+
         $user->assets()->createMany($request->get('assets'));
         $user->workplaces()->create($request->get('workplace'));
         $user->family()->createMany($request->get('family'));
@@ -88,9 +97,6 @@ class CvController extends Controller
         $user->Request()->create($request->get('request'));
 
         event(new UserCreated($user, 'хэрэглэгч шинээр бүртгэв', 'info'));
-
-        $user->roles()->attach($request->get('roles'));
-
 
         return response()->json([
             'result' => !is_null($user)
