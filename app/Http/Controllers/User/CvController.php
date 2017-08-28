@@ -17,10 +17,6 @@ class CvController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-//    function __construct()
-//    {
-//        $this->tempFilePath = '';
-//    }
 
     public function index()
     {
@@ -29,8 +25,7 @@ class CvController extends Controller
     public  function imageUpload(Request $request)
     {
 
-        print_r($request->all());
-        if(!$request->hasFile('file'))
+           if(!$request->hasFile('file'))
             return response()->json([
                 'error' => 'No File Uploaded'
             ]);
@@ -41,16 +36,12 @@ class CvController extends Controller
             return response()->json([
                 'error' => 'File is not valid!'
             ]);;
-
-        $file->store('public/images/temp' . date('Y-m-d-H-i-s'));
-//        $TempPath=('public/images/temp' . date('Y-m-d-H-i-s'));
-
-//        session()->put('public/images/temp' . date('Y-m-d-H-i-s'));
-//       $this->store($TempPath);
+        $tempFilePath=('public/images/temp' . date('Y-m-d-H-i-s'));
+        $file->store($tempFilePath);
         return response()->json([
-            'success' => 'File Uploaded'
+            'success' => 'File Uploaded',
+            'tempPath'=> $tempFilePath
         ]);
-
 
     }
 
@@ -60,9 +51,10 @@ class CvController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-//    public function store($TempPath,Request $request)
+
     public function store(Request $request)
     {
+
         $this->valid($request);
 
         $parameters = $request->all();
@@ -85,16 +77,15 @@ class CvController extends Controller
 
         $user = \DB::transaction(function() use($parameters, $request) {
             $user = User::create($parameters);
-  //        Storage::move($TempPath,'/public/images');
-
-            $user->assets()->createMany($request->get('assets'));
-            $user->workplaces()->create($request->get('workplace'));
-            $user->family()->createMany($request->get('family'));
-            $user->emergencies()->createMany($request->get('emergencies'));
-            $user->budgets()->createMany($request->get('budgets'));
-            $user->expenses()->createMany($request->get('expenses'));
-            $user->activeLoans()->createMany($request->get('credits'));
-            $user->Request()->create($request->get('request'));
+            Storage::move($parameters['filePath'],'public/images/file_'.$user['id'] );
+//            $user->assets()->createMany($request->get('assets'));
+//            $user->workplaces()->create($request->get('workplace'));
+//            $user->family()->createMany($request->get('family'));
+//            $user->emergencies()->createMany($request->get('emergencies'));
+//            $user->budgets()->createMany($request->get('budgets'));
+//            $user->expenses()->createMany($request->get('expenses'));
+//            $user->activeLoans()->createMany($request->get('credits'));
+//            $user->Request()->create($request->get('request'));
             return $user;
         });
         event(new UserCreated($user, 'хэрэглэгч шинээр бүртгэв', 'info'));
