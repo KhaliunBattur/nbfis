@@ -16,20 +16,22 @@
                                 <div class="col-sm-10">
                                     <input type="file" class="form-control" @change="onFileChange" />
                                 </div>
-                                <div class="col-sm-2 col-sm-offset-2" v-if="profile_picture !== null && profile_picture !== ''">
-                                    <img :src="profile_picture" class="profile-user-img img-responsive img-circle" style="margin: 10px 0px" />
+                                <div class="col-sm-2 col-sm-offset-2" v-if="user.image != ''">
+                                    <img :src="user.image" class="profile-user-img img-responsive img-circle" style="margin: 10px 0px" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Овог <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" v-model="user.first_name" />
+                                    <input type="text" maxlength="255" class="form-control" v-model="user.first_name" name="fname" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('fname') }" placeholder="Хамгийн ихдээ 255 тэмдэгт"/>
+                                    <div v-show="errors.has('fname')" class="help is-danger">{{ errors.first('fname') }}</div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Нэр <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" v-model="user.name" />
+                                    <input type="text" maxlength="255"  class="form-control" v-model="user.name"  name="oname" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('oname') }" placeholder="Хамгийн ихдээ 255 тэмдэгт"/>
+                                    <div v-show="errors.has('oname')" class="help is-danger">{{ errors.first('oname') }}</div>
                                 </div>
                             </div>
                             <hr />
@@ -55,7 +57,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Утас</label>
                                 <div class="col-sm-10">
-                                    <masked-input v-model="user.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control" />
+                                    <masked-input v-model="user.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control"  />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -68,16 +70,17 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Email <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" v-model="user.email" />
+                                    <input  type="text" class="form-control" v-model="user.email" name="email" v-validate="'required|email'" :class="{'form-control': true, 'is-danger': errors.has('email') }" placeholder="Email" />
+                                    <div v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-lg-10 col-sm-offset-2">
                                     <div class="radio-inline">
-                                        <input type="radio" v-model="user.user_type" value="staff" /> Ажилтан
+                                        <input name="type" type="radio" v-model="user.user_type" value="staff" /> Ажилтан
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" v-model="user.user_type" value="customer" /> Харилцагч
+                                        <input name="type" type="radio" v-model="user.user_type" value="customer" /> Харилцагч
                                     </div>
                                 </div>
                             </div>
@@ -85,8 +88,22 @@
                                 <label class="col-sm-2 control-label">Албан тушаал</label>
                                 <div class="col-sm-10">
                                     <select v-model="user.roles" multiple="multiple" class="form-control">
-                                        <option v-for="role in roles" :value="role.id" :selected="isSelected(role)">{{ role.display_name }}</option>
+                                        <option v-for="role in roles" :value="role.id">{{ role.display_name }}</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Нууц үг <label class="text-danger">*</label></label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" v-model="user.password" name="pass" v-validate="'required|min:6'" :class="{'form-control': true, 'is-danger': errors.has('pass') }" placeholder="Багадаа 6-н тэмдэгт"/>
+                                    <div v-show="errors.has('pass')" class="help is-danger">{{ errors.first('pass') }}</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Нууц үг батлах <label class="text-danger">*</label></label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" v-model="user.confirm_password" @keyup.enter="save()" name="confpass" v-validate="'required|min:6'" :class="{'form-control': true, 'is-danger': errors.has('confpass') }" placeholder="Багадаа 6-н тэмдэгт"   />
+                                    <div v-show="errors.has('confpass')" class="help is-danger">{{ errors.first('confpass') }}</div>
                                 </div>
                             </div>
                         </div>

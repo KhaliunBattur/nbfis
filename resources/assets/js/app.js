@@ -16,6 +16,10 @@ window.Vue = require('vue');
  */
 
 import Router from './routes'
+import Vue from 'vue';
+import VeeValidate from 'vee-validate';
+
+Vue.use(VeeValidate);
 
 Vue.directive('pick', {
     "twoWay": true,
