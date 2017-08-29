@@ -18,4 +18,10 @@ interface SeasonRepositoryInterface extends Repository
      * @return mixed
      */
     public function findLastClose();
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function findByIdWithCurrencies($id);
 }

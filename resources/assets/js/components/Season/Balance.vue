@@ -1,43 +1,54 @@
 <template>
     <section class="content">
         <!-- Small boxes (Stat box) -->
-        <div class="row">
+        <div class="row" v-if="season">
             <div class="col-lg-12">
                 <div class="box">
                     <div class="box-header with-border">
                         <div class="box-title">
-                            Жагсаалт
+                            {{ season.name }}
                         </div>
                         <div class="box-tools">
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Шинээр нэмэх
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a @click="createGroup" class="links">Бүлэг</a></li>
-                                    <li><a @click="createAccount" class="links">Данс</a></li>
-                                </ul>
-                            </div>
+                            Нээсэн огноо: {{ season.open_date }}
                         </div>
                     </div>
                     <div class="box-body">
+                        <ul class="list-inline">
+                            <li><b>Валютийн ханш </b></li>
+                            <li v-for="currency in season.currencies">{{ currency.name + ': ' + currency.pivot.exchange + '₮' }}</li>
+                        </ul>
                         <div class="list-tree-view" v-if="accounts">
                             <div class="list-group-item list-group-header">
                                 <div class="col-lg-2 col-md-2 col-sm-3">Дугаар</div>
-                                <div class="col-lg-4 col-md-4 col-sm-3">Нэр</div>
-                                <div class="col-lg-1 col-md-1 col-sm-1">Төлөв</div>
-                                <div class="col-lg-1 col-md-1 col-sm-1">Валют</div>
-                                <div class="col-lg-2 hidden-md hidden-sm">Журнал</div>
-                                <div class="col-lg-2 col-md-4 col-sm-3"></div>
+                                <div class="col-lg-3 col-md-4 col-sm-3">Нэр</div>
+                                <div class="col-lg-1 hidden-md hidden-sm">Валют</div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6">Актив</div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6">Пассив</div>
+                                    </div>
+                                </div>
                             </div>
-                            <!--<div class="list-group-item list-group-tree">-->
-                            <!--<div class="col-lg-2 col-md-2 col-sm-3">-->
-                            <!--<input type="text" class="form-control input-sm" v-model="search.code" />-->
-                            <!--<button class="btn btn-sm" @click="filter"></button>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <account-row v-for="account in accounts" v-bind:key="account.id" v-bind:account="account" :number="15" v-on:destroyedGroup="deleteGroup" v-on:saveGroup="saveGroup" v-on:saveAccount="saveAccount"></account-row>
+                            <account-row v-for="account in accounts" v-bind:key="account.id" :season="season" v-bind:account="account" :number="15" v-on:destroyedGroup="deleteGroup" v-on:saveGroup="saveGroup" v-on:saveAccount="saveAccount"></account-row>
+                            <div class="list-group-item list-group-footer">
+                                <div class="col-lg-2 col-md-2 col-sm-3"></div>
+                                <div class="col-lg-3 col-md-4 col-sm-3"></div>
+                                <div class="col-lg-1 hidden-md hidden-sm"></div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6">Актив = {{ getActive() }}</div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6">Пассив = {{ getPassive() }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-inline">
+                            <div class="pull-right">
+                                <span class="text-danger"><i v-if="(active > 0 || passive > 0) && active != passive" class="fa fa-warning"> Баланс тэнцээгүй байна</i></span>
+                            </div>
+                            <div class="btn-group pull-right" v-if="(active > 0 || passive > 0) && active == passive">
+                                <button class="btn btn-success btn-sm" @click="saveBalance">Хадгалах</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -65,8 +76,11 @@
         data()
         {
             return {
+                active: 0,
+                passive: 0,
                 roles: null,
                 accounts: null,
+                season: null,
                 search: {
                     code: ''
                 },
@@ -102,6 +116,7 @@
         created()
         {
             this.fetchRoles();
+            this.fetchSeason();
             this.fetchAccounts();
         },
 
@@ -133,6 +148,62 @@
                 var filtering = deepFilter(this.accounts);
 
                 return filtering;
+            },
+            saveBalance()
+            {
+                var self = this;
+
+                swal({
+                    title: "Та итгэлтэй байна уу?",
+                    text: "Эхлэл балансын дүнг хадгалах гэж байна!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Тийм",
+                    cancelButtonText: "Үгүй",
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true,
+                },
+                function(){
+                    axios.patch('/api/season/' + self.$route.params.id + '/balance', self.accounts).then(response => {
+                        if(response.data.result)
+                        {
+                            swal({
+                                title: 'Амжилттай!',
+                                text: 'Aмжилттай хадгалагдлаа',
+                                type: 'success'
+                            }, function(){
+
+                            })
+                        }
+                    }).catch(function(error) {
+                        swal(
+                            'Уучлаарай',
+                            'Хүсэлт амжилтгүй боллоо! Та дахин оролдоно уу.',
+                            'error'
+                        );
+                    });
+                });
+            },
+            getActive()
+            {
+                let active = this.accounts.reduce(function(prev, account){
+                    return parseFloat(prev) + parseFloat(account.active);
+                }, 0);
+
+                this.active = active;
+
+                return this.formatPrice(active);
+            },
+            getPassive()
+            {
+                let passive = this.accounts.reduce(function(prev, account){
+                    return parseFloat(prev) + parseFloat(account.passive);
+                }, 0);
+
+                this.passive = passive;
+
+                return this.formatPrice(passive);
             },
             createGroup()
             {
@@ -173,6 +244,12 @@
             {
                 this.accounts.splice(this.accounts.indexOf(group), 1);
             },
+            fetchSeason()
+            {
+                axios.get('/api/season/' + this.$route.params.id + '/edit').then(response => {
+                    this.season = response.data.season;
+                });
+            },
             fetchAccounts()
             {
                 axios.get('/api/season/' + this.$route.params.id).then(response => {
@@ -189,6 +266,10 @@
                 }).catch(function (errors) {
                     self.$router.push('/')
                 })
+            },
+            formatPrice(value) {
+                let val = (value/1).toFixed(2).replace(',', '.')
+                return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
             }
         }
 

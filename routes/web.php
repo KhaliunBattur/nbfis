@@ -39,7 +39,8 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::get('journal/lists', ['as' => 'journal.lists', 'uses' => 'JournalController@lists']);
     });
 
-    Route::resource('season', 'Season\SeasonController');
+    Route::resource('season', 'Season\SeasonController', ['expect' => ['create']]);
+    Route::patch('season/{id}/balance', ['as' => 'season.balance.save', 'uses' => 'Season\SeasonController@saveBalance']);
 
     Route::group(['namespace' => 'User'], function (){
         Route::resource('users', 'UserController', ['except' => ['create']]);

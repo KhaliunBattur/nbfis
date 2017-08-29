@@ -61,9 +61,13 @@ class SeasonController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function edit($id)
     {
-        //
+        $season = $this->seasonRepository->findByIdWithCurrencies($id);
+
+        return response()->json([
+            'season' => $season
+        ]);
     }
 
     /**
@@ -94,7 +98,7 @@ class SeasonController extends Controller
             {
                 $season->accounts()->attach($account->getKey(), [
                     'exchange' => $account->currency->exchange,
-                    'balance' => $account->balance($season_key) * $account->currency->exchange
+                    'balance' => $account->balance($season_key)
                 ]);
             }
 
@@ -118,13 +122,17 @@ class SeasonController extends Controller
 
         $groups = $this->groupRepository->findParents();
 
-        $accounts = $season->accounts()->pluck('id')->toArray();
+        $accounts = $season->accounts()->pluck('exchange', 'id')->toArray();
 
         $array = [];
 
         foreach ($groups as $key => $group)
         {
-            $array[$key] = $group->toArray();
+            $groupArray = $group->toArray();
+            $groupArray['balance'] = 0;
+            $groupArray['active'] = 0;
+            $groupArray['passive'] = 0;
+            $array[$key] = $groupArray;
             if($group->children->count())
             {
                 $array[$key]['children'] = $this->recursive($group->children, $accounts, $season);
@@ -134,10 +142,11 @@ class SeasonController extends Controller
                 $array[$key]['accounts'] = [];
                 foreach ($group->accounts()->with(['currency', 'journal', 'group', 'bank'])->get() as $account)
                 {
-                    if(in_array($account->getKey(), $accounts))
+                    if(array_key_exists($account->getKey(), $accounts))
                     {
                         $accountArray = $account->toArray();
                         $accountArray['balance'] = $account->balance($season->getKey());
+                        $accountArray['exchange'] = $accounts[$account->getKey()];
                         array_push($array[$key]['accounts'], $accountArray);
                     }
                 }
@@ -150,12 +159,22 @@ class SeasonController extends Controller
 
     }
 
+    /**
+     * @param $children
+     * @param $accounts
+     * @param $season
+     * @return array
+     */
     private function recursive($children, $accounts, $season)
     {
         $array = [];
         foreach ($children as $key => $child)
         {
-            $array[$key] = $child->toArray();
+            $groupArray = $child->toArray();
+            $groupArray['balance'] = 0;
+            $groupArray['active'] = 0;
+            $groupArray['passive'] = 0;
+            $array[$key] = $groupArray;
             if($child->children->count())
             {
                 $array[$key]['children'] = $this->recursive($child->children, $accounts, $season);
@@ -165,10 +184,11 @@ class SeasonController extends Controller
                 $array[$key]['accounts'] = [];
                 foreach ($child->accounts()->with(['currency', 'journal', 'group', 'bank'])->get() as $account)
                 {
-                    if(in_array($account->getKey(), $accounts))
+                    if(array_key_exists($account->getKey(), $accounts))
                     {
                         $accountArray = $account->toArray();
                         $accountArray['balance'] = $account->balance($season->getKey());
+                        $accountArray['exchange'] = $accounts[$account->getKey()];
                         array_push($array[$key]['accounts'], $accountArray);
                     }
                 }
@@ -181,12 +201,52 @@ class SeasonController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function saveBalance($id, Request $request)
     {
+        $accounts = [];
 
+        $accounts = $this->getAccounts($request->all(), $accounts);
+
+        $season = $this->seasonRepository->findById($id);
+
+        foreach ($accounts as $account)
+        {
+            $season->accounts()->updateExistingPivot($account['id'], ['balance' => $account['balance']]);
+        }
+
+        return response()->json([
+            'result' => true
+        ]);
+    }
+
+    /**
+     * @param $groups
+     * @param $accounts
+     * @return mixed
+     */
+    private function getAccounts($groups, $accounts)
+    {
+        foreach ($groups as $group)
+        {
+            if(array_key_exists('accounts', $group))
+            {
+                foreach ($group['accounts'] as $account)
+                {
+                    array_push($accounts, $account);
+                }
+            }
+
+            if(array_key_exists('children', $group))
+            {
+                $accounts = $this->getAccounts($group['children'], $accounts);
+            }
+        }
+
+        return $accounts;
     }
 
     /**

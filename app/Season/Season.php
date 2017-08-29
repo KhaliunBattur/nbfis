@@ -10,6 +10,7 @@ namespace App\Season;
 
 
 use App\Account\Account;
+use App\Support\Currency;
 use App\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,6 +35,14 @@ class Season extends Model
     public function accounts()
     {
         return $this->belongsToMany(Account::class, 'season_balance', 'season_id', 'account_id')->withPivot('exchange', 'balance');
+    }
+
+    /**
+     * @return $this
+     */
+    public function currencies()
+    {
+        return $this->belongsToMany(Currency::class, 'season_currency', 'season_id', 'currency_id')->withPivot('exchange');
     }
 
     /**

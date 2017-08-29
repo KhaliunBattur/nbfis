@@ -79,4 +79,13 @@ class SeasonRepository implements SeasonRepositoryInterface
 
         return is_null($season) ? 0 : $season->getKey();
     }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function findByIdWithCurrencies($id)
+    {
+        return $this->model->with('currencies')->findOrFail($id);
+    }
 }

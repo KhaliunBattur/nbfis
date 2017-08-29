@@ -22,6 +22,6 @@ class Currency extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'exchange', 'marker'];
+    protected $fillable = ['name', 'exchange', 'marker', 'is_current'];
 
 }

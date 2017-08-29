@@ -170,8 +170,20 @@ $panel-default-heading-bg: #fff;
   font-weight: bold;
 }
 
+.list-group-footer {
+  float: left;
+  width: 100%;
+  border-radius: 0px !important;
+  padding: 5px 15px !important;
+  border-top: 3px solid #d3e0e9 !important;
+  font-weight: bold;
+}
+
 .list-tree-view {
   float: left; border-bottom: 1px solid #d3e0e9; width: 100%;
+  font-size: 12px !important;
+  position: relative;
+  margin-bottom: 15px;
 }
 
 .list-tree-view-parent {
