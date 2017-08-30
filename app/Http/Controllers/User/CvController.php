@@ -61,16 +61,22 @@ class CvController extends Controller
 
         if($request->has('image'))
         {
-            $url = $request->get('image');
+            $exploded = explode(',',$request->get('image'));
 
-            $file = file_get_contents($url);
-            $filename = '/storage/users/' . sha1(pathinfo($url, PATHINFO_FILENAME).date('H:i:s')) . '.' . FileType::getFileType($url);
+            $decoded= base64_decode($exploded[1]);
+            if(str_contains($exploded[0],'jpeg'))
 
-            $destinationPath = public_path() . $filename;
+                $extension = 'jpg';
+            else
+                $extension = 'png';
+
+            $filename = str_random() . '.' . $extension;
+
+            $destinationPath = public_path() .'/images/profile/'. $filename;
 
             $parameters['image'] = $filename;
 
-            file_put_contents($destinationPath, $file);
+            file_put_contents($destinationPath, $decoded);
         }
 
         $parameters['password'] = \Hash::make('123');

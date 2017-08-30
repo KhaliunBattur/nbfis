@@ -17,7 +17,7 @@
                                     <input type="file" class="form-control" @change="onFileChange" />
                                 </div>
                                 <div class="col-sm-2 col-sm-offset-2" v-if="user.image != ''">
-                                    <img :src="user.image" class="profile-user-img img-responsive img-circle" style="margin: 10px 0px" />
+                                    <img :src=" user.image " class="profile-user-img img-responsive img-circle" style="margin: 10px 0px" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -225,8 +225,8 @@
             {
                 axios.get('/api/users/' + this.$route.params.id + '/edit').then(response => {
                     this.user = response.data.user;
-                    this.user.roles = response.data.roles
-                    this.profile_picture = this.user.image;
+                    this.user.roles = response.data.roles;
+                    this.profile_picture = '/images/profile/' + this.user.image;
                     this.user.image = null;
                     Vue.delete(this.user, 'created_at');
                     Vue.delete(this.user, 'updated_at');
