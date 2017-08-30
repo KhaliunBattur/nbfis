@@ -53,17 +53,23 @@ class UserController extends Controller
 
         if($request->has('image'))
         {
-            $url = $request->get('image');
+        $exploded = explode(',',$request->get('image'));
 
-            $file = file_get_contents($url);
+        $decoded= base64_decode($exploded[1]);
+        if(str_contains($exploded[0],'jpeg'))
 
-            $filename = '/storage/users/' . sha1(pathinfo($url, PATHINFO_FILENAME).date('H:i:s')) . '.' . FileType::getFileType($url);
+            $extension = 'jpg';
+        else
+            $extension = 'png';
 
-            $destinationPath = public_path() . $filename;
+            $filename = str_random() . '.' . $extension;
+
+            $destinationPath = public_path() .'/images/profile/'. $filename;
 
             $parameters['image'] = $filename;
 
-            file_put_contents($destinationPath, $file);
+            file_put_contents($destinationPath, $decoded);
+//            dd($destinationPath);
         }
 
         $parameters['password'] = \Hash::make($parameters['password']);
@@ -129,17 +135,22 @@ class UserController extends Controller
 
         if($request->has('image') && !is_null($request->get('image')))
         {
-            $url = $request->get('image');
+            $exploded = explode(',',$request->get('image'));
 
-            $file = file_get_contents($url);
+            $decoded= base64_decode($exploded[1]);
+            if(str_contains($exploded[0],'jpeg'))
 
-            $filename = '/storage/users/' . sha1(pathinfo($url, PATHINFO_FILENAME).date('H:i:s')) . '.' . FileType::getFileType($url);
+                $extension = 'jpg';
+            else
+                $extension = 'png';
 
-            $destinationPath = public_path() . $filename;
+            $filename = str_random() . '.' . $extension;
+
+            $destinationPath = public_path() .'/images/profile/'. $filename;
 
             $parameters['image'] = $filename;
 
-            file_put_contents($destinationPath, $file);
+            file_put_contents($destinationPath, $decoded);
         }
         else
         {

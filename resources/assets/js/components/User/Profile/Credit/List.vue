@@ -35,25 +35,25 @@
                     </tr>
                     <tr v-if="advancedSearch">
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.organization" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.organization" @keyup.enter="search()"/>
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.loan_amount" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.loan_amount" @keyup.enter="search()"/>
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.loan_usage" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.loan_usage" @keyup.enter="search()"/>
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.loan_date" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.loan_date" @keyup.enter="search()"/>
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.loan_interest" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.loan_interest" @keyup.enter="search()"/>
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.loan_balance" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.loan_balance" @keyup.enter="search()"/>
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.monthly_pay" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.monthly_pay" @keyup.enter="search()"/>
                         </th>
                         <th colspan="2">
                             <button class="btn btn-sm btn-info" @click="search()">

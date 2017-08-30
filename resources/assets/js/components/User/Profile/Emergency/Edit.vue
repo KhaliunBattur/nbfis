@@ -6,7 +6,8 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Овог нэр <label class="text-danger">*</label></label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="emergency.name" />
+                            <input type="text" class="form-control" v-model="emergency.name" name="name" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('name') }" placeholder="Ихдээ 255 тэмдэгт"/>
+                            <div v-show="errors.has('name')" class="help is-danger">{{ errors.first('name') }}</div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -20,7 +21,8 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Ажил мэргэжил <label class="text-danger">*</label></label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="emergency.job" />
+                            <input type="text" class="form-control" v-model="emergency.job" name="job" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('job') }" placeholder="Ихдээ 255 тэмдэгт"/>
+                            <div v-show="errors.has('job')" class="help is-danger">{{ errors.first('job') }}</div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -32,13 +34,15 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Сарын орлого <label class="text-danger">*</label></label>
                         <div class="col-sm-10">
-                            <input class="form-control" v-model="emergency.budged" />
+                            <input class="form-control" type="number" v-model="emergency.budged" name="budged" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('budged') }" placeholder="Зөвхөн тоон утга оруулна уу"/>
+                            <div v-show="errors.has('budged')" class="help is-danger">{{ errors.first('budged') }}</div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Утас<label class="text-danger">*</label></label>
                         <div class="col-sm-10">
-                            <masked-input v-model="emergency.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control" />
+                            <masked-input name="phone" v-validate="'required'" v-model="emergency.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control" @keyup.enter="save()"/>
+                            <div v-show="errors.has('phone')" class="help is-danger">{{ errors.first('phone') }}</div>
                         </div>
                     </div>
                     <div class="btn-group">

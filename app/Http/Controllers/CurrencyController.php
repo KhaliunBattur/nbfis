@@ -134,7 +134,7 @@ class CurrencyController extends Controller
     private function valid($request)
     {
         $this->validate($request, [
-            'name' => 'required|unique:currency,name',
+            'name' => 'required',
             'exchange' => 'required',
             'marker' => 'required',
         ]);
