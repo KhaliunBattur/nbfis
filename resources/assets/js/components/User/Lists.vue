@@ -15,7 +15,7 @@
                     <div class="box-body">
                         <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
                             <div class="input-group input-group-sm input-small with-margin-bottom pull-left">
-                                <input type="text" v-model="query.per_page" class="form-control" />
+                                <input type="text" v-model="query.per_page" class="form-control" @keyup.enter="changePerPage()" />
                                 <div class="input-group-btn">
                                     <button class="btn" @click="changePerPage()">-р хуудаслах</button>
                                 </div>
@@ -45,16 +45,16 @@
                                 </tr>
                                 <tr v-if="advancedSearch">
                                     <th>
-                                        <input type="text" class="form-control input-sm" v-model="query.search.first_name" />
+                                        <input type="text" class="form-control input-sm" v-model="query.search.first_name" @keyup.enter="search()" />
                                     </th>
                                     <th>
-                                        <input type="text" class="form-control input-sm" v-model="query.search.name" />
+                                        <input type="text" class="form-control input-sm" v-model="query.search.name" @keyup.enter="search()"/>
                                     </th>
                                     <th>
-                                        <input type="text" class="form-control input-sm" v-model="query.search.email" />
+                                        <input type="text" class="form-control input-sm" v-model="query.search.email" @keyup.enter="search()"/>
                                     </th>
                                     <th>
-                                        <input type="text" class="form-control input-sm" v-model="query.search.phone_number" />
+                                        <input type="text" class="form-control input-sm" v-model="query.search.phone_number" @keyup.enter="search()"/>
                                     </th>
                                     <th colspan="2">
                                         <button class="btn btn-sm btn-info" @click="search()">
@@ -72,7 +72,7 @@
                                     <td>{{ user.name }}</td>
                                     <td>{{ user.email }}</td>
                                     <td>{{ user.phone_number }}</td>
-                                    <td>
+                                    <td >
                                         <label class="text" v-for="role in user.roles">{{ role.display_name + ', ' }}</label>
                                     </td>
                                     <td>

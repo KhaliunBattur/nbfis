@@ -33,19 +33,19 @@
                     </tr>
                     <tr v-if="advancedSearch">
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.organization" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.organization" @keyup.enter="search()"/>
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.date_employment" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.date_employment" @keyup.enter="search()"/>
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.position" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.position" @keyup.enter="search()"/>
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.activity" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.activity" @keyup.enter="search()"/>
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.address" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.address" @keyup.enter="search()"/>
                         </th>
                         <th colspan="3">
                             <button class="btn btn-sm btn-info" @click="search()">

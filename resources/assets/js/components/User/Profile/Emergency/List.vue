@@ -33,22 +33,22 @@
                     </tr>
                     <tr v-if="advancedSearch">
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.name" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.name" @keyup.enter="search()"/>
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.relation" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.relation" @keyup.enter="search()"/>
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.job" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.job" @keyup.enter="search()"/>
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.register" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.register" @keyup.enter="search()"/>
                         </th>
                         <th>
 
                         </th>
                         <th>
-                            <input type="text" class="form-control input-sm" v-model="query.search.phone_number" />
+                            <input type="text" class="form-control input-sm" v-model="query.search.phone_number" @keyup.enter="search()"/>
                         </th>
                         <th>
                             <button class="btn btn-sm btn-info" @click="search()">

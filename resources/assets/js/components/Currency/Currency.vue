@@ -17,7 +17,7 @@
                     <div class="box">
                         <div class="box-header with-border">
                             <div class="box-title">
-                               Вальют нэмэх
+                               {{mode}}
                             </div>
                         </div>
                         <div class="form-horizontal">
@@ -35,17 +35,17 @@
                                     <label class="col-sm-3 control-label">Ханш<label class="text-danger">*</label></label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" v-model="currency.exchange" />
-                                        <div class="text-danger" v-if="errorMessages.name">
-                                            {{ errorMessages.name[0] }}
+                                        <div class="text-danger" v-if="errorMessages.exchange">
+                                            {{ errorMessages.exchange[0] }}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Тэмдэг<label class="text-danger">*</label></label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" v-model="currency.marker" />
-                                        <div class="text-danger" v-if="errorMessages.name">
-                                            {{ errorMessages.name[0] }}
+                                        <input type="text" class="form-control" v-model="currency.marker" @keyup.enter="save()" />
+                                        <div class="text-danger" v-if="errorMessages.marker">
+                                            {{ errorMessages.marker[0] }}
                                         </div>
                                     </div>
                                 </div>
@@ -63,7 +63,7 @@
                             <div class="box-body">
                                 <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
                                     <div class="input-group input-group-sm input-small with-margin-bottom pull-left">
-                                        <input type="text" v-model="query.per_page" class="form-control" />
+                                        <input type="text" v-model="query.per_page" class="form-control" @keyup.enter="changePerPage()"/>
                                         <div class="input-group-btn">
                                             <button class="btn" @click="changePerPage()">-р хуудаслах</button>
                                         </div>
@@ -125,6 +125,7 @@
         data()
         {
             return {
+                mode:'Вальют нэмэх',
                 model: [],
                 loading: false,
                 roots: [],
@@ -189,6 +190,7 @@
             edit(currency)
             {
                 this.currency = currency;
+                this.mode = 'Вальют засварлах'
             },
             save()
             {
