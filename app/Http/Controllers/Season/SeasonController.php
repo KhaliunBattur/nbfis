@@ -6,6 +6,8 @@ use App\Account\AccountGroupRepositoryInterface;
 use App\Account\AccountRepositoryInterface;
 use App\Season\Season;
 use App\Season\SeasonRepositoryInterface;
+use App\Transaction\Transaction;
+use App\Transaction\TransactionRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -24,18 +26,24 @@ class SeasonController extends Controller
      * @var AccountGroupRepositoryInterface
      */
     private $groupRepository;
+    /**
+     * @var TransactionRepositoryInterface
+     */
+    private $transactionRepository;
 
     /**
      * SeasonController constructor.
      * @param SeasonRepositoryInterface $seasonRepository
      * @param AccountRepositoryInterface $accountRepository
      * @param AccountGroupRepositoryInterface $groupRepository
+     * @param TransactionRepositoryInterface $transactionRepository
      */
-    public function __construct(SeasonRepositoryInterface $seasonRepository, AccountRepositoryInterface $accountRepository, AccountGroupRepositoryInterface $groupRepository)
+    public function __construct(SeasonRepositoryInterface $seasonRepository, AccountRepositoryInterface $accountRepository, AccountGroupRepositoryInterface $groupRepository, TransactionRepositoryInterface $transactionRepository)
     {
         $this->seasonRepository = $seasonRepository;
         $this->accountRepository = $accountRepository;
         $this->groupRepository = $groupRepository;
+        $this->transactionRepository = $transactionRepository;
     }
 
     /**
@@ -140,7 +148,7 @@ class SeasonController extends Controller
             if($group->accounts->count())
             {
                 $array[$key]['accounts'] = [];
-                foreach ($group->accounts()->with(['currency', 'journal', 'group', 'bank'])->get() as $account)
+                foreach ($group->accounts()->with(['currency', 'journal', 'group', 'bank', 'breakdown'])->get() as $account)
                 {
                     if(array_key_exists($account->getKey(), $accounts))
                     {
@@ -182,7 +190,7 @@ class SeasonController extends Controller
             if($child->accounts->count())
             {
                 $array[$key]['accounts'] = [];
-                foreach ($child->accounts()->with(['currency', 'journal', 'group', 'bank'])->get() as $account)
+                foreach ($child->accounts()->with(['currency', 'journal', 'group', 'bank', 'breakdown'])->get() as $account)
                 {
                     if(array_key_exists($account->getKey(), $accounts))
                     {
@@ -207,16 +215,25 @@ class SeasonController extends Controller
      */
     public function saveBalance($id, Request $request)
     {
-        $accounts = [];
+        \DB::transaction(function() use($request, $id) {
+            $accounts = [];
 
-        $accounts = $this->getAccounts($request->all(), $accounts);
+            $accounts = $this->getAccounts($request->all(), $accounts);
 
-        $season = $this->seasonRepository->findById($id);
+            $season = $this->seasonRepository->findById($id);
 
-        foreach ($accounts as $account)
-        {
-            $season->accounts()->updateExistingPivot($account['id'], ['balance' => $account['balance']]);
-        }
+            foreach ($accounts as $account)
+            {
+                $season->accounts()->updateExistingPivot($account['id'], ['balance' => $account['balance']]);
+
+                $syncAccount = $this->accountRepository->findById($account['id']);
+
+                if(array_key_exists('breakdown', $account))
+                {
+                    $syncAccount->syncBreakDowns($account['breakdown'], $season, $account);
+                }
+            }
+        });
 
         return response()->json([
             'result' => true

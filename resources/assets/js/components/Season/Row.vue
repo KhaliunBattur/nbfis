@@ -32,8 +32,8 @@
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="input-group" v-if="acc.type == 'active'">
                             <money v-model="acc.balance" v-bind="money" class="input-sm form-control" @input="selectInput(acc.balance)"></money>
-                            <div class="input-group-addon">
-                                {{ acc.currency.marker }}
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary btn-sm" data-placement="top" title="Задаргаа оруулах" @click="breakdown(acc)" v-tip>{{ acc.currency.marker }}</button>
                             </div>
                             <div v-if="!acc.currency.is_current">
                                 <money :value="parseFloat(acc.balance) * acc.exchange" v-bind="money" readonly="readonly" class="input-sm form-control" @input="selectInput(acc.balance)"></money>
@@ -45,16 +45,21 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="input-group" v-if="acc.type == 'passive'">
-                            <div>
-                                <money v-model="acc.balance" v-bind="money" class="input-sm form-control" @input="selectInput(acc.balance)"></money>
+                            <money v-model="acc.balance" v-bind="money" class="input-sm form-control" @input="selectInput(acc.balance)"></money>
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary btn-sm" data-placement="top" title="Задаргаа оруулах" @click="breakdown(acc)" v-tip>{{ acc.currency.marker }}</button>
                             </div>
-                            <div class="input-group-addon">
-                                {{ acc.currency.marker }}
+                            <div v-if="!acc.currency.is_current">
+                                <money :value="parseFloat(acc.balance) * acc.exchange" v-bind="money" readonly="readonly" class="input-sm form-control" @input="selectInput(acc.balance)"></money>
+                            </div>
+                            <div class="input-group-btn">
+                                ₮
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <breakdown :account="acc" v-on:saved="saveBreakDown" :id="'breakDown' + acc.id"></breakdown>
         </div>
         <account-row v-for="child in account.children" v-bind:key="child.id" v-bind:account="child" :number="number + 10" v-on:setBalance="setBalance"></account-row>
     </div>
@@ -64,6 +69,7 @@
 
     import Row from './Row.vue';
     import DeleteConfirm from './../Helper/DeleteConfirm.vue';
+    import Breakdown from './Breakdown.vue';
     import {Money} from 'v-money'
 
     export default {
@@ -81,6 +87,7 @@
         data()
         {
             return {
+                acc: null,
                 selectedValue: null,
                 money:{
                     decimal:'.',
@@ -119,9 +126,21 @@
             'account-row': Row,
             'delete-confirm': DeleteConfirm,
             'money': Money,
+            'breakdown': Breakdown
         },
 
         methods: {
+            breakdown(account)
+            {
+                this.acc = account;
+                $('#breakDown' + account.id).modal('show');
+            },
+            saveBreakDown(data)
+            {
+                $('#breakDown' + this.acc.id).modal('hide');
+                this.account.accounts[this.account.accounts.indexOf(this.acc)]['breakdown'] = data.transaction;
+                this.account.accounts[this.account.accounts.indexOf(this.acc)]['balance'] = data.total;
+            },
             selectInput(value)
             {
                 this.selectedValue = value;

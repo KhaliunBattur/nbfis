@@ -17,6 +17,13 @@ window.Vue = require('vue');
 
 import Router from './routes'
 
+Vue.directive('tip', {
+    "twoWay": true,
+    bind: function(el, binding, vnode) {
+        $(el).tooltip()
+    }
+});
+
 Vue.directive('pick', {
     "twoWay": true,
     bind: function(el, binding, vnode) {

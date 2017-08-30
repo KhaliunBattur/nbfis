@@ -12,6 +12,7 @@ namespace App\Account;
 use App\Season\Season;
 use App\Support\Bank;
 use App\Support\Currency;
+use App\Transaction\Transaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laracasts\Presenter\PresentableTrait;
@@ -42,6 +43,60 @@ class Account extends Model
     public function seasons()
     {
         return $this->belongsToMany(Season::class, 'season_balance', 'account_id', 'season_id')->withPivot('exchange', 'balance');
+    }
+
+    /**
+     * @return $this
+     */
+    public function breakdown()
+    {
+        return $this->hasMany(Transaction::class, 'account_id')->whereNull('type');
+    }
+
+    /**
+     * @param $breakdown
+     * @param $season
+     * @param $account
+     */
+    public function syncBreakDowns($breakdown, $season, $account)
+    {
+        $children = $this->breakdown;
+        $items = collect($breakdown);
+
+        $delete_ids = $children->filter(function($child) use($items){
+            return empty(
+                $items->where('id', $child->id)->first()
+            );
+        })->map(function($child) {
+            $id = $child->id;
+            $child->delete();
+
+            return $id;
+        });
+
+        $attachments = $items->filter(function($item){
+            return empty($item['id']);
+        })->map(function($item) use ($delete_ids, $season, $account) {
+            $item['id'] = $delete_ids->pop();
+            $item['season_id'] = $season->getKey();
+            $item['account_id'] = $account['id'];
+            $item['description'] = is_null($item['description']) ? 'Эхний үлдэгдэл' : $item['description'];
+            $item['exchange'] = $account['exchange'];
+            $item['user_id'] = \Auth::user()->getKey();
+            return new Transaction($item);
+        });
+
+        if($attachments->count() == 0)
+        {
+            $attachments = $items->map(function($item){
+                $transaction = Transaction::find($item['id']);
+                $transaction->amount = $item['amount'];
+                $transaction->description = is_null($item['description']) ? 'Эхний үлдэгдэл' : $item['description'];
+                return $transaction;
+            });
+        }
+
+        $this->breakdown()->saveMany($attachments);
     }
 
     /**
