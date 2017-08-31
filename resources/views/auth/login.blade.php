@@ -33,7 +33,7 @@
                 {{ csrf_field() }}
 
                 <div class="form-group has-feedback">
-                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" />
+                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Нэвтрэх нэр"/>
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     @if ($errors->has('email'))
                         <span class="help-block">
@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="form-group has-feedback">
-                    <input id="password" type="password" class="form-control" name="password" />
+                    <input id="password" type="password" class="form-control" name="password"  placeholder="Нууц үг"/>
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     @if ($errors->has('password'))
                         <span class="help-block">
