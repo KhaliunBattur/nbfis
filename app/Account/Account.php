@@ -70,7 +70,10 @@ class Account extends Model
             );
         })->map(function($child) {
             $id = $child->id;
-            $child->transactionAble->delete();
+            if(!is_null($child->transactionAble))
+            {
+                $child->transactionAble->delete();
+            }
             $child->delete();
 
             return $id;
@@ -85,7 +88,7 @@ class Account extends Model
             $item['description'] = is_null($item['description']) ? 'Эхний үлдэгдэл' : $item['description'];
             $item['exchange'] = $account['exchange'];
             $item['user_id'] = \Auth::user()->getKey();
-            if(!is_null($item['transaction_able']))
+            if(array_key_exists('transaction_able', $item) && !is_null($item['transaction_able']))
             {
                 if($account['class_name'] == 'Receivable')
                 {
@@ -104,7 +107,7 @@ class Account extends Model
                 $transaction->amount = $item['amount'];
                 $transaction->description = is_null($item['description']) ? 'Эхний үлдэгдэл' : $item['description'];
 
-                if(!is_null($item['transaction_able']))
+                if(array_key_exists('transaction_able', $item) && !is_null($item['transaction_able']))
                 {
                     $transaction->transactionAble->update($item['transaction_able']);
                 }
