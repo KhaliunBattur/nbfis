@@ -190,7 +190,7 @@ class SeasonController extends Controller
             if($child->accounts->count())
             {
                 $array[$key]['accounts'] = [];
-                foreach ($child->accounts()->with(['currency', 'journal', 'group', 'bank', 'breakdown'])->get() as $account)
+                foreach ($child->accounts()->with(['currency', 'journal', 'group', 'bank', 'breakdown', 'breakdown.transactionAble'])->get() as $account)
                 {
                     if(array_key_exists($account->getKey(), $accounts))
                     {

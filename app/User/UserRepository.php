@@ -105,4 +105,12 @@ class UserRepository implements UserRepositoryInterface
             'family', 'workplaces', 'emergencies', 'activeLoans', 'budgets', 'assets', 'expenses','pledge_types','owner_types'
         ])->first();
     }
+
+    /**
+     * @return Collection
+     */
+    public function findByCustomerListRaw()
+    {
+        return $this->model->where('user_type', 'customer')->select('id', \DB::raw("CONCAT(first_name, ' ', name) as text"))->get();
+    }
 }

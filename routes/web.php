@@ -92,6 +92,8 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::resource('roles', 'RoleController', ['only' => ['index']]);
         Route::resource('roles.permission', 'PermissionController', ['only' => ['store', 'destroy']]);
         Route::get('permission/search', ['as' => 'permission.search', 'uses' => 'PermissionController@search']);
+
+        Route::get('customer/list', 'UserController@customerList')->name('customer.list');
     });
 
     Route::get('relations', function(){
@@ -118,7 +120,11 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         ]);
     });
 
-
+    Route::get('codes', function(){
+        return response()->json([
+            'codes' => \Config::get('enums.codes')
+        ]);
+    });
 
     Route::get('references/{type}', function ($type, Request $request){
         return ReferenceText::where('type', $type)

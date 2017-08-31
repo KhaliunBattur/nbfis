@@ -12,6 +12,7 @@ namespace App\Account;
 use App\Season\Season;
 use App\Support\Bank;
 use App\Support\Currency;
+use App\Transaction\Receivable;
 use App\Transaction\Transaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -69,6 +70,7 @@ class Account extends Model
             );
         })->map(function($child) {
             $id = $child->id;
+            $child->transactionAble->delete();
             $child->delete();
 
             return $id;
@@ -83,6 +85,12 @@ class Account extends Model
             $item['description'] = is_null($item['description']) ? 'Эхний үлдэгдэл' : $item['description'];
             $item['exchange'] = $account['exchange'];
             $item['user_id'] = \Auth::user()->getKey();
+            if(array_key_exists('receivable', $item))
+            {
+                $receivable = Receivable::create($item['receivable']);
+                $item['transaction_able'] = 'App\Transaction\Receivable';
+                $item['transaction_able_id'] = $receivable->getKey();
+            }
             return new Transaction($item);
         });
 
@@ -92,6 +100,12 @@ class Account extends Model
                 $transaction = Transaction::find($item['id']);
                 $transaction->amount = $item['amount'];
                 $transaction->description = is_null($item['description']) ? 'Эхний үлдэгдэл' : $item['description'];
+
+                if(array_key_exists('receivable', $item))
+                {
+                    $transaction->transactionAble->update($item['receivable']);
+                }
+
                 return $transaction;
             });
         }

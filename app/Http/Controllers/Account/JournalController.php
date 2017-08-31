@@ -58,6 +58,7 @@ class JournalController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
+            'form_code' => 'required',
             'name' => 'required|unique:journal,name,'.$request->get('id')
         ]);
 

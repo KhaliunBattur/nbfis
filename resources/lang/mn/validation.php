@@ -133,6 +133,7 @@ return [
         'code'        => 'код',
         'journal'     => 'журнал',
         'currency'    => 'валют',
+        'form_code'   => 'форум код',
         'bank_account_number' => 'банкны дансны дугаар'
     ],
 

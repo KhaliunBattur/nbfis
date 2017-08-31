@@ -272,6 +272,15 @@ class UserController extends Controller
         ]);
     }
 
+    public function customerList()
+    {
+        $customers = $this->userRepository->findByCustomerListRaw()->toArray();
+
+        return response()->json([
+            'customers' => $customers
+        ]);
+    }
+
     /**
      * @param $request
      */

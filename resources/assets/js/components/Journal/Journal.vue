@@ -40,6 +40,17 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Форум код <label class="text-danger">*</label></label>
+                                    <div class="col-sm-9">
+                                        <select v-model="journal.form_code" class="form-control">
+                                            <option v-for="(code, index) in codes" :value="index">{{ code }}</option>
+                                        </select>
+                                        <div class="text-danger" v-if="errorMessages.form_code">
+                                            {{ errorMessages.form_code[0] }}
+                                        </div>
+                                    </div>
+                                </div>
                                 <button type="button" class="btn btn-primary btn-sm pull-right" @click="save()">Хадгалах</button>
                             </div>
                         </div>
@@ -117,6 +128,7 @@
                 model: [],
                 loading: false,
                 roots: [],
+                codes: [],
                 journal: {
                     id: 0,
                     name: null,
@@ -141,6 +153,7 @@
         created()
         {
             this.fetchJournal();
+            this.fetchCodes();
         },
 
         components: {
@@ -153,6 +166,12 @@
             changePerPage()
             {
                 this.fetchJournal();
+            },
+            fetchCodes()
+            {
+                axios.get('/api/codes').then(response => {
+                    this.codes = response.data.codes
+                }).catch(errors => {});
             },
             fetchRoot(search, loading)
             {
