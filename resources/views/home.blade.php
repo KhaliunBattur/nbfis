@@ -30,7 +30,7 @@
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini">ББСБ</span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg">ББСБ</span>
+                <span class="logo-lg">ББСБ Hello</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
@@ -70,7 +70,7 @@
                     </div>
                     <div class="pull-left info">
                         <p>{{ Auth::user()->name }}</p>
-                        <a href="#">Admin</a>
+                        <a href="#"></a>
                     </div>
                 </div>
                 <!-- search form -->
