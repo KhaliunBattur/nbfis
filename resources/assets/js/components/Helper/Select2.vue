@@ -1,6 +1,6 @@
 <template>
-    <select>
-        <option v-for="option in options" :value="option.id" :selected="value == option.id ? 'selected' : ''">{{ option.text }}</option>
+    <select v-model="value">
+        <option v-for="option in options" :value="option.id">{{ option.text }}</option>
     </select>
 </template>
 
@@ -8,14 +8,13 @@
 
     export default {
         props: ['options', 'value', 'selected'],
-
         mounted: function() {
             var self = this;
-            $(this.$el)
-                .select2({ data: this.options })
-                .trigger('change')
-                // emit event on change.
-                .on('change', function () {
+            $(this.$el).select2({
+                placeholder: 'Сонгох...',
+                allowClear: true
+            })
+                .on('change', function(){
                     var data = {
                         value: this.value,
                         selected: self.selected
@@ -23,7 +22,7 @@
                     self.$emit('input', data)
                 })
         },
-        destroyed: function () {
+        destroyed: function(){
             $(this.$el).off().select2('destroy')
         }
     }

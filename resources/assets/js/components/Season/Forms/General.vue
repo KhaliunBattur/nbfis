@@ -67,7 +67,7 @@
                 transaction: [
                     {
                         id: 0,
-                        description: null,
+                        description: 'Эхний үлдэгдэл',
                         amount: 0
                     }
                 ],
@@ -88,7 +88,7 @@
             {
                 this.transaction.push({
                     id: 0,
-                    description: null,
+                    description: 'Эхний үлдэгдэл',
                     amount: 0
                 });
             },
@@ -104,11 +104,13 @@
                 }
                 let data = {
                     total: this.total,
-                    transaction: this.transaction
+                    transaction: this.transaction,
+                    class_name: null
                 }
                 this.transaction = [
                     {
-                        description: null,
+                        id: 0,
+                        description: 'Эхний үлдэгдэл',
                         amount: 0
                     }
                 ]

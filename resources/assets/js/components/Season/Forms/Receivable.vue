@@ -71,10 +71,11 @@
             return {
                 selectedValue: 0,
                 total: 0,
+                class_name: "Receivable",
                 transaction: [
                     {
                         id: 0,
-                        description: null,
+                        description: 'Эхний үлдэгдэл',
                         amount: 0,
                         transaction_able: {
                             id: 0,
@@ -102,7 +103,7 @@
             {
                 this.transaction.push({
                     id: 0,
-                    description: null,
+                    description: 'Эхний үлдэгдэл',
                     amount: 0,
                     transaction_able: {
                         id: 0,
@@ -127,13 +128,14 @@
                 }
                 let data = {
                     total: this.total,
-                    transaction: this.transaction
+                    transaction: this.transaction,
+                    class_name: this.class_name
                 }
 
                 this.transaction = [
                     {
                         id: 0,
-                        description: null,
+                        description: 'Эхний үлдэгдэл',
                         amount: 0,
                         transaction_able: {
                             id: 0,

@@ -85,11 +85,14 @@ class Account extends Model
             $item['description'] = is_null($item['description']) ? 'Эхний үлдэгдэл' : $item['description'];
             $item['exchange'] = $account['exchange'];
             $item['user_id'] = \Auth::user()->getKey();
-            if(array_key_exists('receivable', $item))
+            if(!is_null($item['transaction_able']))
             {
-                $receivable = Receivable::create($item['receivable']);
-                $item['transaction_able'] = 'App\Transaction\Receivable';
-                $item['transaction_able_id'] = $receivable->getKey();
+                if($account['class_name'] == 'Receivable')
+                {
+                    $receivable = Receivable::create($item['transaction_able']);
+                    $item['transaction_able'] = 'App\Transaction\Receivable';
+                    $item['transaction_able_id'] = $receivable->getKey();
+                }
             }
             return new Transaction($item);
         });
@@ -101,9 +104,9 @@ class Account extends Model
                 $transaction->amount = $item['amount'];
                 $transaction->description = is_null($item['description']) ? 'Эхний үлдэгдэл' : $item['description'];
 
-                if(array_key_exists('receivable', $item))
+                if(!is_null($item['transaction_able']))
                 {
-                    $transaction->transactionAble->update($item['receivable']);
+                    $transaction->transactionAble->update($item['transaction_able']);
                 }
 
                 return $transaction;

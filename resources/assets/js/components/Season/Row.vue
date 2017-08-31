@@ -140,6 +140,7 @@
                 $('#breakDown' + this.acc.id).modal('hide');
                 this.account.accounts[this.account.accounts.indexOf(this.acc)]['breakdown'] = data.transaction;
                 this.account.accounts[this.account.accounts.indexOf(this.acc)]['balance'] = data.total;
+                this.account.accounts[this.account.accounts.indexOf(this.acc)]['class_name'] = data.class_name;
             },
             selectInput(value)
             {
