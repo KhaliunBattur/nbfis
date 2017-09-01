@@ -2,7 +2,7 @@
     <div class="box">
         <div class="box-header with-border">
             <div class="box-title">
-                Ажлын газрын мэдээлэл
+                Холбоо барих хүний мэдээлэл
             </div>
             <div class="box-tools">
                 <a class="btn btn-sm btn-default" @click="createEmergency()" v-if="view == 'list'">Шинээр нэмэх</a>
