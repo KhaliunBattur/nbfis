@@ -25,7 +25,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Нэр <label class="text-danger">*</label></label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" v-model="bank.name" @keyup.enter="save()"/>
+                                        <input maxlength="255" type="text" class="form-control" v-model="bank.name" @keyup.enter="save()"/>
                                         <div class="text-danger" v-if="errorMessages.name">
                                             {{ errorMessages.name[0] }}
                                         </div>
