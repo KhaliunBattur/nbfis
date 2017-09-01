@@ -113,4 +113,12 @@ class UserRepository implements UserRepositoryInterface
     {
         return $this->model->where('user_type', 'customer')->select('id', \DB::raw("CONCAT(first_name, ' ', name) as text"))->get();
     }
+
+    /**
+     * @return Collection
+     */
+    public function findByUserListRaw()
+    {
+        return $this->model->where('user_type', 'staff')->select('id', \DB::raw("CONCAT(first_name, ' ', name) as text"))->get();
+    }
 }

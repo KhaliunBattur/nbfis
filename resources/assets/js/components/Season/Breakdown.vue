@@ -2,6 +2,7 @@
     <div>
         <general v-on:saved="saveGeneral" :account="account" :id="id" v-if="account.journal.form_code == '00001'"></general>
         <receivable v-on:saved="saveReceivable" :account="account" :id="id" v-if="account.journal.form_code == '00002'"></receivable>
+        <property v-on:saved="saveReceivable" :account="account" :id="id" v-if="account.journal.form_code == '00003'"></property>
     </div>
 </template>
 
@@ -9,6 +10,7 @@
 
     import General from './Forms/General.vue';
     import Receivable from './Forms/Receivable.vue';
+    import Property from './Forms/Property.vue';
 
     export default {
 
@@ -16,7 +18,8 @@
 
         components: {
             'general' : General,
-            'receivable' : Receivable
+            'receivable' : Receivable,
+            'property': Property
         },
 
         methods: {

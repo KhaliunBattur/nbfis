@@ -136,6 +136,15 @@ class GroupController extends Controller
         ]);
     }
 
+    public function journalGroups($id)
+    {
+        $groups = $this->groupRepository->findJournalGroups($id)->toArray();
+
+        return response()->json([
+            'groups' => $groups
+        ]);
+    }
+
     /**
      * @param $request
      */

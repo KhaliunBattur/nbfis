@@ -28,8 +28,11 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
     Route::get('currency/lists', ['as' => 'currency.lists', 'uses' => 'CurrencyController@lists']);
     Route::get('bank/lists', ['as' => 'bank.lists', 'uses' => 'BankController@lists']);
 
-    Route::resource('bank','BankController');
-    Route::resource('currency','CurrencyController');
+    Route::resource('bank', 'BankController');
+    Route::resource('currency', 'CurrencyController');
+
+    Route::resource('branch', 'BranchController');
+    Route::get('list/branches', 'BranchController@lists')->name('branch.lists');
 
     Route::group(['namespace' => 'Account', 'as' => 'account.'], function(){
         Route::resource('account', 'AccountController');
@@ -37,6 +40,7 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::get('account/group/{group}/others', ['as' => 'group.others', 'uses' => 'GroupController@others']);
         Route::resource('journal', 'JournalController', ['except' => ['create', 'show', 'edit', 'update']]);
         Route::get('journal/lists', ['as' => 'journal.lists', 'uses' => 'JournalController@lists']);
+        Route::get('journal/{id}/group', ['as' => 'journal.lists', 'uses' => 'GroupController@journalGroups']);
     });
 
     Route::resource('season', 'Season\SeasonController', ['expect' => ['create']]);
@@ -94,6 +98,7 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::get('permission/search', ['as' => 'permission.search', 'uses' => 'PermissionController@search']);
 
         Route::get('customer/list', 'UserController@customerList')->name('customer.list');
+        Route::get('user/list', 'UserController@userList')->name('user.list');
     });
 
     Route::get('relations', function(){

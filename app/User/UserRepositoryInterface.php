@@ -25,4 +25,9 @@ interface UserRepositoryInterface extends Repository
      * @return Collection
      */
     public function findByCustomerListRaw();
+
+    /**
+     * @return Collection
+     */
+    public function findByUserListRaw();
 }

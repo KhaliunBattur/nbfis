@@ -90,4 +90,14 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     {
         return $this->model->whereNull('root_id')->get();
     }
+
+    /**
+     * @param $id
+     * @return Collection
+     */
+    public function findJournalGroups($id)
+    {
+        return $this->model->select('id', \DB::raw("CONCAT(code, ' ', name) as text"))
+            ->get();
+    }
 }

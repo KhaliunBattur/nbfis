@@ -281,6 +281,15 @@ class UserController extends Controller
         ]);
     }
 
+    public function userList()
+    {
+        $users = $this->userRepository->findByUserListRaw()->toArray();
+
+        return response()->json([
+            'users' => $users
+        ]);
+    }
+
     /**
      * @param $request
      */

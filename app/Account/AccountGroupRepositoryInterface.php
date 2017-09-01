@@ -10,6 +10,7 @@ namespace App\Account;
 
 
 use App\Core\Repository;
+use Illuminate\Database\Eloquent\Collection;
 
 interface AccountGroupRepositoryInterface extends Repository
 {
@@ -25,4 +26,10 @@ interface AccountGroupRepositoryInterface extends Repository
      * @return mixed
      */
     public function findParents();
+
+    /**
+     * @param $id
+     * @return Collection
+     */
+    public function findJournalGroups($id);
 }
