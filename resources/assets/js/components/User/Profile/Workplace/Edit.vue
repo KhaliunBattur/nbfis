@@ -6,7 +6,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Байгууллага <label class="text-danger">*</label></label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="workplace.organization" name="org" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('org') }" placeholder="Ихдээ 255 тэмдэгт" />
+                            <input type="text" maxlength="255" class="form-control" v-model="workplace.organization" name="org" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('org') }"/>
                             <div v-show="errors.has('org')" class="help is-danger">{{ errors.first('org') }}</div>
                         </div>
                     </div>
@@ -20,14 +20,14 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Албан тушаал <label class="text-danger">*</label></label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="workplace.position" name="pos" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('pas') }" placeholder="Ихдээ 255 тэмдэгт"/>
+                            <input type="text" maxlength="255" class="form-control" v-model="workplace.position" name="pos" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('pas') }"/>
                             <div v-show="errors.has('pos')" class="help is-danger">{{ errors.first('pos') }}</div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Үйл ажиллагааны чиглэл <label class="text-danger">*</label></label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="workplace.activity" name="act" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('act') }" placeholder="Ихдээ 255 тэмдэгт"/>
+                            <input type="text" maxlength="255" class="form-control" v-model="workplace.activity" name="act" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('act') }"/>
                             <div v-show="errors.has('act')" class="help is-danger">{{ errors.first('act') }}</div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Ажилчдын тоо<label class="text-danger">*</label></label>
                         <div class="col-sm-10">
-                            <input type="number" @keyup.enter="save()" class="form-control" v-model="workplace.worker_count" name="count" v-validate="'required'" :class="{'form-control': true, 'is-danger': errors.has('count') }" placeholder="Зөвхөн тоо оруулна уу"/>
+                            <input type="number" @keyup.enter="save()" class="form-control" v-model="workplace.worker_count" name="count" v-validate="'required'" :class="{'form-control': true, 'is-danger': errors.has('count') }"/>
                             <div v-show="errors.has('count')" class="help is-danger">{{ errors.first('count') }}</div>
                         </div>
                     </div>
