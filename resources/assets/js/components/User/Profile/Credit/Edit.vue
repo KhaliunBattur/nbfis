@@ -6,7 +6,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Зээл авсан банк /санхүүгийн байгууллагын/ нэр<label class="text-danger">*</label></label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="credit.organization" name="org" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('org') }" placeholder="Ихдээ 255 тэмдэгт"/>
+                            <input type="text" maxlength="255" class="form-control" v-model="credit.organization" name="org" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('org') }"/>
                             <div v-show="errors.has('org')" class="help is-danger">{{ errors.first('org') }}</div>
                         </div>
                     </div>

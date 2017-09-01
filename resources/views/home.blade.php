@@ -32,7 +32,7 @@
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini">ББСБ</span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg">ББСБ Hello</span>
+                <span class="logo-lg">ББСБ</span>
             </router-link>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
@@ -64,13 +64,20 @@
                                         <router-link to="/users/{{ Auth::user()->getKey() }}/profile" class="btn btn-default btn-flat">Хувийн мэдээлэл</router-link>
                                     </div>
                                     <div class="pull-right">
-                                        <a onclick="document.getElementById('form-logout').submit()" class="btn btn-default btn-flat">Гарах</a>
+                                        <a href="{{ route('logout') }}"
+                                           onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();" class="btn btn-default btn-flat">
+                                            Гарах
+                                        </a>
                                     </div>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                    </form>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                            <a href="#" data-toggle="control-sidebar" class="settingsBtn"><i class="fa fa-gears"></i></a>
                         </li>
                     </ul>
                 </div>
@@ -227,5 +234,16 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+        $(window).click(function(event) {
+            var sidebar = $(".control-sidebar");
+            if (
+                $(".settingsBtn").has(event.target).length == 0 && !$(".settingsBtn").is(event.target)
+                && $(".control-sidebar-dark").has(event.target).length == 0 && !$(".control-sidebar-dark").is(event.target)
+            ){
+                $(".control-sidebar").removeClass("control-sidebar-open")
+            }
+        });
+    </script>
 </body>
 </html>

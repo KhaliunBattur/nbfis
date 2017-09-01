@@ -23,14 +23,14 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Овог <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input type="text" maxlength="255" class="form-control" v-model="user.first_name" name="fname" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('fname') }" placeholder="Хамгийн ихдээ 255 тэмдэгт"/>
+                                    <input type="text" maxlength="255" class="form-control" v-model="user.first_name" name="fname" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('fname') }"/>
                                     <div v-show="errors.has('fname')" class="help is-danger">{{ errors.first('fname') }}</div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Нэр <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input type="text" maxlength="255"  class="form-control" v-model="user.name"  name="oname" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('oname') }" placeholder="Хамгийн ихдээ 255 тэмдэгт"/>
+                                    <input type="text" maxlength="255"  class="form-control" v-model="user.name"  name="oname" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('oname') }"/>
                                     <div v-show="errors.has('oname')" class="help is-danger">{{ errors.first('oname') }}</div>
                                 </div>
                             </div>
@@ -95,14 +95,14 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Нууц үг <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input type="password" class="form-control" v-model="user.password" name="pass" v-validate="'required|min:6'" :class="{'form-control': true, 'is-danger': errors.has('pass') }" placeholder="Багадаа 6-н тэмдэгт"/>
+                                    <input type="password" class="form-control" v-model="user.password" name="pass" v-validate="'required|min:6'" :class="{'form-control': true, 'is-danger': errors.has('pass') }"/>
                                     <div v-show="errors.has('pass')" class="help is-danger">{{ errors.first('pass') }}</div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Нууц үг батлах <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input type="password" class="form-control" v-model="user.confirm_password" @keyup.enter="save()" name="confpass" v-validate="'required|min:6'" :class="{'form-control': true, 'is-danger': errors.has('confpass') }" placeholder="Багадаа 6-н тэмдэгт"   />
+                                    <input type="password" class="form-control" v-model="user.confirm_password" @keyup.enter="save()" name="confpass" v-validate="'required|min:6'" :class="{'form-control': true, 'is-danger': errors.has('confpass') }"/>
                                     <div v-show="errors.has('confpass')" class="help is-danger">{{ errors.first('confpass') }}</div>
                                 </div>
                             </div>
