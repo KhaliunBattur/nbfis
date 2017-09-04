@@ -14,10 +14,10 @@
                             <tr>
                                 <td><span class="text text-black">#</span></td>
                                 <td>
-                                    <input type="text" class="form-control input-sm" v-auto data-type="asset" v-model="asset.name" data-target="#asset-input" v-on:selected="setData(asset, '#asset-input')">
+                                    <input type="text" class="form-control input-sm" v-auto data-type="asset" v-model="asset.name" data-target="#asset-input" v-on:selected="setData(asset, '#asset-input')" placeholder="Хөрөнгийн төрөл">
                                     <input type="hidden" v-model="asset.name" id="asset-input" />
                                 </td>
-                                <td><input type="text" class="form-control input-sm" v-model="asset.asset"></td>
+                                <td><input type="number" class="form-control input-sm" v-model="asset.asset" placeholder="Дүн"></td>
                                 <td>
                                     <button class="btn btn-sm btn-success" @click="addAsset()"><i class="fa fa-plus-circle"></i></button>
                                 </td>
@@ -25,10 +25,10 @@
                             <tr v-for="(b, index) in assets">
                                 <td><span class="text text-black">{{ index + 1 }}</span></td>
                                 <td>
-                                    <input type="text" class="form-control input-sm" v-auto data-type="asset" :data-target="'#asset-input' + b.id" :value="b.name" v-on:selected="setData(b, '#asset-input' + b.id)">
+                                    <input type="text" class="form-control input-sm" v-model="b.name" v-auto data-type="asset" :data-target="'#asset-input' + b.id" :value="b.name" v-on:selected="setData(b, '#asset-input' + b.id)">
                                     <input type="hidden" v-model="b.name" :id="'asset-input' + b.id" />
                                 </td>
-                                <td><input type="text" class="form-control input-sm" v-model="b.asset"></td>
+                                <td><input type="number" class="form-control input-sm" v-model="b.asset"></td>
                                 <td>
                                     <div class="btn-group">
                                         <button class="btn btn-sm btn-warning" @click="saveAsset(b)"><i class="fa fa-pencil"></i></button>
@@ -106,6 +106,8 @@
                 axios.post('/api/user/' + this.user.id + '/asset', this.asset).then(response => {
                     if (response.data.result) {
                         this.fetchAsset();
+                        this.asset.name='';
+                        this.asset.asset='';
                     }
                     this.loading = false;
                 }).catch(errors => {

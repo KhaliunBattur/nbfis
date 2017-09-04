@@ -92,20 +92,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Нууц үг <label class="text-danger">*</label></label>
-                                <div class="col-sm-10">
-                                    <input type="password" class="form-control" v-model="user.password" name="pass" v-validate="'required|min:6'" :class="{'form-control': true, 'is-danger': errors.has('pass') }"/>
-                                    <div v-show="errors.has('pass')" class="help is-danger">{{ errors.first('pass') }}</div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Нууц үг батлах <label class="text-danger">*</label></label>
-                                <div class="col-sm-10">
-                                    <input type="password" class="form-control" v-model="user.confirm_password" @keyup.enter="save()" name="confpass" v-validate="'required|min:6'" :class="{'form-control': true, 'is-danger': errors.has('confpass') }"/>
-                                    <div v-show="errors.has('confpass')" class="help is-danger">{{ errors.first('confpass') }}</div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="box-footer">
