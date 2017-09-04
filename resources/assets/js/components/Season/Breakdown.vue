@@ -2,7 +2,7 @@
     <div>
         <general v-on:saved="saveGeneral" :account="account" :id="id" v-if="account.journal.form_code == '00001'"></general>
         <receivable v-on:saved="saveReceivable" :account="account" :id="id" v-if="account.journal.form_code == '00002'"></receivable>
-        <property v-on:saved="saveReceivable" :account="account" :id="id" v-if="account.journal.form_code == '00003'"></property>
+        <property v-on:saved="saveReceivable" :account="account" :season="season" :id="id" v-if="account.journal.form_code == '00003'"></property>
     </div>
 </template>
 
@@ -14,7 +14,7 @@
 
     export default {
 
-        props: ['account', 'id'],
+        props: ['account', 'id', 'season'],
 
         components: {
             'general' : General,

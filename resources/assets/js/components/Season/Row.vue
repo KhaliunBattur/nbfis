@@ -59,9 +59,9 @@
                     </div>
                 </div>
             </div>
-            <breakdown :account="acc" v-on:saved="saveBreakDown" :id="'breakDown' + acc.id"></breakdown>
+            <breakdown :account="acc" v-on:saved="saveBreakDown" :id="'breakDown' + acc.id" :season="season"></breakdown>
         </div>
-        <account-row v-for="child in account.children" v-bind:key="child.id" v-bind:account="child" :number="number + 10" v-on:setBalance="setBalance"></account-row>
+        <account-row v-for="child in account.children" v-bind:key="child.id" v-bind:account="child" :number="number + 10" :season="season" v-on:setBalance="setBalance"></account-row>
     </div>
 </template>
 

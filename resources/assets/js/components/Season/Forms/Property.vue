@@ -21,13 +21,13 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Хөрөнгийн ангилал</label>
-                                                <select2 :options="groups" :value="tran.property.group_id" :selected="tran"></select2>
+                                                <select2 :options="groups" :value="tran.property.group_id" :selected="tran" v-on:input="selectGroup"></select2>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Байрлал</label>
-                                                <select2 :options="branches" :value="tran.property.branch_id" :selected="tran"></select2>
+                                                <select2 :options="branches" :value="tran.property.branch_id" :selected="tran" v-on:input="selectBranch"></select2>
                                             </div>
                                         </td>
                                     </tr>
@@ -47,7 +47,7 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Эд хариуцагч</label>
-                                                <select2 :options="users" :value="tran.property.owner_id" :selected="tran"></select2>
+                                                <select2 :options="users" :value="tran.property.owner_id" :selected="tran" v-on:input="selectOwner"></select2>
                                             </div>
                                         </td>
                                     </tr>
@@ -55,19 +55,39 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Нэгж өртөг</label>
-                                                <input type="text" class="form-control input-sm" v-model="tran.property.unit_amount" />
+                                                <money v-model="tran.property.unit_amount" v-bind="money" class="input-sm form-control"></money>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Тоо ширхэг</label>
-                                                <input type="text" class="form-control input-sm" v-model="tran.property.count" />
+                                                <money v-model="tran.property.count" v-bind="money" class="input-sm form-control"></money>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Нийт үнэ</label>
-                                                <input type="text" class="form-control input-sm" v-model="tran.amount" />
+                                                <money :value="tran.property.count * tran.property.unit_amount" v-bind="money" readonly="readonly" class="input-sm form-control" @input="calculate"></money>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <label class="control-label">Ашиглаж эхэлсэн огноо</label>
+                                                <input type="text" v-pick="tran.property.start_date" class="form-control input-sm" v-model="tran.property.start_date" v-on:changeDate="calculate" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <label class="control-label">Ашиглах хугацаа (жилээр)</label>
+                                                <money v-model="tran.property.use_time_count" v-bind="money" class="input-sm form-control" @input="calculate"></money>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <label class="control-label">Элэгдэх дүн (жилээр)</label>
+                                                <input type="text" readonly="readonly" class="form-control input-sm" :value="formatPrice(Math.round(expiration_amount * 100) / 100)" />
                                             </div>
                                         </td>
                                     </tr>
@@ -75,22 +95,49 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Хуримтлагдсан элэгдэл</label>
-                                                <input type="text" class="form-control input-sm" v-model="tran.property.deprecation" />
+                                                <input type="text" readonly="readonly" class="form-control input-sm" :value="formatPrice(Math.round(deprecation * 100) / 100)" />
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
-                                                <label class="control-label">Ашиглаж эхэлсэн огноо</label>
-                                                <input type="text" v-pick="tran.property.start_date" class="form-control input-sm" v-model="tran.property.start_date" />
+                                                <label class="control-label">Дуусах хугацаа</label>
+                                                <input type="text" readonly="readonly" class="form-control input-sm" v-model="remaining_time_count" />
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Үлдэх өртөг</label>
-                                                <input type="text" class="form-control input-sm" />
+                                                <money v-model="tran.amount" readonly="readonly" v-bind="money" class="input-sm form-control"></money>
                                             </div>
                                         </td>
                                     </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Код</th>
+                                    <th>Нэр</th>
+                                    <th>Нэгж үнэ</th>
+                                    <th>Тоо ширхэг</th>
+                                    <th>Нийт үнэ</th>
+                                    <th>Үлдэх өртөг</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(tran, index) in transaction">
+                                    <td>{{ tran.property.code }}</td>
+                                    <td>{{ tran.property.name }}</td>
+                                    <td>{{ tran.property.unit_amount }}</td>
+                                    <td>{{ tran.property.count }}</td>
+                                    <td>{{ tran.property.unit_amount * tran.property.count }}</td>
+                                    <td>{{ tran.amount }}</td>
+                                    <td>
+                                        <button class="btn btn-xs btn-warning" @click="edit(tran)"><i class="fa fa-pencil"></i></button>
+                                        <button class="btn btn-xs btn-danger" v-if="index > 0" @click="destroy(tran)"><i class="fa fa-trash-o"></i></button>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -100,7 +147,7 @@
                     <div class="pull-left">
                         Нийт: {{ formatPrice(total) }}
                     </div>
-                    <button type="button" class="btn btn-default btn-sm" @click="addRow()">Нэмэх</button>
+                    <button type="button" class="btn btn-default btn-sm" @click="saveRow()">{{ mode ? 'Засах' : 'Нэмэх' }}</button>
                     <button type="button" class="btn btn-primary btn-sm" @click="saveBreakDown">Хадгалах</button>
                 </div>
             </div>
@@ -115,10 +162,10 @@
 
     export default {
 
-        props: ['account'],
+        props: ['account', 'season'],
 
         watch: {
-            selectedValue: function() {
+            transaction: function() {
                 let total = this.transaction.reduce(function(prev, t){
                     return parseFloat(prev) + parseFloat(t.amount);
                 }, 0);
@@ -130,24 +177,28 @@
         {
             return {
                 selectedValue: 0,
+                expiration_amount: 0,
+                remaining_time_count: '',
+                deprecation: 0,
                 total: 0,
                 branches: [],
                 groups: [],
                 users: [],
+                mode: false,
                 tran: {
                     id: 0,
                     description: 'Эхний үлдэгдэл',
                     amount: 0,
                     property: {
                         branch_id: null,
-                        group_id: 0,
+                        group_id: null,
                         code: null,
                         name: null,
                         owner_id: null,
-                        unit_amount: null,
-                        count: null,
-                        deprecation: null,
-                        start_date: null
+                        unit_amount: 0,
+                        count: 1,
+                        use_time_count: 0,
+                        start_date: this.season.open_date
                     }
                 },
                 transaction: [],
@@ -165,9 +216,73 @@
         },
 
         methods: {
-            selectInput(amount)
+            selectGroup(data)
             {
-                this.selectedValue = amount;
+                this.tran.property.group_id = data.value;
+            },
+            selectBranch(data)
+            {
+                this.tran.property.branch_id = data.value;
+            },
+            selectOwner(data)
+            {
+                this.tran.property.owner_id = data.value;
+            },
+            saveRow()
+            {
+                if(!this.mode)
+                {
+                    this.transaction.push(this.tran);
+                }
+                this.resetForm();
+            },
+            calculate()
+            {
+                var date1 = new Date(this.season.open_date);
+                var date2 = new Date(this.tran.property.start_date);
+                var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+                var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+                if(this.tran.property.use_time_count > 0)
+                {
+                    var day_expiration = (this.tran.property.count * this.tran.property.unit_amount) / (365 * this.tran.property.use_time_count);
+                    this.expiration_amount = day_expiration * 365;
+                    this.deprecation = diffDays * day_expiration;
+                    var remain_percent = (diffDays * 100) / (365 * this.tran.property.use_time_count);
+
+                    const dateformat = require('dateformat');
+
+                    this.remaining_time_count = dateformat(new Date(date2.getFullYear() + this.tran.property.use_time_count, date2.getMonth(), date2.getDate()), 'yyyy-mm-dd');
+                    this.tran.amount = (this.tran.property.count * this.tran.property.unit_amount) - this.deprecation;
+                }
+                else
+                {
+                    this.remaining_time_count = '';
+                }
+
+            },
+            resetForm()
+            {
+                this.tran = {
+                    id: 0,
+                    description: 'Эхний үлдэгдэл',
+                    amount: 0,
+                    property: {
+                        branch_id: null,
+                        group_id: null,
+                        code: null,
+                        name: null,
+                        owner_id: null,
+                        unit_amount: 0,
+                        count: 1,
+                        use_time_count: 0,
+                        start_date: this.season.open_date
+                    }
+                };
+                this.mode = false;
+                this.expiration_amount = 0;
+                this.remaining_time_count = '';
+                this.deprecation = 0;
             },
             saveBreakDown()
             {
@@ -184,6 +299,11 @@
                 this.total = 0;
                 this.selectedValue = 0;
                 this.$emit('saved', data);
+            },
+            edit(t)
+            {
+                this.mode = true;
+                this.tran = t;
             },
             destroy(t)
             {
@@ -221,7 +341,11 @@
                     this.users = response.data.users
                 }).catch(errors => {
                 })
-            }
+            },
+            formatPrice(amount) {
+                let val = (amount/1).toFixed(2).replace(',', '.')
+                return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            },
         }
 
     }
