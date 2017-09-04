@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\User\Asset\Asset;
 use App\User\Asset\AssetRepositoryInterface;
+use App\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\User\Expense\Expense;
 use App\User\Expense\ExpenseRepositoryInterface;
+use App\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

@@ -1,15 +1,15 @@
 <template>
     <div class="col-lg-6">
-        <h4>Өрхийн орлого</h4>
+        <h4>Өрхийн сарын нийт орлого</h4>
         <table v-bind:class="loading ? 'loading table table-bordered' : 'table table-bordered'">
             <tbody>
             <tr>
                 <td><span class="text text-black">#</span></td>
                 <td>
-                    <input type="text" class="form-control input-sm" v-auto data-type="budged" v-model="budget.name" data-target="#budget-input" v-on:selected="setData(budget, '#budget-input')">
+                    <input type="text" class="form-control input-sm" v-auto data-type="budged" v-model="budget.name" data-target="#budget-input" v-on:selected="setData(budget, '#budget-input')" placeholder="Орлогын төрөл">
                     <input type="hidden" v-model="budget.name" id="budget-input" />
                 </td>
-                <td><input type="text" class="form-control input-sm" v-model="budget.budget"></td>
+                <td><input type="number" class="form-control input-sm" v-model="budget.budget" placeholder="Дүн"></td>
                 <td>
                     <button class="btn btn-sm btn-success" @click="addBudget()"><i class="fa fa-plus-circle"></i></button>
                 </td>
@@ -17,10 +17,10 @@
             <tr v-for="(b, index) in budgets">
                 <td><span class="text text-black">{{ index + 1 }}</span></td>
                 <td>
-                    <input type="text" class="form-control input-sm" v-auto data-type="budged" :data-target="'#budget-input' + b.id" :value="b.name" v-on:selected="setData(b, '#budget-input' + b.id)">
+                    <input type="text" class="form-control input-sm" v-model="b.name" v-auto data-type="budged" :data-target="'#budget-input' + b.id" :value="b.name" v-on:selected="setData(b, '#budget-input' + b.id)">
                     <input type="hidden" v-model="b.name" :id="'budget-input' + b.id" />
                 </td>
-                <td><input type="text" class="form-control input-sm" v-model="b.budget"></td>
+                <td><input type="number" class="form-control input-sm" v-model="b.budget"></td>
                 <td>
                     <div class="btn-group">
                         <button class="btn btn-sm btn-warning" @click="saveBudget(b)"><i class="fa fa-pencil"></i></button>
@@ -75,6 +75,7 @@
             {
                 var self = this;
                 this.loading = true;
+                console.log(budget);
                 axios.patch('/api/user/' + this.user.id + '/budget/' + budget.id, budget).then(response => {
                     this.loading = false;
                 }).catch(errors => {
@@ -94,6 +95,8 @@
                 axios.post('/api/user/' + this.user.id + '/budget', this.budget).then(response => {
                     if (response.data.result) {
                         this.fetchBudget();
+                        this.budget.name='';
+                        this.budget.budget='';
                     }
                     this.loading = false;
                 }).catch(errors => {
