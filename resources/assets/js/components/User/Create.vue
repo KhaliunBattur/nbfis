@@ -14,11 +14,21 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Зураг</label>
                                 <div class="col-sm-10">
-                                    <input type="file" class="form-control" @change="onFileChange" />
+                                    <dropzone
+                                              ref="profUpload"
+                                              id="profile"
+                                              class="margin-bottom-10"
+                                              :headers='csrfHeaders'
+                                              :url="profileUpload"
+                                              :thumbnail-height="100"
+                                              :thumbnail-width="100"
+                                              v-on:vdropzone-success="ProfSuccess"
+                                              v-on:vdropzone-error="onError">
+                                    </dropzone>
                                 </div>
-                                <div class="col-sm-2 col-sm-offset-2" v-if="user.image != ''">
-                                    <img :src="user.image" class="profile-user-img img-responsive img-circle" style="margin: 10px 0px" />
-                                </div>
+                                <!--<div class="col-sm-2 col-sm-offset-2" v-if="user.image != ''">-->
+                                    <!--<img :src="user.image" class="profile-user-img img-responsive img-circle" style="margin: 10px 0px" />-->
+                                <!--</div>-->
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Овог <label class="text-danger">*</label></label>
@@ -125,19 +135,21 @@
 <script>
 
     import MaskedInput from 'vue-masked-input'
-
+    import Dropzone from 'vue2-dropzone'
     export default {
 
         props: ['roles'],
 
         components: {
-            'masked-input': MaskedInput
+            'masked-input': MaskedInput,
+            Dropzone,
+
         },
 
         data()
         {
             return {
-
+                profileUpload:'/api/cv/profileUpload',
                 user: {
                     image: '',
                     first_name: '',
@@ -152,13 +164,26 @@
                     birth_day: null,
                     age: null,
                     confirm_password: '',
-
+                    profilePath:''
                 }
             }
         },
-
+        created()
+        {
+            this.csrfHeaders = {
+                'X-CSRF-TOKEN': window.Laravel.csrfToken
+            }
+        },
         methods: {
-
+            ProfSuccess(file,response)
+            {
+                this.user.profilePath = response.tempProfPath;
+                this.user.image = response.tempProfPath +'/'+ response.profPic;
+            },
+            onError (file, error)
+            {
+                swal('Уучлаарай!', 'Амжилтгүй боллоо!', 'error')
+            },
             setRegister()
             {
                 try {
@@ -202,19 +227,19 @@
                         }, function(){
                             self.reset();
                         })
+
                     }
                 }).catch(function(response){
                     swal('Уучлаарай!', 'Амжилтгүй боллоо!', 'error')
                 })
             },
-
             back()
             {
                 this.$router.push('/users')
             },
-
             reset()
             {
+                this.$refs.profUpload.removeAllFiles();
                 this.user = {
                     image: '',
                     first_name: '',
@@ -222,34 +247,19 @@
                     phone_number: '',
                     address: '',
                     email: '',
+                    profilePath:'',
                     password: '',
                     confirm_password: '',
+
                 }
             },
-
-            onFileChange(e)
-            {
-                var files = e.target.files || e.dataTransfer.files;
-                if (!files.length)
-                    return;
-                this.createImage(files[0]);
-            },
-
-            createImage(file) {
-                var image = new Image();
-                var reader = new FileReader();
-                var vm = this;
-
-                reader.onload = (e) => {
-                    vm.user.image = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            },
-
-            removeImage: function (e) {
-                this.user.image = '';
-            }
         }
 
     }
 </script>
+<style>
+    .vue-dropzone {
+        min-height:20px;
+        padding: 0;
+    }
+</style>

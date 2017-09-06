@@ -45,13 +45,24 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root' => public_path(),
         ],
-
+        'profile' => [
+            'driver' => 'local',
+            'root' => public_path('/images/profile'),
+            'url' => env('APP_URL').'/public',
+            'visibility' => 'public',
+        ],
+        'UpFiles' => [
+            'driver' => 'local',
+            'root' => public_path('/temp_files'),
+            'url' => env('APP_URL').'/public',
+            'visibility' => 'public',
+        ],
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'root' => public_path(),
+            'url' => env('APP_URL').'/public',
             'visibility' => 'public',
         ],
 

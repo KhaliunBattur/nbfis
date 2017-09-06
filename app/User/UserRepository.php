@@ -102,7 +102,7 @@ class UserRepository implements UserRepositoryInterface
     public function findInfoById($id)
     {
         return $this->model->where('id', $id)->with([
-            'family', 'workplaces', 'emergencies', 'activeLoans', 'budgets', 'assets', 'expenses','pledge_types','owner_types'
+            'family', 'workplaces', 'emergencies', 'activeLoans', 'budgets', 'assets', 'expenses'
         ])->first();
     }
 
