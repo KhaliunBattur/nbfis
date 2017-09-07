@@ -289,6 +289,18 @@ class UserController extends Controller
         ]);
     }
 
+    public function findByRegister($register)
+    {
+
+        $user=$this->userRepository->findByRegister($register);
+
+        return response()->json([
+           'user'=>$user,
+           'owner_type'=>\Config::get('enums.owner_type'),
+           'relations'=>\Config::get('enums.relation')
+        ]);
+    }
+
     public function customerList()
     {
         $customers = $this->userRepository->findByCustomerListRaw()->toArray();

@@ -107,6 +107,17 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param $register
+     * @return Model|null|static
+     */
+    public  function findByRegister($register)
+    {
+        return $this->model->where('register',$register)->with([
+            'family','workplaces','emergencies','activeLoans','budgets','assets','expenses','Request'
+        ])->first();
+    }
+
+    /**
      * @return Collection
      */
     public function findByCustomerListRaw()

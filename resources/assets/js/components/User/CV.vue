@@ -50,21 +50,28 @@
                                         <tbody>
                                         <tr>
                                             <td style="width: 15%;">Овог нэр:</td>
-                                            <td style="width: 35%;"> <input type="text" class="form-control input-sm" v-model="user.first_name" /><br><input type="text" class="form-control input-sm" v-model="user.name" /></td>
+                                            <td style="width: 35%;" >
+                                                <input type="text" class="form-control input-sm"   v-model="user.first_name"/><br>
+                                                <input type="text" class="form-control input-sm"   v-model="user.name"  />
+                                            </td>
                                             <td style="width: 20%;">Регистерийн дугаар:</td>
                                             <td style="width: 30%;"><masked-input v-model="user.register" mask="AA11111111" placeholder="АА00000000" @input="setRegister" class="form-control input-sm"></masked-input></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 15%;">Нас:</td>
-                                            <td style="width: 35%;"><input type="number" class="form-control input-sm" v-model="user.age" readonly="readonly" /></td>
+                                            <td style="width: 35%;"><input type="number" class="form-control input-sm" v-model="user.age" readonly="readonly" />
+                                            </td>
                                             <td style="width: 20%;">Утасны дугаар:</td>
-                                            <td style="width: 30%;"><masked-input v-model="user.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control input-sm"></masked-input></td>
+                                            <td style="width: 30%;"><masked-input v-model="user.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control input-sm">
+                                            </masked-input></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 15%;">Цахим шуудан:</td>
-                                            <td style="width: 35%;"><input placeholder="simple@simple.com" type="text" class="form-control input-sm" v-model="user.email" /></td>
+                                            <td style="width: 35%;"><input placeholder="simple@simple.com" type="text" class="form-control input-sm" v-model="user.email" />
+                                            </td>
                                             <td style="width: 20%;">Мэргэжил:</td>
-                                            <td style="width: 30%;"><input type="text" class="form-control input-sm" v-model="user.profession"/></td>
+                                            <td style="width: 30%;"><input type="text" class="form-control input-sm" v-model="user.profession"/>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -72,7 +79,8 @@
                                         <tbody>
                                         <tr>
                                             <td style="width: 30%;">Одоо амьдарч буй гэрийн хаяг:</td>
-                                            <td style="width: 70%;"><textarea class="form-control input-sm" rows="2" v-model="user.address"></textarea></td>
+                                            <td style="width: 70%;"><textarea class="form-control input-sm" rows="2" v-model="user.address"></textarea>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td style="width: 30%;">Одоо амьдарч буй байр нь орон сууц, хашаа байшин, хашаа гэр:</td>
@@ -88,7 +96,7 @@
                                         <tbody>
                                         <tr>
                                             <td style="width: 50%;">Тухайн хаяг дээр амьдарсан жил:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.live_year"  type="number" placeholder="111"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.live_year"  type="number" placeholder="111"/>{{user.live_year}}</td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Байр нь зээлийн барьцаанд байгаа бол дэлгэрэнгүй бөглөнө үү:</td>
@@ -665,6 +673,7 @@
             Dropzone,
 //            'money':VMoney
         },
+
         data()
         {
             return {
@@ -807,7 +816,6 @@
             this.fetchOwnerType();
             this.fetchLoanPledgeType();
             this.fetchAdvertisement();
-
         },
 
         created()
@@ -863,18 +871,39 @@
                         var month = parseInt(splits[2]) - 20;
                         var birthDay = new Date(year, month - 1, parseInt(splits[3]) + 1);
                     }
-                    else {
+                    else
+                    {
                         var year = 1900 + parseInt(splits[1]);
                         var birthDay = new Date(year, parseInt(splits[2]) - 1, parseInt(splits[3]) + 1);
                     }
                     this.user.birth_day = birthDay.toISOString().substring(0, 10);
                     this.user.age = this.getAge(birthDay);
+                    this.findByRegister(this.user.register);
                 }
                 catch (error) {
 
                 }
             },
-
+            findByRegister($register)
+            {
+                    if ($register.length === 10 && ($register[9])!= '_' )
+                    {
+                       this.reset();
+                        axios.get('/api/user/' + $register).then(response => {
+                            if((response.data.user) !== null)
+                            {
+                                console.log(response.data);
+                                this.user = response.data.user;
+                                this.owner_type = response.data.owner_type;
+                                this.relations = response.data.relations;
+                            }
+                        })
+                    }
+                    else
+                    {
+                        console.log('Шинэ хэрэглэгч');
+                    }
+            },
             getAge(d1) {
                 var d2 = new Date();
                 var diff = d2.getTime() - d1.getTime();
@@ -903,7 +932,6 @@
             },
 
             reset() {
-                console.log('hey');
                 this.$refs.profUpload.removeAllFiles();
                 this.$refs.profUpload1.removeAllFiles();
                 this.$refs.profUpload2.removeAllFiles();
@@ -924,7 +952,7 @@
                         nextFamilyId:1,
                         nextCreditId:1,
                         owner_types:null,
-                        pledge_types:null,
+//                        pledge_types:null,
                         advertisements:null,
                         user: {
                             image: '',
@@ -1286,7 +1314,8 @@
             },
             addCredit()
             {
-                try {
+                try
+                {
                     var self = this;
                     this.loading = true;
                     this.user.credits.push({
