@@ -9,9 +9,8 @@
                 <li class="active">Удирдлага</li>
             </ol>
         </section>
-
         <!-- Main content -->
-        <section class="content">
+        <section class="content" >
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2">
                     <div class="box">
@@ -20,7 +19,7 @@
                                 Анкет
                             </div>
                         </div>
-                        <div class="box-body">
+                        <div class="box-body" >
                             <div class="form-horizontal">
                                 <div class="cv">
                                     <div class="form-group">
@@ -51,23 +50,25 @@
                                         <tr>
                                             <td style="width: 15%;">Овог нэр:</td>
                                             <td style="width: 35%;" >
-                                                <input type="text" class="form-control input-sm"   v-model="user.first_name"/><br>
-                                                <input type="text" class="form-control input-sm"   v-model="user.name"  />
+                                                <input  type="text" class="form-control input-sm"  v-model="user.first_name" :value="user.first_name"/><br>
+                                                <input type="text" class="form-control input-sm"    v-model="user.name" :value="user.name"/>
                                             </td>
                                             <td style="width: 20%;">Регистерийн дугаар:</td>
-                                            <td style="width: 30%;"><masked-input v-model="user.register" mask="AA11111111" placeholder="АА00000000" @input="setRegister" class="form-control input-sm"></masked-input></td>
+                                            <td style="width: 30%;"><masked-input v-model="user.register" mask="AA11111111" placeholder="АА00000000"   @input="setRegister" class="form-control input-sm"></masked-input></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 15%;">Нас:</td>
-                                            <td style="width: 35%;"><input type="number" class="form-control input-sm" v-model="user.age" readonly="readonly" />
+                                            <td style="width: 35%;">
+                                                <input type="number" class="form-control input-sm" v-model="user.age" readonly="readonly" />
                                             </td>
                                             <td style="width: 20%;">Утасны дугаар:</td>
-                                            <td style="width: 30%;"><masked-input v-model="user.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control input-sm">
+                                            <td style="width: 30%;"><masked-input v-model="user.phone_number" v-bind:value="user.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control input-sm">
                                             </masked-input></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 15%;">Цахим шуудан:</td>
                                             <td style="width: 35%;"><input placeholder="simple@simple.com" type="text" class="form-control input-sm" v-model="user.email" />
+                                                {{ user.email }}
                                             </td>
                                             <td style="width: 20%;">Мэргэжил:</td>
                                             <td style="width: 30%;"><input type="text" class="form-control input-sm" v-model="user.profession"/>
@@ -96,7 +97,7 @@
                                         <tbody>
                                         <tr>
                                             <td style="width: 50%;">Тухайн хаяг дээр амьдарсан жил:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.live_year"  type="number" placeholder="111"/>{{user.live_year}}</td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.live_year"  type="number" placeholder="111"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Байр нь зээлийн барьцаанд байгаа бол дэлгэрэнгүй бөглөнө үү:</td>
@@ -146,19 +147,19 @@
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Ашиглалтанд орсон огноо:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_apart.commissioned" type="text" v-pick="user.bail_apart.commissioned"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.apartment.commissioned" type="text" v-pick="user.apartment.commissioned"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Хаяг:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_apart.address" type="text"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.apartment.address" type="text"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 50%;">Хэдэн М2::<input class="form-control input-sm" v-model="user.bail_apart.apart_meter" type="number"  placeholder="111"/></td>
-                                            <td style="width: 50%;">Хэдэн өрөө: М2:<input class="form-control input-sm" v-model="user.bail_apart.room" type="number"  placeholder="11"/></td>
+                                            <td style="width: 50%;">Хэдэн М2::<input class="form-control input-sm" v-model="user.apartment.apart_meter" type="number"  placeholder="111"/></td>
+                                            <td style="width: 50%;">Хэдэн өрөө: М2:<input class="form-control input-sm" v-model="user.apartment.room" type="number"  placeholder="11"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Зах зээлийн үнэ:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_apart.price" /></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.apartment.price" /></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -169,19 +170,19 @@
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Марк/өнгө:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_car.model" type="text"/><input class="form-control input-sm" v-model="user.bail_car.color" type="text"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.car.model" type="text"/><input class="form-control input-sm" v-model="user.car.color" type="text"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Үйлдвэрлэсэн огноо:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_car.manufacture" v-pick="user.bail_car.manufacture" type="text"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.car.manufacture" v-pick="user.car.manufacture" type="text"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Орж ирсэн огноо:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_car.entry_date" v-pick="user.bail_car.entry_date" type="text"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.car.entry_date" v-pick="user.car.entry_date" type="text"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Зах зээлийн үнэ:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm"  v-model="user.bail_car.price"   /></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm"  v-model="user.car.price"   /></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -189,7 +190,7 @@
                                         <tbody>
                                         <tr>
                                             <td style="width: 23.8%;">Бусад</td>
-                                            <td style="width: 75%;"><input class="form-control input-sm" v-model="user.bail_other.name" type="text"/></td>
+                                            <td style="width: 75%;"><input class="form-control input-sm" v-model="user.other.name" type="text"/></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -197,8 +198,8 @@
                                         <tbody>
                                         <tr>
                                             <td style="width: 23.8%;">Зах зээлийн үнэ:</td>
-                                            <td style="width: 10%;"><input class="form-control input-sm" v-model="user.bail_other.price"   /></td>
-                                            <td style="width: 65%;">Тайлбар:<input style="width: 90%; float: right" class="form-control input-sm" v-model="user.bail_other.description" type="text"/> </td>
+                                            <td style="width: 10%;"><input class="form-control input-sm" v-model="user.other.price"   /></td>
+                                            <td style="width: 65%;">Тайлбар:<input style="width: 90%; float: right" class="form-control input-sm" v-model="user.other.description" type="text"/> </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -213,7 +214,7 @@
                                             <td style="width: 16%;">Хаяг</td>
                                             <td style="width: 16%;">Ажилчдын тоо</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-if="!user.workplaces" v-for="workplace in user.workplaces">
                                             <td style="width: 18%;"><input class="form-control input-sm" type="text" v-model="user.workplace.organization"  /></td>
                                             <td style="width: 16%;"><input class="form-control input-sm"  type="text" v-model="user.workplace.date_employment" v-pick="user.workplace.date_employment"  /></td>
                                             <td style="width: 16%;"><input class="form-control input-sm"  type="text" v-model="user.workplace.position"  /></td>
@@ -673,29 +674,9 @@
             Dropzone,
 //            'money':VMoney
         },
-
         data()
         {
             return {
-                money:{
-                    decimal:'.',
-                    thousands:',',
-                    precision:2,
-                    masked:false
-                },
-                adv:[],
-                profileUpload:'/api/cv/profileUpload',
-                mediaUpload: '/api/cv/filesUpload',
-                nextBudgetId:1,
-                nextAssetId:1,
-                nextExpenseId:1,
-                nextEmergencyId:1,
-                nextFamilyId:1,
-                nextCreditId:1,
-                owner_types:null,
-                pledge_types:null,
-                advertisements:null,
-                folder:'',
                 user: {
                     filePaths:[],
                     filePath:'',
@@ -781,21 +762,21 @@
 //                        pledge_type:null,
                         description:null
                     },
-                    bail_apart: {
+                    apartment: {
                         commissioned: null,
                         address: null,
                         apart_meter: null,
                         room: null,
                         price:null
                     },
-                    bail_car: {
+                    car: {
                         model: null,
                         color: null,
                         manufacture: null,
                         entry_date: null,
                         price:null
                     },
-                    bail_other: {
+                    other: {
                         name: null,
                         price: null,
                         description: null,
@@ -808,7 +789,26 @@
                         path:null,
                         file:null
                     }
-                },loading: true,
+                },loading:false,
+                money:{
+                    decimal:'.',
+                    thousands:',',
+                    precision:2,
+                    masked:false
+                },
+                adv:[],
+                profileUpload:'/api/cv/profileUpload',
+                mediaUpload: '/api/cv/filesUpload',
+                nextBudgetId:1,
+                nextAssetId:1,
+                nextExpenseId:1,
+                nextEmergencyId:1,
+                nextFamilyId:1,
+                nextCreditId:1,
+                owner_types:null,
+                pledge_types:null,
+                advertisements:null,
+                folder:'',
             }
         },
         mounted()
@@ -824,7 +824,9 @@
                 'X-CSRF-TOKEN': window.Laravel.csrfToken
             }
         },
+        computed: {
 
+        },
         methods: {
             'template': function () {
                 return `
@@ -884,25 +886,35 @@
 
                 }
             },
-            findByRegister($register)
-            {
-                    if ($register.length === 10 && ($register[9])!= '_' )
-                    {
-                       this.reset();
-                        axios.get('/api/user/' + $register).then(response => {
-                            if((response.data.user) !== null)
-                            {
-                                console.log(response.data);
-                                this.user = response.data.user;
-                                this.owner_type = response.data.owner_type;
-                                this.relations = response.data.relations;
-                            }
-                        })
-                    }
-                    else
-                    {
-                        console.log('Шинэ хэрэглэгч');
-                    }
+            findByRegister($register){
+
+                if ($register.length === 10 && ( $register[9]) != '_' )
+                {
+                    this.reset();
+                    axios.get('/api/user/' + $register).then(response => {
+
+                        if((response.data.user) !== null)
+                        {
+                            console.log(response.data);
+                            this.user = response.data.user;
+                            this.user.workplace = response.data.user.workplace;
+                            this.user.member = response.data.user.members;
+                            this.user.emergency = response.data.user.members;
+                            this.user.budget = response.data.user.budget;
+                            this.user.asset = response.data.user.asset;
+                            this.user.expense = response.data.user.expense;
+                            Vue.delete(this.user, 'created_at');
+                            Vue.delete(this.user, 'updated_at');
+                            this.owner_type = response.data.owner_type;
+                            this.relations = response.data.relations;
+                            this.loading = true;
+                        }
+                    })
+                }
+                else
+                {
+                    console.log('Шинэ хэрэглэгч');
+                }
             },
             getAge(d1) {
                 var d2 = new Date();
@@ -910,7 +922,8 @@
                 return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
             },
 
-            save() {
+            save()
+            {
                 axios.post('/api/cv', this.user).then(response => {
                     if (response.data.result) {
                         var self = this;
@@ -927,7 +940,8 @@
                 })
             },
 
-            back() {
+            back()
+            {
                 this.$router.push('/users')
             },
 
@@ -944,6 +958,7 @@
                 this.$refs.profUpload9.removeAllFiles();
 
                 return {
+
                         mediaUpload: '/api/cv/filesUpload',
                         nextBudgetId:1,
                         nextAssetId:1,
@@ -1033,21 +1048,21 @@
                                 expire_date: null,
                                 description:  null
                             },
-                            bail_apart: {
+                            apartment: {
                                 commissioned: null,
                                 address: null,
                                 apart_meter: null,
                                 room: null,
                                 price:null
                             },
-                            bail_car: {
+                            car: {
                                 model: null,
                                 color: null,
                                 manufacture: null,
                                 entry_date: null,
                                 price:null
                             },
-                            bail_other: {
+                            other: {
                                 name: null,
                                 price:null,
                                 description: null,

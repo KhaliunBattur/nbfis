@@ -113,7 +113,7 @@ class UserRepository implements UserRepositoryInterface
     public  function findByRegister($register)
     {
         return $this->model->where('register',$register)->with([
-            'family','workplaces','emergencies','activeLoans','budgets','assets','expenses','Request'
+            'family','workplaces','emergencies','activeLoans','budgets','assets','expenses','Request','Apartment','Car','Other'
         ])->first();
     }
 

@@ -25,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'name', 'image', 'phone_number', 'address', 'live_year', 'owner_type', 'email', 'user_type', 'register', 'password',
+        'first_name', 'name', 'image', 'phone_number', 'address', 'live_year', 'owner_type', 'email', 'user_type', 'register', 'password','bail_info'
     ];
 
     /**
@@ -92,8 +92,34 @@ class User extends Authenticatable
     {
         return $this->hasMany(Expense::class, 'user_id');
     }
+
+    /**
+     * @return HasMany
+     */
     public function Request()
     {
         return $this->hasMany(Request::class,'user_id');
     }
+
+    /**
+     * @return HasMany
+     */
+    public function Apartment()
+    {
+        return $this->hasMany(Request::class,'user_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function Car()
+    {
+        return $this->hasMany(Request::class,'user_id');
+    }
+
+    public function Other()
+    {
+        return $this->hasMany(Request::class,'user_id');
+    }
+
 }
