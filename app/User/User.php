@@ -122,4 +122,8 @@ class User extends Authenticatable
         return $this->hasMany(Request::class,'user_id');
     }
 
+    public function credit()
+    {
+        return $this->hasMany(Request::class,'user_id');
+    }
 }

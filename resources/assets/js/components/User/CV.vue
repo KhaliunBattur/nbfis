@@ -898,11 +898,12 @@
                             console.log(response.data);
                             this.user = response.data.user;
                             this.user.workplace = response.data.user.workplace;
-                            this.user.member = response.data.user.members;
-                            this.user.emergency = response.data.user.members;
-                            this.user.budget = response.data.user.budget;
-                            this.user.asset = response.data.user.asset;
-                            this.user.expense = response.data.user.expense;
+                            this.user.members = response.data.user.family;
+                            this.user.emergency = response.data.user.emergencies;
+                            this.user.budget = response.data.user.budgets;
+                            this.user.asset = response.data.user.assets;
+                            this.user.expense = response.data.user.expenses;
+                            this.user.credit = response.data.user.credit;
                             Vue.delete(this.user, 'created_at');
                             Vue.delete(this.user, 'updated_at');
                             this.owner_type = response.data.owner_type;
