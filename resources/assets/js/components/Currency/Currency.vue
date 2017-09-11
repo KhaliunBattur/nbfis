@@ -242,6 +242,7 @@
             {
                 this.model.data.splice(this.model.data.indexOf(currency), 1);
                 this.model.total = this.model.total - 1;
+                this.fetchCurrency();
             }
         }
 

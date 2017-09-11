@@ -13,7 +13,7 @@
         <div class="box-body" v-if="view == 'list'">
             <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
                 <div class="input-group input-group-sm input-small with-margin-bottom">
-                    <input type="text" v-model="query.per_page" class="form-control" />
+                    <input type="text" v-model="query.per_page" class="form-control" @keyup.enter="changePerPage()" />
                     <div class="input-group-btn">
                         <button class="btn" @click="changePerPage()">-р хуудаслах</button>
                     </div>
@@ -225,6 +225,7 @@
             {
                 this.workplaces.data.splice(this.workplaces.data.indexOf(workplace), 1);
                 this.workplaces.total = this.workplaces.total - 1;
+                this.fetchWorkplace();
             }
         }
     }
