@@ -9,7 +9,6 @@ use App\Events\UserCreated;
 use Illuminate\Support\Facades\Storage;
 use App\Support\FileType;
 
-
 class CvController extends Controller
 {
     /**
@@ -22,10 +21,40 @@ class CvController extends Controller
     {
         //
     }
-    public  function imageUpload(Request $request)
+    public function profileUpload(Request $request)
+    {
+        if(!$request->hasFile('file'))
+            return response()->json([
+                'error' => 'No profile Uploaded'
+            ]);
+
+        $file = $request->file('file');
+
+        if(!$file->isValid())
+            return response()->json([
+                'error' => 'profile is not valid!'
+            ]);
+
+        $pic=$file->hashName();
+
+        $tempProfilePath=( 'images/profile/user');
+
+        Storage::disk('profile')->put('user',$file);
+
+        return response()->json([
+            'success' => 'Profile Uploaded',
+            'tempProfPath'=> $tempProfilePath,
+            'profPic'=>$pic
+        ]);
+
+    }
+    public  function fileUpload(Request $request)
     {
 
-           if(!$request->hasFile('file'))
+           $folder= $request->get('folder');
+
+           if(!$request->hasFile( 'file'))
+
             return response()->json([
                 'error' => 'No File Uploaded'
             ]);
@@ -36,8 +65,11 @@ class CvController extends Controller
             return response()->json([
                 'error' => 'File is not valid!'
             ]);;
-        $tempFilePath=('public/images/temp' . date('Y-m-d-H-i-s'));
-        $file->store($tempFilePath);
+
+        $tempFilePath=('temp_files/' );
+
+        Storage::disk('UpFiles')->put($folder,$file);
+
         return response()->json([
             'success' => 'File Uploaded',
             'tempPath'=> $tempFilePath
@@ -59,31 +91,21 @@ class CvController extends Controller
 
         $parameters = $request->all();
 
-        if($request->has('image'))
-        {
-            $exploded = explode(',',$request->get('image'));
-
-            $decoded= base64_decode($exploded[1]);
-            if(str_contains($exploded[0],'jpeg'))
-
-                $extension = 'jpg';
-            else
-                $extension = 'png';
-
-            $filename = str_random() . '.' . $extension;
-
-            $destinationPath = public_path() .'/images/profile/'. $filename;
-
-            $parameters['image'] = $filename;
-
-            file_put_contents($destinationPath, $decoded);
-        }
-
         $parameters['password'] = \Hash::make('123');
 
         $user = \DB::transaction(function() use($parameters, $request) {
-            $user = User::create($parameters);
-            Storage::move($parameters['filePath'],'public/images/file_'.$user['id'] );
+
+        $user = User::create($parameters);
+
+            if($request->has('profilePath'))
+            {
+                Storage::move($parameters['profilePath'],'/images/profile_'.$user['id']);
+            }
+
+            if($request->has('filePath'))
+            {
+                Storage::move($parameters['filePath'],'/files/file_'.$user['id'] );
+            }
 //            $user->assets()->createMany($request->get('assets'));
 //            $user->workplaces()->create($request->get('workplace'));
 //            $user->family()->createMany($request->get('family'));
@@ -94,6 +116,7 @@ class CvController extends Controller
 //            $user->Request()->create($request->get('request'));
             return $user;
         });
+
         event(new UserCreated($user, 'хэрэглэгч шинээр бүртгэв', 'info'));
 
         return response()->json([
