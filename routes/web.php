@@ -55,7 +55,7 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
 
         Route::get('user/{id}/info', ['as' => 'user.info', 'uses' => 'UserController@info']);
 
-        Route::get('user/{register}','UserController@findByRegister');
+        Route::get('user/{register}/find','UserController@findByRegister');
 
         Route::resource('cv', 'CvController', ['except' => ['create']]);
         Route::post('cv/filesUpload','CvController@fileUpload');

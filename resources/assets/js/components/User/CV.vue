@@ -891,7 +891,7 @@
                 if ($register.length === 10 && ( $register[9]) != '_' )
                 {
                     this.reset();
-                    axios.get('/api/user/' + $register).then(response => {
+                    axios.get('/api/user/' + $register + '/find').then(response => {
 
                         if((response.data.user) !== null)
                         {
