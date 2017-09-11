@@ -210,6 +210,7 @@
             getUser()
             {
                 axios.get('/api/users/' + this.$route.params.id + '/edit').then(response => {
+                    console.log(this.user);
                     this.user = response.data.user;
                     this.user.roles = response.data.roles;
                     this.profile_picture = '/images/profile/' + this.user.image;

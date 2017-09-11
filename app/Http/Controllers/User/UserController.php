@@ -10,6 +10,7 @@ use App\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -45,36 +46,52 @@ class UserController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+    public function profileUpload(Request $request)
+    {
+        if(!$request->hasFile('file'))
+            return response()->json([
+                'error' => 'No profile Uploaded'
+            ]);
+
+        $file = $request->file('file');
+
+        if(!$file->isValid())
+            return response()->json([
+                'error' => 'profile is not valid!'
+            ]);
+
+        $pic=$file->hashName();
+
+        $tempProfilePath=( 'images/profile/user');
+
+        Storage::disk('profile')->put('user',$file);
+
+        return response()->json([
+            'success' => 'Profile Uploaded',
+            'tempProfPath'=> $tempProfilePath,
+            'profPic'=>$pic
+        ]);
+
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
         $this->valid($request);
 
         $parameters = $request->all();
 
-        if($request->has('image'))
-        {
-        $exploded = explode(',',$request->get('image'));
-
-        $decoded= base64_decode($exploded[1]);
-        if(str_contains($exploded[0],'jpeg'))
-
-            $extension = 'jpg';
-        else
-            $extension = 'png';
-
-            $filename = str_random() . '.' . $extension;
-
-            $destinationPath = public_path() .'/images/profile/'. $filename;
-
-            $parameters['image'] = $filename;
-
-            file_put_contents($destinationPath, $decoded);
-//            dd($destinationPath);
-        }
-
         $parameters['password'] = \Hash::make($parameters['password']);
 
         $user = User::create($parameters);
+
+        if($request->has('profilePath'))
+        {
+            Storage::move($parameters['profilePath'],'/images/profile_'.$user['id']);
+        }
 
         event(new UserCreated($user, 'хэрэглэгч шинээр бүртгэв', 'info'));
 
@@ -269,6 +286,18 @@ class UserController extends Controller
             'user' => $user,
             'owner_type' => \Config::get('enums.owner_type'),
             'relations' => \Config::get('enums.relation')
+        ]);
+    }
+
+    public function findByRegister($register)
+    {
+
+        $user=$this->userRepository->findByRegister($register);
+
+        return response()->json([
+           'user'=>$user,
+           'owner_type'=>\Config::get('enums.owner_type'),
+           'relations'=>\Config::get('enums.relation')
         ]);
     }
 

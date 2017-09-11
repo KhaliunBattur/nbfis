@@ -60,97 +60,97 @@
                                 </tr>
                                 </tbody>
                             </table>
-                            <!--<h1>02 ЗЭЭЛИЙН ХҮСЭЛТ</h1>-->
-                            <!--<table class="cv-table cv-lg" >-->
-                                <!--<tbody>-->
-                                <!--<tr>-->
-                                    <!--<td colspan="2" style="width: 100%;">-->
-                                        <!--<span>А. Автомашин</span>-->
-                                        <!--<span>Б. Байр </span>-->
-                                        <!--<span>В. Граш </span>-->
-                                        <!--<span>Г. Автомашин, байр хосолсон </span>-->
-                                        <!--<span>Д. Барилга </span>-->
-                                        <!--<span>Е. Үйлчилгээний талбай</span>-->
-                                    <!--</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 30%;">Хүсэж буй зээлийн хэмжээ:</td>-->
-                                    <!--<td style="width: 70%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 30%;">Зээлийн эргэн төлөх хугацаа:</td>-->
-                                    <!--<td style="width: 70%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 30%;">Сар бүрийн эргэн төлөлт хийх өдөр:</td>-->
-                                    <!--<td style="width: 70%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--</tbody>-->
-                            <!--</table>-->
-                            <!--<h1>03 БАРЬЦАА ХӨРӨНГИЙН МЭДЭЭЛЭЛ</h1>-->
-                            <!--<table class="cv-table cv-md" style=" ;" >-->
-                                <!--<tbody>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 100%;" colspan="2">Байр барьцаалах бол 4%</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 50%;">Ашиглалтанд орсон огноо:</td>-->
-                                    <!--<td style="width: 50%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 50%;">Хаяг:</td>-->
-                                    <!--<td style="width: 50%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 50%;">Хэдэн М2::</td>-->
-                                    <!--<td style="width: 50%;">Хэдэн өрөө: М2:</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 50%;">Зах зээлийн үнэ:</td>-->
-                                    <!--<td style="width: 50%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--</tbody>-->
-                            <!--</table>-->
-                            <!--<table class="cv-table cv-md cv-md-margin-left">-->
-                                <!--<tbody>-->
-                                <!--<tr>-->
-                                    <!--<td colspan="2">Машин барьцаалах бол 3.5-4%</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 50%;">Марк/өнгө:</td>-->
-                                    <!--<td style="width: 50%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 50%;">Үйлдвэрлэсэн огноо:</td>-->
-                                    <!--<td style="width: 50%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 50%;">Орж ирсэн огноо:</td>-->
-                                    <!--<td style="width: 50%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 50%;">Зах зээлийн үнэ:</td>-->
-                                    <!--<td style="width: 50%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--</tbody>-->
-                            <!--</table>-->
-                            <!--<table class="cv-table cv-lg cv-table-margin-top" >-->
-                                <!--<tbody>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 23.8%;">Бусад</td>-->
-                                    <!--<td style="width: 75%;"></td>-->
-                                <!--</tr>-->
-                                <!--</tbody>-->
-                            <!--</table>-->
-                            <!--<table class="cv-table cv-lg cv-top-border-none">-->
-                                <!--<tbody>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 23.8%;">Зах зээлийн үнэ:</td>-->
-                                    <!--<td style="width: 10%;"></td>-->
-                                    <!--<td style="width: 65%;">Тайлбар: </td>-->
-                                <!--</tr>-->
-                                <!--</tbody>-->
-                            <!--</table>-->
+                            <h1>02 ЗЭЭЛИЙН ХҮСЭЛТ</h1>
+                            <table class="cv-table cv-lg" >
+                                <tbody>
+                                <tr>
+                                    <td colspan="2" style="width: 100%;">
+                                        <span>А. Автомашин</span>
+                                        <span>Б. Байр </span>
+                                        <span>В. Граш </span>
+                                        <span>Г. Автомашин, байр хосолсон </span>
+                                        <span>Д. Барилга </span>
+                                        <span>Е. Үйлчилгээний талбай</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 30%;">Хүсэж буй зээлийн хэмжээ:</td>
+                                    <td style="width: 70%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 30%;">Зээлийн эргэн төлөх хугацаа:</td>
+                                    <td style="width: 70%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 30%;">Сар бүрийн эргэн төлөлт хийх өдөр:</td>
+                                    <td style="width: 70%;">&nbsp;</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <h1>03 БАРЬЦАА ХӨРӨНГИЙН МЭДЭЭЛЭЛ</h1>
+                            <table class="cv-table cv-md" style=" ;" >
+                                <tbody>
+                                <tr>
+                                    <td style="width: 100%;" colspan="2">Байр барьцаалах бол 4%</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;">Ашиглалтанд орсон огноо:</td>
+                                    <td style="width: 50%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;">Хаяг:</td>
+                                    <td style="width: 50%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;">Хэдэн М2::</td>
+                                    <td style="width: 50%;">Хэдэн өрөө: М2:</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;">Зах зээлийн үнэ:</td>
+                                    <td style="width: 50%;">&nbsp;</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="cv-table cv-md cv-md-margin-left">
+                                <tbody>
+                                <tr>
+                                    <td colspan="2">Машин барьцаалах бол 3.5-4%</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;">Марк/өнгө:</td>
+                                    <td style="width: 50%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;">Үйлдвэрлэсэн огноо:</td>
+                                    <td style="width: 50%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;">Орж ирсэн огноо:</td>
+                                    <td style="width: 50%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;">Зах зээлийн үнэ:</td>
+                                    <td style="width: 50%;">&nbsp;</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="cv-table cv-lg cv-table-margin-top" >
+                                <tbody>
+                                <tr>
+                                    <td style="width: 23.8%;">Бусад</td>
+                                    <td style="width: 75%;"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="cv-table cv-lg cv-top-border-none">
+                                <tbody>
+                                <tr>
+                                    <td style="width: 23.8%;">Зах зээлийн үнэ:</td>
+                                    <td style="width: 10%;"></td>
+                                    <td style="width: 65%;">Тайлбар: </td>
+                                </tr>
+                                </tbody>
+                            </table>
                             <h1>02 АЖЛЫН ГАЗРЫН МЭДЭЭЛЭЛ</h1>
                             <table class="cv-table cv-lg" >
                                 <tbody>
@@ -252,86 +252,86 @@
                                 </tr>
                                 </tbody>
                             </table>
-                            <!--<h1>08 идэвхтэй зээлийн мэдээлэл</h1>-->
-                            <!--<table class="cv-table cv-lg" >-->
-                                <!--<tbody>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 5%;">№</td>-->
-                                    <!--<td style="width: 17%;">Зээл авсан банк санхүүгийн байгууллагын нэр</td>-->
-                                    <!--<td style="width: 13%;">Зээлийн хэмжээ</td>-->
-                                    <!--<td style="width: 13%;">Зээлийн зориулалт</td>-->
-                                    <!--<td style="width: 13%;">Хугацаа</td>-->
-                                    <!--<td style="width: 13%;">Зээлийн хүү</td>-->
-                                    <!--<td style="width: 13%;">Одоогийн үлдэгдэл</td>-->
-                                    <!--<td style="width: 13%;">Сард төлөгдөх төлбөр</td>-->
-                                <!--</tr>-->
-                                <!--<tr v-for="(loan, index) in user.active_loans">-->
-                                    <!--<td>{{ index + 1 }}</td>-->
-                                    <!--<td>{{ loan.organization }}</td>-->
-                                    <!--<td>{{ loan.loan_amount }}</td>-->
-                                    <!--<td>{{ loan.loan_usage }}</td>-->
-                                    <!--<td>{{ loan.loan_date }}</td>-->
-                                    <!--<td>{{ loan.loan_interest }}</td>-->
-                                    <!--<td>{{ loan.loan_balance }}</td>-->
-                                    <!--<td>{{ loan.monthly_pay }}</td>-->
-                                <!--</tr>-->
-                                <!--</tbody>-->
-                            <!--</table>-->
-                            <!--<h1>09 зээл хүсч бүрдүүлсэн материалууд</h1>-->
-                            <!--<table class="cv-table cv-lg" >-->
-                                <!--<tbody>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 5%;">№</td>-->
-                                    <!--<td style="width: 65%;">Иргэний бүрдүүлэх материалууд</td>-->
-                                    <!--<td style="width: 30%;">Хуудасны тоо</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 5%;">1</td>-->
-                                    <!--<td style="width: 65%;">Иргэний үнэмлэх, 1% цээж зураг</td>-->
-                                    <!--<td style="width: 30%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 5%;">2</td>-->
-                                    <!--<td style="width: 65%;">Оршин суугаа хорооны тодорхойлолт</td>-->
-                                    <!--<td style="width: 30%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 5%;">3</td>-->
-                                    <!--<td style="width: 65%;">Ажлын газар болон цалингийн тодорхойлолт</td>-->
-                                    <!--<td style="width: 30%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 5%;">4</td>-->
-                                    <!--<td style="width: 65%;">Нийгмийн даатгалын дэвтэр</td>-->
-                                    <!--<td style="width: 30%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 5%;">5</td>-->
-                                    <!--<td style="width: 65%;">Компантай бол дурэм, гэрчилгээ</td>-->
-                                    <!--<td style="width: 30%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 5%;">6</td>-->
-                                    <!--<td style="width: 65%;">Компани, хувь хүний дансны хуулга /Сүүлийн нэг жилээр/</td>-->
-                                    <!--<td style="width: 30%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 5%;">7</td>-->
-                                    <!--<td style="width: 65%;">Гэрлэлтийн лавлагаа</td>-->
-                                    <!--<td style="width: 30%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 5%;">8</td>-->
-                                    <!--<td style="width: 65%;">Бусад банк болон ББСБ-аас авсан төлөгдөөгүй зээлийн өрийн үлдэгдэлтэй бол зээлийн гэрээ, дансны хуулга, төлбөр төлсөн баримт</td>-->
-                                    <!--<td style="width: 30%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--<tr>-->
-                                    <!--<td style="width: 5%;">9</td>-->
-                                    <!--<td style="width: 65%;">Бусад холбогдох бичиг баримт</td>-->
-                                    <!--<td style="width: 30%;">&nbsp;</td>-->
-                                <!--</tr>-->
-                                <!--</tbody>-->
-                            <!--</table>-->
+                            <h1>08 идэвхтэй зээлийн мэдээлэл</h1>
+                            <table class="cv-table cv-lg" >
+                                <tbody>
+                                <tr>
+                                    <td style="width: 5%;">№</td>
+                                    <td style="width: 17%;">Зээл авсан банк санхүүгийн байгууллагын нэр</td>
+                                    <td style="width: 13%;">Зээлийн хэмжээ</td>
+                                    <td style="width: 13%;">Зээлийн зориулалт</td>
+                                    <td style="width: 13%;">Хугацаа</td>
+                                    <td style="width: 13%;">Зээлийн хүү</td>
+                                    <td style="width: 13%;">Одоогийн үлдэгдэл</td>
+                                    <td style="width: 13%;">Сард төлөгдөх төлбөр</td>
+                                </tr>
+                                <tr v-for="(loan, index) in user.active_loans">
+                                    <td>{{ index + 1 }}</td>
+                                    <td>{{ loan.organization }}</td>
+                                    <td>{{ loan.loan_amount }}</td>
+                                    <td>{{ loan.loan_usage }}</td>
+                                    <td>{{ loan.loan_date }}</td>
+                                    <td>{{ loan.loan_interest }}</td>
+                                    <td>{{ loan.loan_balance }}</td>
+                                    <td>{{ loan.monthly_pay }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <h1>09 зээл хүсч бүрдүүлсэн материалууд</h1>
+                            <table class="cv-table cv-lg" >
+                                <tbody>
+                                <tr>
+                                    <td style="width: 5%;">№</td>
+                                    <td style="width: 65%;">Иргэний бүрдүүлэх материалууд</td>
+                                    <td style="width: 30%;">Хуудасны тоо</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%;">1</td>
+                                    <td style="width: 65%;">Иргэний үнэмлэх, 1% цээж зураг</td>
+                                    <td style="width: 30%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%;">2</td>
+                                    <td style="width: 65%;">Оршин суугаа хорооны тодорхойлолт</td>
+                                    <td style="width: 30%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%;">3</td>
+                                    <td style="width: 65%;">Ажлын газар болон цалингийн тодорхойлолт</td>
+                                    <td style="width: 30%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%;">4</td>
+                                    <td style="width: 65%;">Нийгмийн даатгалын дэвтэр</td>
+                                    <td style="width: 30%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%;">5</td>
+                                    <td style="width: 65%;">Компантай бол дурэм, гэрчилгээ</td>
+                                    <td style="width: 30%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%;">6</td>
+                                    <td style="width: 65%;">Компани, хувь хүний дансны хуулга /Сүүлийн нэг жилээр/</td>
+                                    <td style="width: 30%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%;">7</td>
+                                    <td style="width: 65%;">Гэрлэлтийн лавлагаа</td>
+                                    <td style="width: 30%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%;">8</td>
+                                    <td style="width: 65%;">Бусад банк болон ББСБ-аас авсан төлөгдөөгүй зээлийн өрийн үлдэгдэлтэй бол зээлийн гэрээ, дансны хуулга, төлбөр төлсөн баримт</td>
+                                    <td style="width: 30%;">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 5%;">9</td>
+                                    <td style="width: 65%;">Бусад холбогдох бичиг баримт</td>
+                                    <td style="width: 30%;">&nbsp;</td>
+                                </tr>
+                                </tbody>
+                            </table>
                             <p class="center">
                                 <span>А.Харилцагчаас</span>
                                 <span>Б.Интернет</span>

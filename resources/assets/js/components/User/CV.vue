@@ -9,9 +9,8 @@
                 <li class="active">Удирдлага</li>
             </ol>
         </section>
-
         <!-- Main content -->
-        <section class="content">
+        <section class="content" >
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2">
                     <div class="box">
@@ -20,41 +19,60 @@
                                 Анкет
                             </div>
                         </div>
-                        <div class="box-body">
+                        <div class="box-body" >
                             <div class="form-horizontal">
                                 <div class="cv">
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">Зураг</label>
                                         <div class="col-sm-10">
-                                            <input type="file" class="form-control input-sm" @change="onFileChange" />
+                                            <dropzone
+                                                      ref="profUpload"
+                                                      id="profile"
+                                                      class="margin-bottom-10"
+                                                      :headers='csrfHeaders'
+                                                      :url="profileUpload"
+                                                      :use-font-awesome="true"
+                                                      :thumbnail-height="100"
+                                                      :thumbnail-width="100"
+                                                      v-on:vdropzone-success="ProfSuccess"
+                                                      v-on:vdropzone-error="onError">
+                                            </dropzone>
                                         </div>
-                                        <!--<div class="col-sm-2 col-sm-offset-2 cv-picture" v-if="user.image != ''">-->
-                                            <!--<img :src="user.image" class="profile-user-img img-responsive " style="margin: 10px 0" />-->
-                                        <!--</div>-->
                                     </div>
 
-                                        <img :src="user.image" class="cv-picture" />
+                                    <div  v-if="user.image != ''">
+                                        <img  :src= "user.image"  class="cv-picture" />
+                                    </div>
 
                                     <h1 style="margin-top: 130px">01 ЕРӨНХИЙ МЭДЭЭЛЭЛ</h1>
                                     <table class="cv-table cv-lg" >
                                         <tbody>
                                         <tr>
                                             <td style="width: 15%;">Овог нэр:</td>
-                                            <td style="width: 35%;"> <input type="text" class="form-control input-sm" v-model="user.first_name" /><br><input type="text" class="form-control input-sm" v-model="user.name" /></td>
+                                            <td style="width: 35%;" >
+                                                <input  type="text" class="form-control input-sm"  v-model="user.first_name" :value="user.first_name"/><br>
+                                                <input type="text" class="form-control input-sm"    v-model="user.name" :value="user.name"/>
+                                            </td>
                                             <td style="width: 20%;">Регистерийн дугаар:</td>
-                                            <td style="width: 30%;"><masked-input v-model="user.register" mask="AA11111111" placeholder="АА00000000" @input="setRegister" class="form-control input-sm"></masked-input></td>
+                                            <td style="width: 30%;"><masked-input v-model="user.register" mask="AA11111111" placeholder="АА00000000"   @input="setRegister" class="form-control input-sm"></masked-input></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 15%;">Нас:</td>
-                                            <td style="width: 35%;"><input type="number" class="form-control input-sm" v-model="user.age" readonly="readonly" /></td>
+                                            <td style="width: 35%;">
+                                                <input type="number" class="form-control input-sm" v-model="user.age" readonly="readonly" />
+                                            </td>
                                             <td style="width: 20%;">Утасны дугаар:</td>
-                                            <td style="width: 30%;"><masked-input v-model="user.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control input-sm"></masked-input></td>
+                                            <td style="width: 30%;"><masked-input v-model="user.phone_number" v-bind:value="user.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control input-sm">
+                                            </masked-input></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 15%;">Цахим шуудан:</td>
-                                            <td style="width: 35%;"><input placeholder="simple@simple.com" type="text" class="form-control input-sm" v-model="user.email" /></td>
+                                            <td style="width: 35%;"><input placeholder="simple@simple.com" type="text" class="form-control input-sm" v-model="user.email" />
+                                                {{ user.email }}
+                                            </td>
                                             <td style="width: 20%;">Мэргэжил:</td>
-                                            <td style="width: 30%;"><input type="text" class="form-control input-sm" v-model="user.profession"/></td>
+                                            <td style="width: 30%;"><input type="text" class="form-control input-sm" v-model="user.profession"/>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -62,7 +80,8 @@
                                         <tbody>
                                         <tr>
                                             <td style="width: 30%;">Одоо амьдарч буй гэрийн хаяг:</td>
-                                            <td style="width: 70%;"><textarea class="form-control input-sm" rows="2" v-model="user.address"></textarea></td>
+                                            <td style="width: 70%;"><textarea class="form-control input-sm" rows="2" v-model="user.address"></textarea>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td style="width: 30%;">Одоо амьдарч буй байр нь орон сууц, хашаа байшин, хашаа гэр:</td>
@@ -78,7 +97,7 @@
                                         <tbody>
                                         <tr>
                                             <td style="width: 50%;">Тухайн хаяг дээр амьдарсан жил:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.lyears"  type="number" placeholder="111"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.live_year"  type="number" placeholder="111"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Байр нь зээлийн барьцаанд байгаа бол дэлгэрэнгүй бөглөнө үү:</td>
@@ -100,7 +119,7 @@
                                         </tr>
                                         <tr>
                                             <td style="width: 30%;">Хүсэж буй зээлийн хэмжээ:</td>
-                                            <td style="width: 70%;"><input v-model="user.request.loan_term"   /></td>
+                                            <td style="width: 70%;"><input class="form-control input-sm" v-model="user.request.loan_term"   /></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 30%;">Зээлийн эргэн төлөх хугацаа:</td>
@@ -128,19 +147,19 @@
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Ашиглалтанд орсон огноо:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_apart.commissioned" type="text" v-pick="user.bail_apart.commissioned"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.apartment.commissioned" type="text" v-pick="user.apartment.commissioned"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Хаяг:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_apart.address" type="text"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.apartment.address" type="text"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 50%;">Хэдэн М2::<input class="form-control input-sm" v-model="user.bail_apart.apart_meter" type="number"  placeholder="111"/></td>
-                                            <td style="width: 50%;">Хэдэн өрөө: М2:<input class="form-control input-sm" v-model="user.bail_apart.room" type="number"  placeholder="11"/></td>
+                                            <td style="width: 50%;">Хэдэн М2::<input class="form-control input-sm" v-model="user.apartment.apart_meter" type="number"  placeholder="111"/></td>
+                                            <td style="width: 50%;">Хэдэн өрөө: М2:<input class="form-control input-sm" v-model="user.apartment.room" type="number"  placeholder="11"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Зах зээлийн үнэ:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_apart.price" /></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.apartment.price" /></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -151,19 +170,19 @@
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Марк/өнгө:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_car.model" type="text"/><input class="form-control input-sm" v-model="user.bail_car.color" type="text"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.car.model" type="text"/><input class="form-control input-sm" v-model="user.car.color" type="text"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Үйлдвэрлэсэн огноо:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_car.manufacture" v-pick="user.bail_car.manufacture" type="text"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.car.manufacture" v-pick="user.car.manufacture" type="text"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Орж ирсэн огноо:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.bail_car.entry_date" v-pick="user.bail_car.entry_date" type="text"/></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.car.entry_date" v-pick="user.car.entry_date" type="text"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 50%;">Зах зээлийн үнэ:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm"  v-model="user.bail_car.price"   /></td>
+                                            <td style="width: 50%;"><input class="form-control input-sm"  v-model="user.car.price"   /></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -171,7 +190,7 @@
                                         <tbody>
                                         <tr>
                                             <td style="width: 23.8%;">Бусад</td>
-                                            <td style="width: 75%;"><input class="form-control input-sm" v-model="user.bail_other.name" type="text"/></td>
+                                            <td style="width: 75%;"><input class="form-control input-sm" v-model="user.other.name" type="text"/></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -179,8 +198,8 @@
                                         <tbody>
                                         <tr>
                                             <td style="width: 23.8%;">Зах зээлийн үнэ:</td>
-                                            <td style="width: 10%;"><input class="form-control input-sm" v-model="user.bail_other.price"   /></td>
-                                            <td style="width: 65%;">Тайлбар:<input class="form-control input-sm" v-model="user.bail_other.description" type="text"/> </td>
+                                            <td style="width: 10%;"><input class="form-control input-sm" v-model="user.other.price"   /></td>
+                                            <td style="width: 65%;">Тайлбар:<input style="width: 90%; float: right" class="form-control input-sm" v-model="user.other.description" type="text"/> </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -195,7 +214,7 @@
                                             <td style="width: 16%;">Хаяг</td>
                                             <td style="width: 16%;">Ажилчдын тоо</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-if="!user.workplaces" v-for="workplace in user.workplaces">
                                             <td style="width: 18%;"><input class="form-control input-sm" type="text" v-model="user.workplace.organization"  /></td>
                                             <td style="width: 16%;"><input class="form-control input-sm"  type="text" v-model="user.workplace.date_employment" v-pick="user.workplace.date_employment"  /></td>
                                             <td style="width: 16%;"><input class="form-control input-sm"  type="text" v-model="user.workplace.position"  /></td>
@@ -311,7 +330,7 @@
                                                        v-model="user.budget.name" data-target="#budget-input" v-on:selected="setDataBudget(user.budget, '#budget-input')">
                                                 <input  type="hidden" v-model="user.budget.name" id="budget-input" />
                                             </td>
-                                            <td><input v-model="user.budget.budget"   /></td>
+                                            <td><input v-model="user.budget.budget"  class="form-control input-sm" /></td>
                                             <td>
                                                 <button class="btn btn-sm btn-success" @click="addBudget()"><i class="fa fa-plus-circle"></i></button>
                                             </td>
@@ -323,7 +342,7 @@
                                                 <input type="text" class="form-control input-sm" v-auto data-type="budget" :data-target="'#budget-input' + b.id" :value="b.name" v-on:selected="setDataBudget(b, '#budget-input' + b.id)">
                                                 <input type="hidden" v-model="b.name" :id="'budget-input' + b.id" />
                                             </td>
-                                            <td><input  v-model="b.budget"   /></td>
+                                            <td><input  v-model="b.budget"  class="form-control input-sm" /></td>
                                             <td>
                                                 <div class="btn-group ">
                                                     <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyBudget(b)"></button>
@@ -341,7 +360,7 @@
                                                 <input type="text" class="form-control input-sm input-sm" v-auto data-type="user.expense" v-model="user.expense.name" data-target="#expense-input" v-on:selected="setDataExpense(user.expense, '#expense-input')">
                                                 <input type="hidden" v-model="user.expense.name" id="expense-input" />
                                             </td>
-                                            <td><input  v-model="user.expense.expense"   /></td>
+                                            <td><input  v-model="user.expense.expense"  class="form-control input-sm" /></td>
                                             <td>
                                                 <button class="btn btn-sm btn-success" @click="addExpense()"><i class="fa fa-plus-circle"></i></button>
                                             </td>
@@ -352,7 +371,7 @@
                                                 <input type="text" class="form-control input-sm input-sm" v-auto data-type="user.expense" :data-target="'#expense-input' + b.id" :value="b.name" v-on:selected="setDataExpense(b, '#expense-input' + b.id)">
                                                 <input type="hidden" v-model="b.name" :id="'expense-input' + b.id" />
                                             </td>
-                                            <td><input v-model="b.expense"   /></td>
+                                            <td><input v-model="b.expense"  class="form-control input-sm" /></td>
                                             <td>
                                                 <div class="btn-group">
                                                     <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyExpense(b)"></button>
@@ -371,7 +390,7 @@
                                                 <input type="text" class="form-control input-sm input-sm" v-auto data-type="user.asset" v-model="user.asset.name" data-target="#asset-input" v-on:selected="setDataAsset(user.asset, '#asset-input')">
                                                 <input type="hidden" v-model="user.asset.name" id="asset-input" />
                                             </td>
-                                            <td><input v-model="user.asset.asset"   /></td>
+                                            <td><input v-model="user.asset.asset" class="form-control input-sm"  /></td>
                                             <td>
                                                 <button class="btn btn-sm btn-success" @click="addAsset()"><i class="fa fa-plus-circle"></i></button>
                                             </td>
@@ -382,7 +401,7 @@
                                                 <input type="text" class="form-control input-sm input-sm" v-auto data-type="asset" :data-target="'#asset-input' + b.id" :value="b.name" v-on:selected="setDataAsset(b, '#asset-input' + b.id)">
                                                 <input type="hidden" v-model="b.name" :id="'asset-input' + b.id" />
                                             </td>
-                                            <td><input  v-model="b.asset"   /></td>
+                                            <td><input  v-model="b.asset" class="form-control input-sm"  /></td>
                                             <td>
                                                 <div class="btn-group">
                                                     <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyAsset(b)"></button>
@@ -427,8 +446,8 @@
                                             <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_usage"  /></td>
                                             <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_date"  /></td>
                                             <td><input class="form-control input-sm" type="number" v-model="user.credit.loan_interest"   placeholder="11"/></td>
-                                            <td><input v-model="user.credit.loan_balance"   /></td>
-                                            <td><input v-model="user.credit.monthly_pay"   /></td>
+                                            <td><input v-model="user.credit.loan_balance"  class="form-control input-sm" /></td>
+                                            <td><input v-model="user.credit.monthly_pay" class="form-control input-sm"  /></td>
                                             <td>
                                                 <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyCredit(credit)"></button>
                                             </td>
@@ -446,14 +465,18 @@
                                         <tr>
                                             <td style="width: 5%;">1</td>
                                             <td style="width: 65%;">Иргэний үнэмлэх, 1% цээж зураг</td>
-                                            <td style="width: 30%;">
-                                                <dropzone v-model="user.doc_attach" id="1"
+                                            <td style="width: 30%;"  @click="getFolderName('1')" >
+                                                <dropzone v-model="user.doc_attach"
+                                                          ref="profUpload1"
+                                                          id="1"
                                                           class="margin-bottom-10"
                                                           :headers='csrfHeaders'
                                                           :url="mediaUpload"
                                                           :use-font-awesome="true"
                                                           :thumbnail-height="100"
                                                           :thumbnail-width="100"
+                                                          v-on:vdropzone-sending="onFileChange"
+                                                          v-bind:preview-template="template"
                                                           v-on:vdropzone-success="showSuccess"
                                                           v-on:vdropzone-error="onError">
                                                 </dropzone>
@@ -462,14 +485,16 @@
                                         <tr>
                                             <td style="width: 5%;">2</td>
                                             <td style="width: 65%;">Оршин суугаа хорооны тодорхойлолт</td>
-                                            <td style="width: 30%;">
+                                            <td style="width: 30%;"  @click="getFolderName('2')" >
                                                 <dropzone v-model="user.doc_attach" id="2"
+                                                          ref="profUpload2"
                                                           class="margin-bottom-10"
                                                           :headers='csrfHeaders'
                                                           :url="mediaUpload"
                                                           :use-font-awesome="true"
                                                           :thumbnail-height="100"
                                                           :thumbnail-width="100"
+                                                          v-on:vdropzone-sending="onFileChange"
                                                           v-on:vdropzone-success="showSuccess"
                                                           v-on:vdropzone-error="onError">
                                                 </dropzone>
@@ -478,14 +503,16 @@
                                         <tr>
                                             <td style="width: 5%;">3</td>
                                             <td style="width: 65%;">Ажлын газар болон цалингийн тодорхойлолт</td>
-                                            <td style="width: 30%;">
+                                            <td style="width: 30%;"  @click="getFolderName('3')" >
                                                 <dropzone v-model="user.doc_attach" id="3"
+                                                          ref="profUpload3"
                                                           class="margin-bottom-10"
                                                           :headers='csrfHeaders'
                                                           :url="mediaUpload"
                                                           :use-font-awesome="true"
                                                           :thumbnail-height="100"
                                                           :thumbnail-width="100"
+                                                          v-on:vdropzone-sending="onFileChange"
                                                           v-on:vdropzone-success="showSuccess"
                                                           v-on:vdropzone-error="onError">
                                                 </dropzone>
@@ -494,14 +521,16 @@
                                         <tr>
                                             <td style="width: 5%;">4</td>
                                             <td style="width: 65%;">Нийгмийн даатгалын дэвтэр</td>
-                                            <td style="width: 30%;">
+                                            <td style="width: 30%;"  @click="getFolderName('4')" >
                                                 <dropzone v-model="user.doc_attach" id="4"
+                                                          ref="profUpload4"
                                                           class="margin-bottom-10"
                                                           :headers='csrfHeaders'
                                                           :url="mediaUpload"
                                                           :use-font-awesome="true"
                                                           :thumbnail-height="100"
                                                           :thumbnail-width="100"
+                                                          v-on:vdropzone-sending="onFileChange"
                                                           v-on:vdropzone-success="showSuccess"
                                                           v-on:vdropzone-error="onError">
                                                 </dropzone>
@@ -510,14 +539,16 @@
                                         <tr>
                                             <td style="width: 5%;">5</td>
                                             <td style="width: 65%;">Компантай бол дурэм, гэрчилгээ</td>
-                                            <td style="width: 30%;">
+                                            <td style="width: 30%;"  @click="getFolderName('5')" >
                                                 <dropzone v-model="user.doc_attach" id="5"
+                                                          ref="profUpload5"
                                                           class="margin-bottom-10"
                                                           :headers='csrfHeaders'
                                                           :url="mediaUpload"
                                                           :use-font-awesome="true"
                                                           :thumbnail-height="100"
                                                           :thumbnail-width="100"
+                                                          v-on:vdropzone-sending="onFileChange"
                                                           v-on:vdropzone-success="showSuccess"
                                                           v-on:vdropzone-error="onError">
                                                 </dropzone>
@@ -526,14 +557,16 @@
                                         <tr>
                                             <td style="width: 5%;">6</td>
                                             <td style="width: 65%;">Компани, хувь хүний дансны хуулга /Сүүлийн нэг жилээр/</td>
-                                            <td style="width: 30%;">
+                                            <td style="width: 30%;"  @click="getFolderName('6')" >
                                                 <dropzone v-model="user.doc_attach" id="6"
+                                                          ref="profUpload6"
                                                           class="margin-bottom-10"
                                                           :headers='csrfHeaders'
                                                           :url="mediaUpload"
                                                           :use-font-awesome="true"
                                                           :thumbnail-height="100"
                                                           :thumbnail-width="100"
+                                                          v-on:vdropzone-sending="onFileChange"
                                                           v-on:vdropzone-success="showSuccess"
                                                           v-on:vdropzone-error="onError">
                                                 </dropzone>
@@ -542,14 +575,16 @@
                                         <tr>
                                             <td style="width: 5%;">7</td>
                                             <td style="width: 65%;">Гэрлэлтийн лавлагаа</td>
-                                            <td style="width: 30%;">
+                                            <td style="width: 30%;"  @click="getFolderName('7')" >
                                                 <dropzone v-model="user.doc_attach" id="7"
+                                                          ref="profUpload7"
                                                           class="margin-bottom-10"
                                                           :headers='csrfHeaders'
                                                           :url="mediaUpload"
                                                           :use-font-awesome="true"
                                                           :thumbnail-height="100"
                                                           :thumbnail-width="100"
+                                                          v-on:vdropzone-sending="onFileChange"
                                                           v-on:vdropzone-success="showSuccess"
                                                           v-on:vdropzone-error="onError">
                                                 </dropzone>
@@ -558,14 +593,17 @@
                                         <tr>
                                             <td style="width: 5%;">8</td>
                                             <td style="width: 65%;">Бусад банк болон ББСБ-аас авсан төлөгдөөгүй зээлийн өрийн үлдэгдэлтэй бол зээлийн гэрээ, дансны хуулга, төлбөр төлсөн баримт</td>
-                                            <td style="width: 30%;">
-                                                <dropzone v-model="user.doc_attach" id="8"
+                                            <td style="width: 30%;"  @click="getFolderName('8')" >
+                                                <dropzone
+                                                          v-model="user.doc_attach" id="8"
+                                                          ref="profUpload8"
                                                           class="margin-bottom-10"
                                                           :headers='csrfHeaders'
                                                           :url="mediaUpload"
                                                           :use-font-awesome="true"
                                                           :thumbnail-height="100"
                                                           :thumbnail-width="100"
+                                                          v-on:vdropzone-sending="onFileChange"
                                                           v-on:vdropzone-success="showSuccess"
                                                           v-on:vdropzone-error="onError">
                                                 </dropzone>
@@ -574,19 +612,21 @@
                                         <tr>
                                             <td style="width: 5%;">9</td>
                                             <td style="width: 65%;">Бусад холбогдох бичиг баримт</td>
-                                            <td style="width: 30%;">&nbsp;
-                                                <dropzone v-model="user.doc_attach" id="9"
+                                            <td style="width: 30%;" @click="getFolderName('9')" >
+                                                <dropzone
+                                                          id="9"
+                                                          ref="profUpload9"
                                                           class="margin-bottom-10"
                                                           :headers='csrfHeaders'
                                                           :url="mediaUpload"
                                                           :use-font-awesome="true"
                                                           :thumbnail-height="100"
                                                           :thumbnail-width="100"
+                                                          v-on:vdropzone-sending="onFileChange"
                                                           v-on:vdropzone-success="showSuccess"
                                                           v-on:vdropzone-error="onError">
                                                 </dropzone>
                                             </td>
-
                                         </tr>
                                         <tr>
                                             <td  colspan="3" style="width: 100%;">
@@ -596,7 +636,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        </tbody>
+                                       </tbody>
                                     </table>
                                     <p class="center">ДЭЭРХ МЭДЭЭЛЛИЙГ ҮНЭН ЗӨВ БОЛОХЫГ БАТАЛСАН /Гарын үсэг/ /......................................................................................../</p>
                                     <p class="center">ХЯНАЖ АВСАН АЖИЛТАН: /Гарын үсэг/ /............................................................................................../</p>
@@ -637,27 +677,10 @@
         data()
         {
             return {
-                money:{
-                    decimal:'.',
-                    thousands:',',
-                    precision:2,
-                    masked:false
-                },
-                adv:[],
-                csrfHeaders: null,
-                mediaUpload: '/api/cv/imageUpload',
-                nextBudgetId:1,
-                nextAssetId:1,
-                nextExpenseId:1,
-                nextEmergencyId:1,
-                nextFamilyId:1,
-                nextCreditId:1,
-                owner_types:null,
-                pledge_types:null,
-                advertisements:null,
                 user: {
                     filePaths:[],
                     filePath:'',
+                    profilePath:'',
                     image: '',
                     first_name: '',
                     name: '',
@@ -671,6 +694,8 @@
                     age: null,
                     confirm_password: '',
                     owner_type:'',
+                    live_year:'',
+                    bail_info:'',
                     workplace: {
                         organization: null,
                         date_employment: null,
@@ -734,24 +759,24 @@
                         period_time: null,
                         payment_day: null,
                         expire_date: null,
-                        pledge_type:null,
+//                        pledge_type:null,
                         description:null
                     },
-                    bail_apart: {
+                    apartment: {
                         commissioned: null,
                         address: null,
                         apart_meter: null,
                         room: null,
                         price:null
                     },
-                    bail_car: {
+                    car: {
                         model: null,
                         color: null,
                         manufacture: null,
                         entry_date: null,
                         price:null
                     },
-                    bail_other: {
+                    other: {
                         name: null,
                         price: null,
                         description: null,
@@ -764,7 +789,26 @@
                         path:null,
                         file:null
                     }
-                },loading: true,
+                },loading:false,
+                money:{
+                    decimal:'.',
+                    thousands:',',
+                    precision:2,
+                    masked:false
+                },
+                adv:[],
+                profileUpload:'/api/cv/profileUpload',
+                mediaUpload: '/api/cv/filesUpload',
+                nextBudgetId:1,
+                nextAssetId:1,
+                nextExpenseId:1,
+                nextEmergencyId:1,
+                nextFamilyId:1,
+                nextCreditId:1,
+                owner_types:null,
+                pledge_types:null,
+                advertisements:null,
+                folder:'',
             }
         },
         mounted()
@@ -772,32 +816,59 @@
             this.fetchOwnerType();
             this.fetchLoanPledgeType();
             this.fetchAdvertisement();
-
         },
+
         created()
         {
             this.csrfHeaders = {
                 'X-CSRF-TOKEN': window.Laravel.csrfToken
             }
         },
+        computed: {
+
+        },
         methods: {
-            showSuccess(file,response) {
-                    console.log(file);
-                this.user.filePath= response.tempPath;
-                    this.user.filePaths.push({
-                        filePath: this.user.filePath
-                    });
-                    this.reset();
+            'template': function () {
+                return `
+                    <div class="dz-preview dz-file-preview vue-dropzone" >
+                      <div class="dz-image" style="width: 100px;height: 100px">
+                          <img data-dz-thumbnail /></div>
+                      <div class="dz-details">
+                        <div class="dz-size"><span data-dz-size></span></div>
+                        <div class="dz-filename"><span data-dz-name></span></div>
+                      </div>
+                      <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                      <div class="dz-error-message"><span data-dz-errormessage></span></div>
+                      <div class="dz-success-mark"><i class="fa fa-check"></i></div>
+                      <div class="dz-error-mark"><i class="fa fa-close"></i></div>
+                  </div>
+                `;
             },
-            onError (file, error) {
+            ProfSuccess(file, response) {
+                this.user.profilePath = response.tempProfPath;
+                this.user.image = response.tempProfPath + '/' + response.profPic;
+            },
+            getFolderName(name) {
+                this.folder = name
+            },
+            onFileChange(file, xhr, formData) {
+                formData.append('folder', this.folder);
+                this.folder = ''
+            },
+            showSuccess(file, response) {
+                this.user.filePath = response.tempPath;
+                this.user.filePaths.push({
+                    filePath: this.user.filePath
+                });
+
+            },
+            onError(file, error) {
                 swal('Уучлаарай!', 'Амжилтгүй боллоо!', 'error')
             },
-            setRegister()
-            {
+            setRegister() {
                 try {
                     var splits = this.user.register.match(/.{1,2}/g);
-                    if(parseInt(splits[2]) > 12)
-                    {
+                    if (parseInt(splits[2]) > 12) {
                         var year = 2000 + parseInt(splits[1]);
                         var month = parseInt(splits[2]) - 20;
                         var birthDay = new Date(year, month - 1, parseInt(splits[3]) + 1);
@@ -805,18 +876,48 @@
                     else
                     {
                         var year = 1900 + parseInt(splits[1]);
-                        var birthDay = new Date(year, parseInt(splits[2]) - 1 , parseInt(splits[3]) + 1);
+                        var birthDay = new Date(year, parseInt(splits[2]) - 1, parseInt(splits[3]) + 1);
                     }
                     this.user.birth_day = birthDay.toISOString().substring(0, 10);
                     this.user.age = this.getAge(birthDay);
+                    this.findByRegister(this.user.register);
                 }
-                catch(error)
-                {
+                catch (error) {
 
                 }
             },
+            findByRegister($register){
 
-            getAge(d1){
+                if ($register.length === 10 && ( $register[9]) != '_' )
+                {
+                    this.reset();
+                    axios.get('/api/user/' + $register).then(response => {
+
+                        if((response.data.user) !== null)
+                        {
+                            console.log(response.data);
+                            this.user = response.data.user;
+                            this.user.workplace = response.data.user.workplace;
+                            this.user.members = response.data.user.family;
+                            this.user.emergency = response.data.user.emergencies;
+                            this.user.budget = response.data.user.budgets;
+                            this.user.asset = response.data.user.assets;
+                            this.user.expense = response.data.user.expenses;
+                            this.user.credit = response.data.user.credit;
+                            Vue.delete(this.user, 'created_at');
+                            Vue.delete(this.user, 'updated_at');
+                            this.owner_type = response.data.owner_type;
+                            this.relations = response.data.relations;
+                            this.loading = true;
+                        }
+                    })
+                }
+                else
+                {
+                    console.log('Шинэ хэрэглэгч');
+                }
+            },
+            getAge(d1) {
                 var d2 = new Date();
                 var diff = d2.getTime() - d1.getTime();
                 return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
@@ -825,18 +926,17 @@
             save()
             {
                 axios.post('/api/cv', this.user).then(response => {
-                    if(response.data.result)
-                    {
+                    if (response.data.result) {
                         var self = this;
                         swal({
                             title: 'Ажилттай!',
                             text: 'Хэрэглэгч бүртгэгдлээ',
                             type: 'success'
-                        }, function(){
+                        }, function () {
                             self.reset();
                         })
                     }
-                }).catch(function(response){
+                }).catch(function (response) {
                     swal('Уучлаарай!', 'Амжилтгүй боллоо!', 'error')
                 })
             },
@@ -846,153 +946,140 @@
                 this.$router.push('/users')
             },
 
-            reset()
-            {
+            reset() {
+                this.$refs.profUpload.removeAllFiles();
+                this.$refs.profUpload1.removeAllFiles();
+                this.$refs.profUpload2.removeAllFiles();
+                this.$refs.profUpload3.removeAllFiles();
+                this.$refs.profUpload4.removeAllFiles();
+                this.$refs.profUpload5.removeAllFiles();
+                this.$refs.profUpload6.removeAllFiles();
+                this.$refs.profUpload7.removeAllFiles();
+                this.$refs.profUpload8.removeAllFiles();
+                this.$refs.profUpload9.removeAllFiles();
 
                 return {
-                    csrfHeaders: null,
-                    mediaUpload: '/api/cv/imageUpload',
-                    nextBudgetId:1,
-                    nextAssetId:1,
-                    nextExpenseId:1,
-                    nextEmergencyId:1,
-                    nextFamilyId:1,
-                    nextCreditId:1,
-                    owner_types:null,
-                    pledge_types:null,
-                    advertisements:null,
-                    user: {
-                        image: '',
-                        first_name: '',
-                        name: '',
-                        phone_number: '',
-                        address: '',
-                        email: '',
-                        user_type: 'customer',
-                        password: '',
-                        register: null,
-                        birth_day: null,
-                        age: null,
-                        confirm_password: '',
-                        workplace: {
-                            organization: null,
-                            date_employment: null,
-                            position: null,
-                            activity: null,
-                            address: null,
-                            worker_count: null
-                        },
-                        family: [],
-                        members: {
-                            id:null,
-                            name: null,
-                            relation: null,
-                            job: null,
-                            register: null,
-                            budged: null,
-                            phone_number: null,
-                        },
-                        emergencies:[],
-                        emergency: {
-                            id:null,
-                            name: null,
-                            relation: null,
-                            job: null,
-                            register: null,
-                            budged: null,
-                            phone_number: null
-                        },
-                        credits:[],
-                        credit: {
-                            organization: null,
-                            loan_amount: null,
-                            loan_usage: null,
-                            loan_date: null,
-                            loan_interest: null,
-                            loan_balance: null,
-                            monthly_pay: null
-                        },
-                        assets: [],
-                        asset: {
-                            id:null,
-                            name: null,
-                            asset: null
-                        },
-                        budgets: [],
-                        budget: {
-                            id:'',
+
+                        mediaUpload: '/api/cv/filesUpload',
+                        nextBudgetId:1,
+                        nextAssetId:1,
+                        nextExpenseId:1,
+                        nextEmergencyId:1,
+                        nextFamilyId:1,
+                        nextCreditId:1,
+                        owner_types:null,
+//                        pledge_types:null,
+                        advertisements:null,
+                        user: {
+                            image: '',
+                            first_name: '',
                             name: '',
-                            budget: ''
-                        },
-                        expenses: [],
-                        expense: {
-                            id:'',
-                            name: null,
-                            expense: null
-                        },
-                        request: {
-                            pledge_type:null,
-                            loanable: null,
-                            loanable_id: null,
-                            loan_term: null,
-                            period_time: null,
-                            payment_day: null,
-                            expire_date: null,
-                            description:  null
-                        },
-                        bail_apart: {
-                            commissioned: null,
-                            address: null,
-                            apart_meter: null,
-                            room: null,
-                            price:null
-                        },
-                        bail_car: {
-                            model: null,
-                            color: null,
-                            manufacture: null,
-                            entry_date: null,
-                            price:null
-                        },
-                        bail_other: {
-                            name: null,
-                            price:null,
-                            description: null,
-                        },
-                        required_doc:{
-                            document_name:null,
-                        },
-                        docs:[],
-                        doc_attach:{
-                            path:null,
-                            file:null
-                        }
-                    },loading: true,
-                }
+                            phone_number: '',
+                            address: '',
+                            email: '',
+                            user_type: 'customer',
+                            password: '',
+                            register: null,
+                            birth_day: null,
+                            age: null,
+                            confirm_password: '',
+                            workplace: {
+                                organization: null,
+                                date_employment: null,
+                                position: null,
+                                activity: null,
+                                address: null,
+                                worker_count: null
+                            },
+                            family: [],
+                            members: {
+                                id:null,
+                                name: null,
+                                relation: null,
+                                job: null,
+                                register: null,
+                                budged: null,
+                                phone_number: null,
+                            },
+                            emergencies:[],
+                            emergency: {
+                                id:null,
+                                name: null,
+                                relation: null,
+                                job: null,
+                                register: null,
+                                budged: null,
+                                phone_number: null
+                            },
+                            credits:[],
+                            credit: {
+                                organization: null,
+                                loan_amount: null,
+                                loan_usage: null,
+                                loan_date: null,
+                                loan_interest: null,
+                                loan_balance: null,
+                                monthly_pay: null
+                            },
+                            assets: [],
+                            asset: {
+                                id:null,
+                                name: null,
+                                asset: null
+                            },
+                            budgets: [],
+                            budget: {
+                                id:'',
+                                name: '',
+                                budget: ''
+                            },
+                            expenses: [],
+                            expense: {
+                                id:'',
+                                name: null,
+                                expense: null
+                            },
+                            request: {
+                                pledge_type:null,
+                                loanable: null,
+                                loanable_id: null,
+                                loan_term: null,
+                                period_time: null,
+                                payment_day: null,
+                                expire_date: null,
+                                description:  null
+                            },
+                            apartment: {
+                                commissioned: null,
+                                address: null,
+                                apart_meter: null,
+                                room: null,
+                                price:null
+                            },
+                            car: {
+                                model: null,
+                                color: null,
+                                manufacture: null,
+                                entry_date: null,
+                                price:null
+                            },
+                            other: {
+                                name: null,
+                                price:null,
+                                description: null,
+                            },
+                            required_doc:{
+                                document_name:null,
+                            },
+                            docs:[],
+                            doc_attach:{
+                                path:null,
+                                file:null
+                            }
+                        },loading: true,
+                    }
             },
 
-            onFileChange(e)
-            {
-                var files = e.target.files || e.dataTransfer.files;
-                if (!files.length)
-                    return;
-                this.createImage(files[0]);
-            },
-
-            createImage(file) {
-                var image = new Image();
-                var reader = new FileReader();
-                var vm = this;
-
-                reader.onload = (e) => {
-                    vm.user.image = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            },
-
-            removeImage: function (e) {
-                this.user.image = '';
-            },
             setDataCredit(credit,element)
             {
                 credit.organization=$(element).val();
@@ -1243,7 +1330,8 @@
             },
             addCredit()
             {
-                try {
+                try
+                {
                     var self = this;
                     this.loading = true;
                     this.user.credits.push({
@@ -1303,3 +1391,9 @@
 
     }
 </script>
+<style>
+    .vue-dropzone {
+        min-height:10px;
+        padding: 0;
+    }
+</style>

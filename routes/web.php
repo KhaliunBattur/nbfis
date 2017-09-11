@@ -55,8 +55,11 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
 
         Route::get('user/{id}/info', ['as' => 'user.info', 'uses' => 'UserController@info']);
 
+        Route::get('user/{register}','UserController@findByRegister');
+
         Route::resource('cv', 'CvController', ['except' => ['create']]);
-        Route::post('cv/imageUpload','CvController@imageUpload');
+        Route::post('cv/filesUpload','CvController@fileUpload');
+        Route::post('cv/profileUpload','CvController@profileUpload');
 
         Route::get('user/{id}/family', ['as' => 'user.family.index', 'uses' => 'FamilyController@index']);
         Route::post('user/{id}/family', ['as' => 'user.family.store', 'uses' => 'FamilyController@store']);
