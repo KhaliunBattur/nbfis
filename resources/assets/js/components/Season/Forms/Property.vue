@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="breakdownModalLabel">Балансын задаргаа оруулах</h4>
+                    <h4 class="modal-title" id="breakdownModalLabel">Балансын задаргаа оруулах (Үндсэн хөрөнгө)</h4>
                 </div>
                 <div class="modal-body">
                     <div class="table-responsive">
@@ -21,13 +21,13 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Хөрөнгийн ангилал</label>
-                                                <select2 :options="groups" :value="tran.property.group_id" :selected="tran" v-on:input="selectGroup"></select2>
+                                                <select2 :options="groups" :value="tran.transaction_able.group_id" :selected="tran" v-on:input="selectGroup"></select2>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Байрлал</label>
-                                                <select2 :options="branches" :value="tran.property.branch_id" :selected="tran" v-on:input="selectBranch"></select2>
+                                                <select2 :options="branches" :value="tran.transaction_able.branch_id" :selected="tran" v-on:input="selectBranch"></select2>
                                             </div>
                                         </td>
                                     </tr>
@@ -35,19 +35,19 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Код</label>
-                                                <input type="text" class="form-control input-sm" v-model="tran.property.code" />
+                                                <input type="text" class="form-control input-sm" v-model="tran.transaction_able.code" />
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Нэр</label>
-                                                <input type="text" class="form-control input-sm" v-model="tran.property.name" />
+                                                <input type="text" class="form-control input-sm" v-model="tran.transaction_able.name" />
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Эд хариуцагч</label>
-                                                <select2 :options="users" :value="tran.property.owner_id" :selected="tran" v-on:input="selectOwner"></select2>
+                                                <select2 :options="users" :value="tran.transaction_able.owner_id" :selected="tran" v-on:input="selectOwner"></select2>
                                             </div>
                                         </td>
                                     </tr>
@@ -55,19 +55,19 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Нэгж өртөг</label>
-                                                <money v-model="tran.property.unit_amount" v-bind="money" class="input-sm form-control"></money>
+                                                <money v-model="tran.transaction_able.unit_amount" v-bind="money" class="input-sm form-control"></money>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Тоо ширхэг</label>
-                                                <money v-model="tran.property.count" v-bind="money" class="input-sm form-control"></money>
+                                                <money v-model="tran.transaction_able.count" v-bind="money" class="input-sm form-control"></money>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Нийт үнэ</label>
-                                                <money :value="tran.property.count * tran.property.unit_amount" v-bind="money" readonly="readonly" class="input-sm form-control" @input="calculate"></money>
+                                                <money :value="tran.transaction_able.count * tran.transaction_able.unit_amount" v-bind="money" readonly="readonly" class="input-sm form-control" @input="calculate"></money>
                                             </div>
                                         </td>
                                     </tr>
@@ -75,13 +75,13 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Ашиглаж эхэлсэн огноо</label>
-                                                <input type="text" v-pick="tran.property.start_date" class="form-control input-sm" v-model="tran.property.start_date" v-on:changeDate="calculate" />
+                                                <input type="text" v-pick="tran.transaction_able.start_date" class="form-control input-sm" v-model="tran.transaction_able.start_date" v-on:changeDate="calculate" />
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Ашиглах хугацаа (жилээр)</label>
-                                                <money v-model="tran.property.use_time_count" v-bind="money" class="input-sm form-control" @input="calculate"></money>
+                                                <money v-model="tran.transaction_able.use_time_count" v-bind="money" class="input-sm form-control" @input="calculate"></money>
                                             </div>
                                         </td>
                                         <td>
@@ -127,11 +127,11 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="(tran, index) in transaction">
-                                    <td>{{ tran.property.code }}</td>
-                                    <td>{{ tran.property.name }}</td>
-                                    <td>{{ tran.property.unit_amount }}</td>
-                                    <td>{{ tran.property.count }}</td>
-                                    <td>{{ tran.property.unit_amount * tran.property.count }}</td>
+                                    <td>{{ tran.transaction_able.code }}</td>
+                                    <td>{{ tran.transaction_able.name }}</td>
+                                    <td>{{ tran.transaction_able.unit_amount }}</td>
+                                    <td>{{ tran.transaction_able.count }}</td>
+                                    <td>{{ tran.transaction_able.unit_amount * tran.transaction_able.count }}</td>
                                     <td>{{ Math.round(tran.amount * 100) / 100 }}</td>
                                     <td>
                                         <button class="btn btn-xs btn-warning" @click="edit(tran)"><i class="fa fa-pencil"></i></button>
@@ -181,6 +181,7 @@
                 remaining_time_count: '',
                 deprecation: 0,
                 total: 0,
+                class_name: "Property",
                 branches: [],
                 groups: [],
                 users: [],
@@ -189,7 +190,7 @@
                     id: 0,
                     description: 'Эхний үлдэгдэл',
                     amount: 0,
-                    property: {
+                    transaction_able: {
                         branch_id: null,
                         group_id: null,
                         code: null,
@@ -218,15 +219,15 @@
         methods: {
             selectGroup(data)
             {
-                this.tran.property.group_id = data.value;
+                this.tran.transaction_able.group_id = data.value;
             },
             selectBranch(data)
             {
-                this.tran.property.branch_id = data.value;
+                this.tran.transaction_able.branch_id = data.value;
             },
             selectOwner(data)
             {
-                this.tran.property.owner_id = data.value;
+                this.tran.transaction_able.owner_id = data.value;
             },
             saveRow()
             {
@@ -239,21 +240,21 @@
             calculate()
             {
                 var date1 = new Date(this.season.open_date);
-                var date2 = new Date(this.tran.property.start_date);
+                var date2 = new Date(this.tran.transaction_able.start_date);
                 var timeDiff = Math.abs(date2.getTime() - date1.getTime());
                 var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-                if(this.tran.property.use_time_count > 0)
+                if(this.tran.transaction_able.use_time_count > 0)
                 {
-                    var day_expiration = (this.tran.property.count * this.tran.property.unit_amount) / (365 * this.tran.property.use_time_count);
+                    var day_expiration = (this.tran.transaction_able.count * this.tran.transaction_able.unit_amount) / (365 * this.tran.transaction_able.use_time_count);
                     this.expiration_amount = day_expiration * 365;
                     this.deprecation = diffDays * day_expiration;
-                    var remain_percent = (diffDays * 100) / (365 * this.tran.property.use_time_count);
+                    var remain_percent = (diffDays * 100) / (365 * this.tran.transaction_able.use_time_count);
 
                     const dateformat = require('dateformat');
 
-                    this.remaining_time_count = dateformat(new Date(date2.getFullYear() + this.tran.property.use_time_count, date2.getMonth(), date2.getDate()), 'yyyy-mm-dd');
-                    this.tran.amount = (this.tran.property.count * this.tran.property.unit_amount) - this.deprecation;
+                    this.remaining_time_count = dateformat(new Date(date2.getFullYear() + this.tran.transaction_able.use_time_count, date2.getMonth(), date2.getDate()), 'yyyy-mm-dd');
+                    this.tran.amount = (this.tran.transaction_able.count * this.tran.transaction_able.unit_amount) - this.deprecation;
                 }
                 else
                 {
@@ -267,7 +268,7 @@
                     id: 0,
                     description: 'Эхний үлдэгдэл',
                     amount: 0,
-                    property: {
+                    transaction_able: {
                         branch_id: null,
                         group_id: null,
                         code: null,
@@ -293,7 +294,7 @@
                 let data = {
                     total: this.total,
                     transaction: this.transaction,
-                    class_name: null
+                    class_name: this.class_name
                 }
                 this.transaction = [];
                 this.total = 0;

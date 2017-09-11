@@ -12,6 +12,7 @@ namespace App\Account;
 use App\Season\Season;
 use App\Support\Bank;
 use App\Support\Currency;
+use App\Transaction\Property;
 use App\Transaction\Receivable;
 use App\Transaction\Transaction;
 use Illuminate\Database\Eloquent\Model;
@@ -95,6 +96,12 @@ class Account extends Model
                     $receivable = Receivable::create($item['transaction_able']);
                     $item['transaction_able'] = 'App\Transaction\Receivable';
                     $item['transaction_able_id'] = $receivable->getKey();
+                }
+                if($account['class_name'] == 'Property')
+                {
+                    $property = Property::create($item['transaction_able']);
+                    $item['transaction_able'] = 'App\Transaction\Property';
+                    $item['transaction_able_id'] = $property->getKey();
                 }
             }
             return new Transaction($item);
