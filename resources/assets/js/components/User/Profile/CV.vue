@@ -360,7 +360,8 @@
             return {
                 user: null,
                 owner_type: null,
-                relations: null
+                relations: null,
+                download: 'download'
             }
         },
 
@@ -372,13 +373,16 @@
         methods: {
             getUser()
             {
-                axios.get('/api/user/' + this.$route.params.id + '/info').then(response => {
-                    this.user = response.data.user;
-                    this.owner_type = response.data.owner_type;
-                    this.relations = response.data.relations;
-                    this.user.birth_day = null;
-                    this.user.age = null;
-                    this.setRegister();
+                axios.get('/api/user/' + this.$route.params.id + '/info',{
+                    params:{
+                        download:this.download}
+                    }).then(response => {
+//                    this.user = response.data.user;
+//                    this.owner_type = response.data.owner_type;
+//                    this.relations = response.data.relations;
+//                    this.user.birth_day = null;
+//                    this.user.age = null;
+//                    this.setRegister();
                 }).catch(function (response) {
                     swal('Уучлаарай!', 'Хэрэглэгчийн мэдээлэл татаж чадсангүй', 'error')
                 })

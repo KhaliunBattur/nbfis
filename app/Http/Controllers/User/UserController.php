@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class UserController extends Controller
 {
@@ -278,15 +279,20 @@ class UserController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function info($id)
+    public function info(Request $request, $id)
     {
         $user = $this->userRepository->findInfoById($id);
 
-        return response()->json([
-            'user' => $user,
-            'owner_type' => \Config::get('enums.owner_type'),
-            'relations' => \Config::get('enums.relation')
-        ]);
+        view()->share('user',$user);
+
+//        if($request->has('download'))
+//        {
+            $pdf = PDF::loadView('report/cvPDF',$user)->setPaper('a4')->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+            return $pdf->download('cvPDF.pdf');
+//        }
+//
+//        return view('report/cvPDF',compact('user'));
+
     }
 
     public function findByRegister($register)
@@ -310,6 +316,9 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function userList()
     {
         $users = $this->userRepository->findByUserListRaw()->toArray();

@@ -214,7 +214,7 @@
                                             <td style="width: 16%;">Хаяг</td>
                                             <td style="width: 16%;">Ажилчдын тоо</td>
                                         </tr>
-                                        <tr v-if="!user.workplaces" v-for="workplace in user.workplaces">
+                                        <tr>
                                             <td style="width: 18%;"><input class="form-control input-sm" type="text" v-model="user.workplace.organization"  /></td>
                                             <td style="width: 16%;"><input class="form-control input-sm"  type="text" v-model="user.workplace.date_employment" v-pick="user.workplace.date_employment"  /></td>
                                             <td style="width: 16%;"><input class="form-control input-sm"  type="text" v-model="user.workplace.position"  /></td>
@@ -222,7 +222,6 @@
                                             <td style="width: 16%;"><input class="form-control input-sm" type="text" v-model="user.workplace.address"  /></td>
                                             <td style="width: 16%;"><input class="form-control input-sm" type="number" v-model="user.workplace.worker_count"  placeholder="1111" /></td>
                                         </tr>
-
                                         </tbody>
                                     </table>
                                     <p class="left">
@@ -335,6 +334,10 @@
                                                 <button class="btn btn-sm btn-success" @click="addBudget()"><i class="fa fa-plus-circle"></i></button>
                                             </td>
                                         </tr>
+                                        </tbody>
+                                    </table>
+                                    <table>
+                                        <tbody>
                                         <tr v-for="(b, index) in user.budgets">
 
                                             <td><span class="text text-black">{{ index + 1 }}</span></td>
