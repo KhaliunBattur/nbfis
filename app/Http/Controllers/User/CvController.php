@@ -96,10 +96,12 @@ class CvController extends Controller
         $user = \DB::transaction(function() use($parameters, $request) {
 
         $user = User::create($parameters);
-
+            dd($user);
             if($request->has('profilePath'))
             {
                 Storage::move($parameters['profilePath'],'/images/profile_'.$user['id']);
+                $parameters['image']='/images/profile_'.$user['id'].'/'.$parameters['image'];
+                $user->update($parameters);
             }
 
             if($request->has('filePath'))

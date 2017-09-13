@@ -71,7 +71,7 @@
     }
 
     .cv-md {
-        width: 30%;
+        width: 48%;
     }
 
     .cv-md-margin-left {
@@ -92,7 +92,7 @@
 </head>
 <body>
 <div class="cv">
-    <img src="#" class="cv-picture" />
+    <img src="{{base_path()}}/public{{$user->image}}" class="cv-picture" />
     <h1 style="margin-top: 130px">01 ЕРӨНХИЙ МЭДЭЭЛЭЛ</h1>
     <table class="cv-table cv-lg" >
         <tbody>
@@ -122,7 +122,7 @@
                 {{$user->email}}&nbsp;
             </td>
             <td style="width: 20%;">Мэргэжил:</td>
-            <td style="width: 30%;">&nbsp;</td>
+            <td style="width: 30%;">{{$user->profession}}</td>
         </tr>
         </tbody>
     </table>
@@ -269,14 +269,7 @@
             <td style="width: 16%;">&nbsp;</td>
             <td style="width: 16%;">&nbsp;</td>
         </tr>
-        <tr>
-            <td style="width: 18%;">&nbsp;</td>
-            <td style="width: 16%;">&nbsp;</td>
-            <td style="width: 16%;">&nbsp;</td>
-            <td style="width: 16%;">&nbsp;</td>
-            <td style="width: 16%;">&nbsp;</td>
-            <td style="width: 16%;">&nbsp;</td>
-        </tr>
+
         </tbody>
     </table>
     <p class="left">

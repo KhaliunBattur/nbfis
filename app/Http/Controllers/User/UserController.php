@@ -81,6 +81,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
         $this->valid($request);
 
         $parameters = $request->all();
@@ -92,6 +93,8 @@ class UserController extends Controller
         if($request->has('profilePath'))
         {
             Storage::move($parameters['profilePath'],'/images/profile_'.$user['id']);
+            $parameters['image']='/images/profile_'.$user['id'].'/'.$parameters['image'];
+            $user->update($parameters);
         }
 
         event(new UserCreated($user, 'хэрэглэгч шинээр бүртгэв', 'info'));
