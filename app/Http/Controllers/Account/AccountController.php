@@ -64,7 +64,7 @@ class AccountController extends Controller
 
         $parameters = $request->all();
 
-        $request->request->add(['account_number' => $parameters['group']['code'] . $parameters['code']]);
+//        $request->request->add(['account_number' => $parameters['group']['code'] . $parameters['code']]);
 
         $this->valid($request);
 
