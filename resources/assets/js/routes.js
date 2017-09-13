@@ -18,17 +18,24 @@ import Account from './components/Account/Account.vue'
 
 // Журнал
 import Journal from './components/Journal/Journal.vue'
+
 // Банк
 import Bank from './components/Bank/Bank.vue'
+
 // Вальют
 import Currency from './components/Currency/Currency.vue'
+
 //Хэрэглэгчийн эрхийн routes
 import Roles from './components/Role/Roles.vue'
 
 //Эхлэл баланс буюу улирал
 import Season from './components/Season/Season.vue'
-import List from './components/Season/List.vue'
+import BalanceList from './components/Season/List.vue'
 import Balance from './components/Season/Balance.vue'
+
+//Гүйлгээ
+import Transaction from './components/Transaction/Transaction.vue';
+import General from './components/Transaction/General.vue'
 
 Vue.use(VueRouter)
 
@@ -78,10 +85,18 @@ const router = new VueRouter({
             path: '/season', component: Season,
             children: [
                 {
-                    path: '', component: List
+                    path: '', component: BalanceList
                 },
                 {
                     path: ':id/balance', component: Balance
+                }
+            ]
+        },
+        {
+            path: '/transaction', component: Transaction,
+            children: [
+                {
+                    path: '', component: General
                 }
             ]
         },

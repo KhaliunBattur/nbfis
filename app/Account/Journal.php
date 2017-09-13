@@ -11,6 +11,7 @@ namespace App\Account;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Journal extends Model
 {
@@ -31,6 +32,14 @@ class Journal extends Model
     public function root()
     {
         return $this->belongsTo(Journal::class, 'root_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function accounts()
+    {
+        return $this->hasMany(Account::class, 'journal_id');
     }
 
 }

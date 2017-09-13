@@ -53,7 +53,9 @@ class TransactionRepository implements TransactionRepositoryInterface
      */
     public function findByPaginate($howMany, $params = [])
     {
-        return $this->model->paginate($howMany);
+        $query = $this->model->whereNotNull('type');
+
+        return $query->paginate($howMany);
     }
 
     /**

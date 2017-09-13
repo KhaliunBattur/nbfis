@@ -137,7 +137,6 @@ class AccountController extends Controller
     {
         $roles = [
             'name' => 'required',
-            'code' => 'required|numeric',
             'account_number' => 'required|unique:account,account_number,'.$request->get('id'),
             'journal' => 'required',
             'currency' => 'required',

@@ -90,4 +90,17 @@ class JournalRepository implements JournalRepositoryInterface
                 $query->where('name', 'like', '%'. $get .'%');
             })->get();
     }
+
+    /**
+     * @return Collection
+     */
+    public function findWithAccounts()
+    {
+        return $this->model
+            ->join('account', 'journal.id', '=', 'account.journal_id')
+            ->select(['journal.*', \DB::raw('count(account.id) as account_count')])
+            ->groupBy('journal.id')
+            ->havingRaw('account_count > 0')
+            ->get();
+    }
 }

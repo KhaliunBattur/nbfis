@@ -40,7 +40,12 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::get('account/group/{group}/others', ['as' => 'group.others', 'uses' => 'GroupController@others']);
         Route::resource('journal', 'JournalController', ['except' => ['create', 'show', 'edit', 'update']]);
         Route::get('journal/lists', ['as' => 'journal.lists', 'uses' => 'JournalController@lists']);
+        Route::get('journal/lists/with/account', ['as' => 'journal.lists.with.account', 'uses' => 'JournalController@listWithAccount']);
         Route::get('journal/{id}/group', ['as' => 'journal.lists', 'uses' => 'GroupController@journalGroups']);
+    });
+
+    Route::group(['namespace' => 'Transaction', 'as' => 'transaction.'], function (){
+       Route::resource('transaction', 'TransactionController');
     });
 
     Route::resource('season', 'Season\SeasonController', ['expect' => ['create']]);

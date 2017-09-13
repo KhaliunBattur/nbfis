@@ -87,6 +87,7 @@
                     id: 0,
                     name: null,
                     code: null,
+                    account_number: null,
                     group: null,
                     journal: null,
                     currency: null,

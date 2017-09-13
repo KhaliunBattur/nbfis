@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="accountForm" tabindex="-1" role="dialog" aria-labelledby="accountFormLabel">
+    <div class="modal fade" id="accountForm" tabindex="-1" role="dialog" aria-labelledby="accountFormLabel" v-if="account">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -11,7 +11,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Харья бүлэг <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <v-select v-model="account.group" :debounce="250" :on-search="fetchGroup" :options="groups" label="name" placeholder="Харьяа бүлэг"></v-select>
+                                <v-select v-model="account.group" :debounce="250" :on-search="fetchGroup" :on-change="setAccountNumber()" :options="groups" label="name" placeholder="Харьяа бүлэг"></v-select>
                                 <div class="text-danger" v-if="errorMessages.group">
                                     {{ errorMessages.group[0] }}
                                 </div>
@@ -26,12 +26,21 @@
                                 </div>
                             </div>
                         </div>
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-sm-3 control-label">Код <span class="text-danger">*</span></label>-->
+                            <!--<div class="col-sm-9">-->
+                                <!--<input type="text" class="form-control" v-model="account.code" @input="setAccountNumber()" />-->
+                                <!--<div class="text-danger" v-if="errorMessages.code">-->
+                                    <!--{{ errorMessages.code[0] }}-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Код <span class="text-danger">*</span></label>
+                            <label class="col-sm-3 control-label">Дансны дугаар <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" v-model="account.code" />
-                                <div class="text-danger" v-if="errorMessages.code">
-                                    {{ errorMessages.code[0] }}
+                                <input type="text" class="form-control" v-model="account.account_number" />
+                                <div class="text-danger" v-if="errorMessages.account_number">
+                                    {{ errorMessages.account_number[0] }}
                                 </div>
                             </div>
                         </div>
@@ -129,6 +138,16 @@
         },
 
         methods: {
+            setAccountNumber()
+            {
+                if(this.account.group)
+                {
+                    if(this.account.account_number === null)
+                    {
+                        this.account.account_number = this.account.group.code;
+                    }
+                }
+            },
             fetchGroup(search, loading) {
                 loading(true);
                 axios.get('/api/account/group/0/others?q=' + search).then(response => {
