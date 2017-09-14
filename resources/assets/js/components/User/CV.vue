@@ -656,8 +656,11 @@
                                         <div class="btn-group">
                                             <a @click="back()" class="btn btn-sm btn-danger">Буцах</a>
                                         </div>
-                                        <div class="btn-group pull-right">
+                                        <div v-if="user.mode==false" class="btn-group pull-right">
                                             <button type="button" class="btn btn-sm btn-success" @click="save()">Хадгалах</button>
+                                        </div>
+                                        <div v-if="user.mode==true" class="btn-group pull-right">
+                                            <button type="button" class="btn btn-sm btn-success" @click="update()">Засах</button>
                                         </div>
                                     </div>
                                 </div>
@@ -824,6 +827,7 @@
                 pledge_types:null,
                 advertisements:null,
                 folder:'',
+                uid:''
             }
         },
         mounted()
@@ -913,7 +917,7 @@
 
                         if((response.data.user) !== null)
                         {
-                            console.log(response.data);
+                            console.log(response.data.user.id);
                             this.user = response.data.user;
                             this.user.imageTemp = response.data.user.image;
                             this.user.workplace = response.data.user.workplaces;
@@ -923,6 +927,7 @@
                             this.user.asset = response.data.user.assets;
                             this.user.expense = response.data.user.expenses;
                             this.user.credit = response.data.user.credit;
+                            this.uid = response.data.user.id;
                             this.user.mode = true;
                             Vue.delete(this.user, 'created_at');
                             Vue.delete(this.user, 'updated_at');
@@ -936,6 +941,23 @@
                 {
                     console.log('Шинэ хэрэглэгч');
                 }
+            },
+            update()
+            {
+              axios.post('/api/cv/',this.uid,this.user).then(response=> {
+                  if (response.data.result){
+                      var self = this;
+                      swal({
+                          title: 'Ажилттай!',
+                          text: 'Хэрэглэгч засагдлаа',
+                          type: 'success'
+                      },function () {
+                          self.reset();
+                      })
+                  }
+              })  .catch(function (response) {
+                  swal('Уучлаарай!', 'Амжилтгүй боллоо!', 'error')
+              })
             },
             save()
             {
