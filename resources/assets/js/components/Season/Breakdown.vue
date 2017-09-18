@@ -1,8 +1,8 @@
 <template>
     <div>
-        <general v-on:saved="saveGeneral" :account="account" :id="id" v-if="account.journal.form_code == '00001'"></general>
-        <receivable v-on:saved="saveReceivable" :account="account" :id="id" v-if="account.journal.form_code == '00002'"></receivable>
-        <property v-on:saved="saveReceivable" :account="account" :season="season" :id="id" v-if="account.journal.form_code == '00003'"></property>
+        <general v-on:saved="saveGeneral" v-on:modalHidden="hideModal" :account="account" :id="id" v-if="account.journal.form_code == '00001'"></general>
+        <receivable v-on:saved="saveReceivable" v-on:modalHidden="hideModal" :account="account" :id="id" v-if="account.journal.form_code == '00002'"></receivable>
+        <property v-on:saved="saveReceivable" v-on:modalHidden="hideModal" :account="account" :season="season" :id="id" v-if="account.journal.form_code == '00003'"></property>
     </div>
 </template>
 
@@ -30,7 +30,13 @@
             saveReceivable(data)
             {
                 this.$emit('saved', data);
-            }
+            },
+            hideModal(account)
+            {
+                account.breakdown = account.breakdown.filter(function(breakdown){
+                    return breakdown.amount > 0
+                });
+            },
         }
 
     }

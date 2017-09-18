@@ -12,7 +12,12 @@
 */
 
 use App\Support\ReferenceText;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+
+Route::get('test', function(){
+   echo Carbon::now()->format('Ymd') . '001';
+});
 
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
@@ -35,17 +40,18 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
     Route::get('list/branches', 'BranchController@lists')->name('branch.lists');
 
     Route::group(['namespace' => 'Account', 'as' => 'account.'], function(){
-        Route::resource('account', 'AccountController');
+        Route::resource('account', 'AccountController', ['except' => ['edit', 'create', 'show', 'update']]);
         Route::resource('account/group', 'GroupController', ['except' => ['edit', 'create', 'show', 'update']]);
         Route::get('account/group/{group}/others', ['as' => 'group.others', 'uses' => 'GroupController@others']);
         Route::resource('journal', 'JournalController', ['except' => ['create', 'show', 'edit', 'update']]);
         Route::get('journal/lists', ['as' => 'journal.lists', 'uses' => 'JournalController@lists']);
-        Route::get('journal/lists/with/account', ['as' => 'journal.lists.with.account', 'uses' => 'JournalController@listWithAccount']);
+        Route::get('journal/lists/have/account', ['as' => 'journal.lists.have.account', 'uses' => 'JournalController@listHaveAccount']);
         Route::get('journal/{id}/group', ['as' => 'journal.lists', 'uses' => 'GroupController@journalGroups']);
     });
 
     Route::group(['namespace' => 'Transaction', 'as' => 'transaction.'], function (){
        Route::resource('transaction', 'TransactionController');
+       Route::get('account/list', ['as' => 'list', 'uses' => 'TransactionController@lists']);
     });
 
     Route::resource('season', 'Season\SeasonController', ['expect' => ['create']]);
@@ -137,6 +143,21 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         return response()->json([
             'codes' => \Config::get('enums.codes')
         ]);
+    });
+
+    Route::get('codes/transaction', function(){
+
+        $array = [];
+
+        foreach (\Config::get('enums.codes_transaction') as $key => $codes)
+        {
+            $array[$key] = $codes['name'];
+        }
+
+        return response()->json([
+            'codes' => $array
+        ]);
+
     });
 
     Route::get('references/{type}', function ($type, Request $request){

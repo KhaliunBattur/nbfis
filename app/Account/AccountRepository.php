@@ -75,4 +75,14 @@ class AccountRepository implements AccountRepositoryInterface
     {
         return $this->model->pluck('id');
     }
+
+    /**
+     * @return Collection
+     */
+    public function findByListRaw()
+    {
+        return $this->model
+            ->join('currency', 'account.currency_id', '=', 'currency.id')
+            ->select('account.id', \DB::raw("CONCAT(account_number, ' - ', account.name) as text"), 'currency.exchange', 'currency.is_current', 'currency.marker', 'account.currency_id')->get();
+    }
 }

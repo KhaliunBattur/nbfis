@@ -78,7 +78,7 @@ class JournalController extends Controller
 
     }
 
-    public function listWithAccount()
+    public function listHaveAccount()
     {
         $journal = $this->journalRepository->findWithAccounts();
 

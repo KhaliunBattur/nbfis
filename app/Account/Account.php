@@ -83,28 +83,35 @@ class Account extends Model
         $attachments = $items->filter(function($item){
             return empty($item['id']);
         })->map(function($item) use ($delete_ids, $season, $account) {
-            $item['id'] = $delete_ids->pop();
-            $item['season_id'] = $season->getKey();
-            $item['account_id'] = $account['id'];
-            $item['description'] = is_null($item['description']) ? 'Эхний үлдэгдэл' : $item['description'];
-            $item['exchange'] = $account['exchange'];
-            $item['user_id'] = \Auth::user()->getKey();
-            if(array_key_exists('transaction_able', $item) && !is_null($item['transaction_able']))
+            if(array_key_exists('transaction_able', $item) && array_key_exists('class_name', $account))
             {
-                if($account['class_name'] == 'Receivable')
+                $item['id'] = $delete_ids->pop();
+                $item['season_id'] = $season->getKey();
+                $item['account_id'] = $account['id'];
+                $item['description'] = is_null($item['description']) ? 'Эхний үлдэгдэл' : $item['description'];
+                $item['exchange'] = $account['exchange'];
+                $item['user_id'] = \Auth::user()->getKey();
+                if(array_key_exists('transaction_able', $item) && !is_null($item['transaction_able']))
                 {
-                    $receivable = Receivable::create($item['transaction_able']);
-                    $item['transaction_able'] = 'App\Transaction\Receivable';
-                    $item['transaction_able_id'] = $receivable->getKey();
+                    if($account['class_name'] == 'Receivable')
+                    {
+                        $receivable = Receivable::create($item['transaction_able']);
+                        $item['transaction_able'] = 'App\Transaction\Receivable';
+                        $item['transaction_able_id'] = $receivable->getKey();
+                    }
+                    if($account['class_name'] == 'Property')
+                    {
+                        $property = Property::create($item['transaction_able']);
+                        $item['transaction_able'] = 'App\Transaction\Property';
+                        $item['transaction_able_id'] = $property->getKey();
+                    }
                 }
-                if($account['class_name'] == 'Property')
-                {
-                    $property = Property::create($item['transaction_able']);
-                    $item['transaction_able'] = 'App\Transaction\Property';
-                    $item['transaction_able_id'] = $property->getKey();
-                }
+                return new Transaction($item);
             }
-            return new Transaction($item);
+            else
+            {
+                return null;
+            }
         });
 
         if($attachments->count() == 0)
@@ -121,6 +128,14 @@ class Account extends Model
 
                 return $transaction;
             });
+        }
+
+        foreach ($attachments as $key => $attachment)
+        {
+            if(is_null($attachment))
+            {
+                unset($attachments[$key]);
+            }
         }
 
         $this->breakdown()->saveMany($attachments);

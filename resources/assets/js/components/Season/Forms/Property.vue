@@ -135,7 +135,7 @@
                                     <td>{{ Math.round(tran.amount * 100) / 100 }}</td>
                                     <td>
                                         <button class="btn btn-xs btn-warning" @click="edit(tran)"><i class="fa fa-pencil"></i></button>
-                                        <button class="btn btn-xs btn-danger" v-if="index > 0" @click="destroy(tran)"><i class="fa fa-trash-o"></i></button>
+                                        <button class="btn btn-xs btn-danger" @click="destroy(tran)"><i class="fa fa-trash-o"></i></button>
                                     </td>
                                 </tr>
                                 </tbody>

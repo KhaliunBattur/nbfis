@@ -88,4 +88,24 @@ class SeasonRepository implements SeasonRepositoryInterface
     {
         return $this->model->with('currencies')->findOrFail($id);
     }
+
+    /**
+     * @return Season
+     */
+    public function findCurrent()
+    {
+        $season = $this->model->whereNull('close_date')->first();
+
+        return is_null($season) ? 0 : $season->getKey();
+    }
+
+    /**
+     * @return Season
+     */
+    public function findCurrentByObject()
+    {
+        $season = $this->model->whereNull('close_date')->first();
+
+        return $season;
+    }
 }

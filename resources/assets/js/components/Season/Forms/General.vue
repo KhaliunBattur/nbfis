@@ -22,7 +22,7 @@
                                     <td><input type="text" class="form-control input-sm" v-model="t.description" /></td>
                                     <td><money v-model="t.amount" v-bind="money" class="input-sm form-control" @input="selectInput(t.amount)"></money></td>
                                     <td>
-                                        <button class="btn btn-xs btn-danger" v-if="index > 0" @click="destroy(t)"><i class="fa fa-trash-o"></i></button>
+                                        <button class="btn btn-xs btn-danger" @click="destroy(t)"><i class="fa fa-trash-o"></i></button>
                                     </td>
                                 </tr>
                                 </tbody>

@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="breakdownModal" tabindex="-1" role="dialog" aria-labelledby="myModabreakdownModallLabel" v-if="account" v-modal v-on:showModal="init()">
+    <div class="modal fade" id="breakdownModal" tabindex="-1" role="dialog" aria-labelledby="myModabreakdownModallLabel" v-if="account" v-modal v-on:showModal="init()" v-on:hideModal="hidden()">
         <div class="modal-dialog modal-lg" role="document" v-if="account">
             <div class="modal-content">
                 <div class="modal-header">
@@ -28,7 +28,7 @@
                                     <td><input type="text" class="form-control input-sm" v-pick="t.transaction_able.closing_date" v-model="t.transaction_able.closing_date" /> </td>
                                     <td><money v-model="t.amount" v-bind="money" class="input-sm form-control" @input="selectInput(t.amount)"></money></td>
                                     <td>
-                                        <button class="btn btn-xs btn-danger" v-if="index > 0" @click="destroy(t)"><i class="fa fa-trash-o"></i></button>
+                                        <button class="btn btn-xs btn-danger" @click="destroy(t)"><i class="fa fa-trash-o"></i></button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -162,6 +162,9 @@
                     this.options = response.data.customers
                 }).catch(errors => {
                 })
+            },
+            hidden() {
+                this.$emit('modalHidden', this.account);
             },
             init()
             {

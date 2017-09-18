@@ -18,7 +18,8 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li v-for="journal in journals"><a class="links" @click="showModal(journal)">{{ journal.name }}</a></li>
+                                        <li><a class="links" @click="showModal(null)">Ерөнхий журнал</a></li>
+                                        <li v-for="(journal, index) in journals"><a class="links" @click="showModal(journal.index)">{{ journal }}</a></li>
                                     </ul>
                                 </div>
                                 <div class="input-group input-group-sm input-small with-margin-bottom pull-right">
@@ -29,7 +30,7 @@
                                 </div>
                             </div>
                             <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
-                                <table class="table table-bordered table-hover">
+                                <table class="table table-bordered table-hover" style="font-size: 12px">
                                     <thead>
                                     <tr>
                                         <th>Гүйлгээний дугаар</th>
@@ -44,19 +45,30 @@
                                     </thead>
                                     <tbody>
                                     <tr v-for="tran in model.data">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{ tran.transaction_number }}</td>
+                                        <td>{{ tran.account.name }}</td>
+                                        <td>{{ tran.transaction_date }}</td>
+                                        <td>{{ tran.description }}</td>
+                                        <td>
+                                            <div v-if="tran.type == 'debit'">
+                                                {{ formatPrice(tran.amount * tran.exchange) }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div v-if="tran.type == 'credit'">
+                                                {{ formatPrice(tran.amount) }}
+                                            </div>
+                                        </td>
+                                        <td>{{ tran.customer.first_name + ' ' + tran.customer.name }}</td>
+                                        <td>
+                                            {{ tran.user.name }}
+                                            <div class="text-block">{{ tran.created_at }}</div>
+                                        </td>
                                     </tr>
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <td colspan="6">
+                                        <td colspan="8">
                                             <div class="pull-left">
                                                 <span>Нийт: {{ model.total }} мөр бичлэгийн {{ model.from }} -с {{ model.to }} харуулж байна</span>
                                             </div>
@@ -74,7 +86,7 @@
                 </div>
             </div>
         </div>
-        <general></general>
+        <general v-on:modalHided="fetchTransaction"></general>
     </section>
 </template>
 
@@ -121,7 +133,10 @@
         methods: {
             showModal(journal)
             {
-                $('#transactionModal').modal('show');
+                if(journal === null)
+                {
+                    $('#general_transactionModal').modal('show');
+                }
             },
             changePerPage()
             {
@@ -153,8 +168,8 @@
             },
             fetchJournal()
             {
-                axios.get('/api/journal/lists/with/account').then(response => {
-                    this.journals = response.data.lists
+                axios.get('/api/codes/transaction').then(response => {
+                    this.journals = response.data.codes
                 })
             },
             fetchTransaction()
@@ -163,7 +178,11 @@
                     this.model = response.data.transaction;
                     this.loading = false
                 }).catch(errors => {});
-            }
+            },
+            formatPrice(amount) {
+                let val = (amount/1).toFixed(2).replace(',', '.')
+                return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            },
         }
 
     }

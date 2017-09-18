@@ -24,7 +24,7 @@ class Journal extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'form_code', 'root_id'];
+    protected $fillable = ['name', 'form_code', 'form_code_transaction', 'root_id'];
 
     /**
      * @return BelongsTo

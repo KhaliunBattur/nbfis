@@ -19,4 +19,9 @@ interface AccountRepositoryInterface extends Repository
      * @return Collection
      */
     public function findAllIdList();
+
+    /**
+     * @return Collection
+     */
+    public function findByListRaw();
 }

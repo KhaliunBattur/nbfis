@@ -24,4 +24,14 @@ interface SeasonRepositoryInterface extends Repository
      * @return mixed
      */
     public function findByIdWithCurrencies($id);
+
+    /**
+     * @return Season
+     */
+    public function findCurrent();
+
+    /**
+     * @return Season
+     */
+    public function findCurrentByObject();
 }

@@ -14,4 +14,9 @@ use App\Core\Repository;
 interface TransactionRepositoryInterface extends Repository
 {
 
+    /**
+     * @param $transaction_date
+     * @return mixed
+     */
+    public function getTransactionNumber($transaction_date);
 }

@@ -85,6 +85,7 @@ return [
     'unique'               => 'Оруулсан :attribute аль хэдий нь бүртгэгдсэн байна.',
     'uploaded'             => ':Attribute талбарт оруулсан файлыг хуулхад алдаа гарлаа.',
     'url'                  => ':Attribute зөв url хаяг оруулна уу.',
+    'greater_than_zero'    => ':Attribute 0 ээс их байх шаардлагатай',
 
     /*
     |--------------------------------------------------------------------------
@@ -134,7 +135,13 @@ return [
         'journal'     => 'журнал',
         'currency'    => 'валют',
         'form_code'   => 'форум код',
-        'bank_account_number' => 'банкны дансны дугаар'
+        'bank_account_number' => 'банкны дансны дугаар',
+        'account_id' => 'данс',
+        'customer_id' => 'харилцагч',
+        'description' => 'утга',
+        'receipt_number' => 'баримтын дугаар',
+        'to_account_id' => 'харьцах данс',
+        'transaction_date' => 'гүйлгээний огноо'
     ],
 
 ];
