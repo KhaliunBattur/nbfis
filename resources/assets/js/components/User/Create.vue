@@ -26,9 +26,6 @@
                                               v-on:vdropzone-error="onError">
                                     </dropzone>
                                 </div>
-                                <!--<div class="col-sm-2 col-sm-offset-2" v-if="user.image != ''">-->
-                                    <!--<img :src="user.image" class="profile-user-img img-responsive img-circle" style="margin: 10px 0px" />-->
-                                <!--</div>-->
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Овог <label class="text-danger">*</label></label>
@@ -178,7 +175,7 @@
             ProfSuccess(file,response)
             {
                 this.user.profilePath = response.tempProfPath;
-                this.user.image = response.tempProfPath +'/'+ response.profPic;
+                this.user.image = response.profPic;
             },
             onError (file, error)
             {

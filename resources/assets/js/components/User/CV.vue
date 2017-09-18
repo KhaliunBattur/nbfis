@@ -40,7 +40,17 @@
                                         </div>
                                     </div>
 
-                                    <div  v-if="user.image != ''">
+                                    <div  v-if="user.imageTemp != '' && user.image == '' " >
+                                        <p>hey 1</p>
+                                        <img  :src= "user.imageTemp"  class="cv-picture" />
+                                    </div>
+
+                                    <div  v-else-if="user.imageTemp == '' && user.image != '' " >
+                                        <p>hey 2</p>
+                                        <img  :src= "'images/profile/user/'+user.image"  class="cv-picture" />
+                                    </div>
+                                    <div  v-else-if="user.imageTemp != '' && user.image != '' " >
+                                        <p>hey 3</p>
                                         <img  :src= "user.image"  class="cv-picture" />
                                     </div>
 
@@ -51,7 +61,7 @@
                                             <td style="width: 15%;">Овог нэр:</td>
                                             <td style="width: 35%;" >
                                                 <input  type="text" class="form-control input-sm"  v-model="user.first_name" :value="user.first_name"/><br>
-                                                <input type="text" class="form-control input-sm"    v-model="user.name" :value="user.name"/>
+                                                <input  type="text" class="form-control input-sm"  v-model="user.name" :value="user.name"/>
                                             </td>
                                             <td style="width: 20%;">Регистерийн дугаар:</td>
                                             <td style="width: 30%;"><masked-input v-model="user.register" mask="AA11111111" placeholder="АА00000000"   @input="setRegister" class="form-control input-sm"></masked-input></td>
@@ -68,7 +78,6 @@
                                         <tr>
                                             <td style="width: 15%;">Цахим шуудан:</td>
                                             <td style="width: 35%;"><input placeholder="simple@simple.com" type="text" class="form-control input-sm" v-model="user.email" />
-                                                {{ user.email }}
                                             </td>
                                             <td style="width: 20%;">Мэргэжил:</td>
                                             <td style="width: 30%;"><input type="text" class="form-control input-sm" v-model="user.profession"/>
@@ -140,7 +149,7 @@
                                         </tbody>
                                     </table>
                                     <h1>03 БАРЬЦАА ХӨРӨНГИЙН МЭДЭЭЛЭЛ</h1>
-                                    <table class="cv-table cv-md" style=" ;" >
+                                    <table class="cv-table cv-md"  >
                                         <tbody>
                                         <tr>
                                             <td style="width: 100%;" colspan="2">Байр барьцаалах бол 4%</td>
@@ -214,7 +223,7 @@
                                             <td style="width: 16%;">Хаяг</td>
                                             <td style="width: 16%;">Ажилчдын тоо</td>
                                         </tr>
-                                        <tr v-if="!user.workplaces" v-for="workplace in user.workplaces">
+                                        <tr>
                                             <td style="width: 18%;"><input class="form-control input-sm" type="text" v-model="user.workplace.organization"  /></td>
                                             <td style="width: 16%;"><input class="form-control input-sm"  type="text" v-model="user.workplace.date_employment" v-pick="user.workplace.date_employment"  /></td>
                                             <td style="width: 16%;"><input class="form-control input-sm"  type="text" v-model="user.workplace.position"  /></td>
@@ -222,7 +231,6 @@
                                             <td style="width: 16%;"><input class="form-control input-sm" type="text" v-model="user.workplace.address"  /></td>
                                             <td style="width: 16%;"><input class="form-control input-sm" type="number" v-model="user.workplace.worker_count"  placeholder="1111" /></td>
                                         </tr>
-
                                         </tbody>
                                     </table>
                                     <p class="left">
@@ -335,6 +343,10 @@
                                                 <button class="btn btn-sm btn-success" @click="addBudget()"><i class="fa fa-plus-circle"></i></button>
                                             </td>
                                         </tr>
+                                        </tbody>
+                                    </table>
+                                    <table>
+                                        <tbody>
                                         <tr v-for="(b, index) in user.budgets">
 
                                             <td><span class="text text-black">{{ index + 1 }}</span></td>
@@ -428,7 +440,7 @@
                                         <tr>
                                             <td>№</td>
                                             <td><input class="form-control input-sm" v-auto type="text" v-model="user.credit.organization" data-target="#credit-input" @selected="setDataCredit(user.credit,'#credit-input')" /></td>
-                                            <td><input v-model="user.credit.loan_amount"   /></td>
+                                            <td><input class="form-control input-sm" v-model.number="user.credit.loan_amount"   /></td>
                                             <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_usage"  /></td>
                                             <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_date"  /></td>
                                             <td><input class="form-control input-sm" type="number" v-model="user.credit.loan_interest"   placeholder="11"/></td>
@@ -644,8 +656,11 @@
                                         <div class="btn-group">
                                             <a @click="back()" class="btn btn-sm btn-danger">Буцах</a>
                                         </div>
-                                        <div class="btn-group pull-right">
+                                        <div v-if="user.mode==false" class="btn-group pull-right">
                                             <button type="button" class="btn btn-sm btn-success" @click="save()">Хадгалах</button>
+                                        </div>
+                                        <div v-if="user.mode==true" class="btn-group pull-right">
+                                            <button type="button" class="btn btn-sm btn-success" @click="update()">Засах</button>
                                         </div>
                                     </div>
                                 </div>
@@ -682,6 +697,7 @@
                     filePath:'',
                     profilePath:'',
                     image: '',
+                    imageTemp:'',
                     first_name: '',
                     name: '',
                     phone_number: '',
@@ -696,6 +712,8 @@
                     owner_type:'',
                     live_year:'',
                     bail_info:'',
+                    profession:'',
+                    mode:false,
                     workplace: {
                         organization: null,
                         date_employment: null,
@@ -809,6 +827,7 @@
                 pledge_types:null,
                 advertisements:null,
                 folder:'',
+                uid:''
             }
         },
         mounted()
@@ -823,9 +842,6 @@
             this.csrfHeaders = {
                 'X-CSRF-TOKEN': window.Laravel.csrfToken
             }
-        },
-        computed: {
-
         },
         methods: {
             'template': function () {
@@ -846,7 +862,8 @@
             },
             ProfSuccess(file, response) {
                 this.user.profilePath = response.tempProfPath;
-                this.user.image = response.tempProfPath + '/' + response.profPic;
+                this.user.image = response.profPic;
+//                this.user.imageTemp = response.tempProfPath + '/' + response.profPic;
             },
             getFolderName(name) {
                 this.folder = name
@@ -855,7 +872,7 @@
                 formData.append('folder', this.folder);
                 this.folder = ''
             },
-            showSuccess(file, response) {
+            showSuccess(file, response) {sss
                 this.user.filePath = response.tempPath;
                 this.user.filePaths.push({
                     filePath: this.user.filePath
@@ -886,6 +903,11 @@
 
                 }
             },
+            getAge(d1) {
+                var d2 = new Date();
+                var diff = d2.getTime() - d1.getTime();
+                return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+            },
             findByRegister($register){
 
                 if ($register.length === 10 && ( $register[9]) != '_' )
@@ -895,15 +917,18 @@
 
                         if((response.data.user) !== null)
                         {
-                            console.log(response.data);
+                            console.log(response.data.user.id);
                             this.user = response.data.user;
-                            this.user.workplace = response.data.user.workplace;
+                            this.user.imageTemp = response.data.user.image;
+                            this.user.workplace = response.data.user.workplaces;
                             this.user.members = response.data.user.family;
                             this.user.emergency = response.data.user.emergencies;
                             this.user.budget = response.data.user.budgets;
                             this.user.asset = response.data.user.assets;
                             this.user.expense = response.data.user.expenses;
                             this.user.credit = response.data.user.credit;
+                            this.uid = response.data.user.id;
+                            this.user.mode = true;
                             Vue.delete(this.user, 'created_at');
                             Vue.delete(this.user, 'updated_at');
                             this.owner_type = response.data.owner_type;
@@ -917,12 +942,23 @@
                     console.log('Шинэ хэрэглэгч');
                 }
             },
-            getAge(d1) {
-                var d2 = new Date();
-                var diff = d2.getTime() - d1.getTime();
-                return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+            update()
+            {
+              axios.post('/api/cv/',this.uid,this.user).then(response=> {
+                  if (response.data.result){
+                      var self = this;
+                      swal({
+                          title: 'Ажилттай!',
+                          text: 'Хэрэглэгч засагдлаа',
+                          type: 'success'
+                      },function () {
+                          self.reset();
+                      })
+                  }
+              })  .catch(function (response) {
+                  swal('Уучлаарай!', 'Амжилтгүй боллоо!', 'error')
+              })
             },
-
             save()
             {
                 axios.post('/api/cv', this.user).then(response => {

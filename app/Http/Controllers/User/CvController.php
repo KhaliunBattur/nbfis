@@ -100,6 +100,8 @@ class CvController extends Controller
             if($request->has('profilePath'))
             {
                 Storage::move($parameters['profilePath'],'/images/profile_'.$user['id']);
+                $parameters['image']='/images/profile_'.$user['id'].'/'.$parameters['image'];
+                $user->update($parameters);
             }
 
             if($request->has('filePath'))
@@ -118,6 +120,51 @@ class CvController extends Controller
         });
 
         event(new UserCreated($user, 'хэрэглэгч шинээр бүртгэв', 'info'));
+
+        return response()->json([
+            'result' => !is_null($user)
+        ]);
+    }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update($id,Request $request)
+    {
+        $this->valid($request);
+
+        $parameters = $request->all();
+
+        $user = \DB::transaction(function() use($parameters, $request) {
+
+            $user = User::update($parameters);
+            dd($user);
+            if($request->has('profilePath'))
+            {
+                Storage::move($parameters['profilePath'],'/images/profile_'.$user['id']);
+                $parameters['image']='/images/profile_'.$user['id'].'/'.$parameters['image'];
+                $user->update($parameters);
+            }
+
+            if($request->has('filePath'))
+            {
+                Storage::move($parameters['filePath'],'/files/file_'.$user['id'] );
+            }
+//            $user->assets()->createMany($request->get('assets'));
+//            $user->workplaces()->create($request->get('workplace'));
+//            $user->family()->createMany($request->get('family'));
+//            $user->emergencies()->createMany($request->get('emergencies'));
+//            $user->budgets()->createMany($request->get('budgets'));
+//            $user->expenses()->createMany($request->get('expenses'));
+//            $user->activeLoans()->createMany($request->get('credits'));
+//            $user->Request()->create($request->get('request'));
+            return $user;
+        });
+
+        event(new UserCreated($user, 'хэрэглэгч амжилттай засварлав', 'info'));
 
         return response()->json([
             'result' => !is_null($user)
@@ -146,17 +193,6 @@ class CvController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.

@@ -31,7 +31,7 @@
                         </ul>
 
                         <router-link v-bind:to="'/users/' + user.id + '/edit'" class="btn btn-primary btn-block"><b>Мэдээлэл засварлах</b></router-link>
-                        <router-link v-bind:to="'/users/' + user.id + '/cv'" class="btn btn-warning btn-block"><b> <i class="fa fa-file-pdf-o"></i> Анкет татах</b></router-link>
+                        <a style="background-color: orange; color: white; " class="btn btn-waring btn-block"  @click="getUser" target="_blank" :href="href" role="button" ><b><i class="fa fa-file-pdf-o"></i> Анкет татах</b></a>
                     </div>
                     <!-- /.box-body -->
                 </div>
@@ -57,8 +57,8 @@
                             <input type="text" class="form-control" v-model="user.live_year" v-if="show_live" />
                             <input type="text" class="form-control" v-model="user.live_year" readonly="readonly" v-if="!show_live" />
                             <div class="input-group-btn">
-                                <button class="btn btn-xs btn-success" v-if="show_live" @click="saveLiveYear"><i class="fa fa-check"></i></button>
-                                <button class="btn btn-xs btn-danger" v-if="show_live" @click="changeLiveYear"><i class="fa fa-close"></i></button>
+                                <button class="btn btn-xs btn-success" v-if="show_live"  @click="saveLiveYear"><i class="fa fa-check"></i></button>
+                                <button class="btn btn-xs btn-danger"  v-if="show_live"  @click="changeLiveYear"><i class="fa fa-close"></i></button>
                                 <button class="btn btn-xs btn-warning" v-if="!show_live" @click="changeLiveYear"><i class="fa fa-pencil"></i></button>
                             </div>
                         </div>
@@ -263,7 +263,9 @@
                 owner_type: null,
                 user: null,
                 show_live: false,
-                show_owner: false
+                show_owner: false,
+                download: 'download',
+                href:''
             }
         },
 
@@ -282,6 +284,12 @@
         },
 
         methods: {
+
+
+            getUser()
+            {
+                this.href = '/api/user/'+this.user.id+'/info', {params:{download:this.download}};
+            },
 
             saveOwnerType()
             {
