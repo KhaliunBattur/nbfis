@@ -218,6 +218,7 @@
             {
                 this.model.data.splice(this.model.data.indexOf(bank), 1);
                 this.model.total = this.model.total - 1;
+                this.fetchBank();
             }
         }
 

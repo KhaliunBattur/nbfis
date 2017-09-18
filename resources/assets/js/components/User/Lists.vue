@@ -217,6 +217,7 @@
             {
                 this.model.data.splice(this.model.data.indexOf(user), 1);
                 this.model.total = this.model.total - 1;
+                this.fetchUser();
             }
         }
     }

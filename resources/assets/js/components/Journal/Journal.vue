@@ -76,7 +76,7 @@
                             <div class="box-body">
                                 <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
                                     <div class="input-group input-group-sm input-small with-margin-bottom pull-left">
-                                        <input type="text" v-model="query.per_page" class="form-control" />
+                                        <input type="text" v-model="query.per_page" class="form-control" @keyup.enter="changePerPage()"/>
                                         <div class="input-group-btn">
                                             <button class="btn" @click="changePerPage()">-р хуудаслах</button>
                                         </div>
@@ -277,6 +277,7 @@
             {
                 this.model.data.splice(this.model.data.indexOf(journal), 1);
                 this.model.total = this.model.total - 1;
+                this.fetchJournal();
             }
         }
 
