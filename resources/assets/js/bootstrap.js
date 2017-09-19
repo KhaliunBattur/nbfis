@@ -40,6 +40,11 @@ require('./../../../node_modules/jquery-treegrid/js/jquery.treegrid.bootstrap3')
 require('./extra/jquery-ui/jquery-ui.min');
 
 /**
+ * Chosen
+ */
+require('./../../../node_modules/chosen-js/chosen.jquery.min');
+
+/**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.

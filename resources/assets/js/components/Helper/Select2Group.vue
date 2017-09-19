@@ -1,7 +1,22 @@
 <template>
-    <select v-model="selectedValue">
-        <optgroup v-for="option in options" :label="option.name">
-            <option v-for="account in option.accounts" :value="account.id">{{ account.name }}</option>
+    <select class="chosen form-control">
+        <option></option>
+        <optgroup label="Test 1">
+            <option>Html</option>
+            <option>Css</option>
+            <option>Css3</option>
+            <option>Php</option>
+            <option>MySql</option>
+        </optgroup>
+        <optgroup label="Test 2">
+            <option>Javascript</option>
+            <option>Jquery</option>
+            <option>Html5</option>
+            <option>Wordpress</option>
+            <option>Joomla</option>
+            <option>Druple</option>
+            <option>Json</option>
+            <option>Angular Js</option>
         </optgroup>
     </select>
 </template>
@@ -9,7 +24,6 @@
 <script>
 
     export default {
-        props: ['options', 'value', 'selected'],
         data() {
             return {
                 values: [],
@@ -27,20 +41,14 @@
         },
         mounted: function() {
             var self = this;
-            $(this.$el).select2({
-                placeholder: 'Сонгох...',
-                allowClear: true
+            $(this.$el).chosen({
+                allow_single_deselect: true
+            }).on('change', function(){
+
             })
-                .on('change', function(){
-                    var data = {
-                        value: this.value,
-                        selected: self.selected
-                    }
-                    self.$emit('input', data)
-                })
         },
         destroyed: function(){
-            $(this.$el).off().select2('destroy')
+            $(this.$el).off().chosen('destroy')
         }
     }
 
