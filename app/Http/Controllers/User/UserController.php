@@ -288,13 +288,9 @@ class UserController extends Controller
 
         view()->share('user',$user);
 
-//        if($request->has('download'))
-//        {
             $pdf = PDF::loadView('report/cvPDF',$user)->setPaper('a4')->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
             return $pdf->download('cvPDF.pdf');
-//        }
-//
-//        return view('report/cvPDF',compact('user'));
+
 
     }
 

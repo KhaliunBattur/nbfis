@@ -121,14 +121,15 @@ class CvController extends Controller
             {
                 Storage::move($parameters['filePath'],'/files/file_'.$user['id'] );
             }
+
             $user->assets()->createMany($request->get('assets'));
-//            $user->workplaces()->create($request->get('workplace'));
-//            $user->family()->createMany($request->get('family'));
-//            $user->emergencies()->createMany($request->get('emergencies'));
-//            $user->budgets()->createMany($request->get('budgets'));
-//            $user->expenses()->createMany($request->get('expenses'));
-//            $user->activeLoans()->createMany($request->get('credits'));
-//            $user->Request()->create($request->get('request'));
+            $user->workplaces()->createMany($request->get('workplaces'));
+            $user->family()->createMany($request->get('family'));
+            $user->emergencies()->createMany($request->get('emergencies'));
+            $user->budgets()->createMany($request->get('budgets'));
+            $user->expenses()->createMany($request->get('expenses'));
+            $user->activeLoans()->createMany($request->get('aLoans'));
+            $user->Request()->create($request->get('request'));
             return $user;
         });
 
@@ -153,13 +154,14 @@ class CvController extends Controller
         $parameters = $request->all();
 
             $user = $this->userRepository->findById($parameters['id']);
+
            if($user->update($parameters))
            {
+
             if($request->has('profilePath'))
             {
                 Storage::move($parameters['profilePath'],'/images/profile_'.$user['id']);
                 $parameters['image']='/images/profile_'.$user['id'].'/'.$parameters['image'];
-
             }
 
             if($request->has('filePath'))
@@ -173,8 +175,7 @@ class CvController extends Controller
             $emergencies = $request->get('emergencies');
             $budgets = $request->get('budgets');
             $expenses = $request->get('expenses');
-            $activeLoans = $request->get('credits');
-            dd($activeLoans);
+            $activeLoans = $request->get('aLoans');
             $requests = $request->get('request');
 
             foreach ($assets as $asset)
