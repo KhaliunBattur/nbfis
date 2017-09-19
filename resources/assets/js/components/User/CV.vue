@@ -35,6 +35,7 @@
                                                       :thumbnail-height="100"
                                                       :thumbnail-width="100"
                                                       v-on:vdropzone-success="ProfSuccess"
+                                                      v-bind:preview-template="template"
                                                       v-on:vdropzone-error="onError">
                                             </dropzone>
                                         </div>
@@ -111,7 +112,7 @@
                                         <tr>
                                             <td style="width: 50%;">Байр нь зээлийн барьцаанд байгаа бол дэлгэрэнгүй бөглөнө үү:</td>
                                             <td style="width: 50%;">
-                                                <input class="form-control input-sm" v-model="user.bail_info" type="text"/>
+                                                <textarea class="form-control input-sm" v-model="user.bail_info" ></textarea>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -216,20 +217,37 @@
                                     <table class="cv-table cv-lg" >
                                         <tbody>
                                         <tr>
-                                            <td style="width: 18%;">Байгууллагын нэр</td>
-                                            <td style="width: 16%;">Ажилласан огноо</td>
-                                            <td style="width: 16%;">Албан тушаал</td>
-                                            <td style="width: 16%;">Байгууллагын үйл ажиллагааны чиглэл</td>
-                                            <td style="width: 16%;">Хаяг</td>
-                                            <td style="width: 16%;">Ажилчдын тоо</td>
+                                            <td style="width: 3%">№</td>
+                                            <td style="width: 18%">Байгууллагын нэр</td>
+                                            <td style="width: 16%">Ажилласан огноо</td>
+                                            <td style="width: 16%">Албан тушаал</td>
+                                            <td style="width: 16%">Байгууллагын үйл ажиллагааны чиглэл</td>
+                                            <td style="width: 16%">Хаяг</td>
+                                            <td style="width: 16%">Ажилчдын тоо</td>
+                                            <td style="width: 6%"></td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 18%;"><input class="form-control input-sm" type="text" v-model="user.workplace.organization"  /></td>
-                                            <td style="width: 16%;"><input class="form-control input-sm"  type="text" v-model="user.workplace.date_employment" v-pick="user.workplace.date_employment"  /></td>
-                                            <td style="width: 16%;"><input class="form-control input-sm"  type="text" v-model="user.workplace.position"  /></td>
-                                            <td style="width: 16%;"><input class="form-control input-sm" type="text" v-model="user.workplace.activity"  /></td>
-                                            <td style="width: 16%;"><input class="form-control input-sm" type="text" v-model="user.workplace.address"  /></td>
-                                            <td style="width: 16%;"><input class="form-control input-sm" type="number" v-model="user.workplace.worker_count"  placeholder="1111" /></td>
+                                            <td style="width: 3%"></td>
+                                            <td style="width: 18%;">
+                                                <input class="form-control input-sm" v-auto type="text" v-model="user.works.organization" data-target="#work-input"
+                                                       @selected="setDataWork(user.works,'#work-input')" />
+                                            </td>
+                                            <td style="width: 16%;"><input class="form-control input-sm"  type="text" v-model="user.works.date_employment" v-pick="user.works.date_employment"  /></td>
+                                            <td style="width: 16%;"><input class="form-control input-sm"  type="text" v-model="user.works.position"  /></td>
+                                            <td style="width: 16%;"><input class="form-control input-sm" type="text" v-model="user.works.activity"  /></td>
+                                            <td style="width: 16%;"><input class="form-control input-sm" type="text" v-model="user.works.address"  /></td>
+                                            <td style="width: 16%;"><input class="form-control input-sm" type="number" v-model="user.works.worker_count"  placeholder="1111" /></td>
+                                            <td style="width: 6%"><button class="btn btn-sm btn-success" @click="addWork()"><i class="fa fa-plus-circle"></i></button></td>
+                                        </tr>
+                                        <tr v-for="(works , index) in user.workplaces">
+                                            <td style="width: 3%;"><span class="text text-black">{{ index + 1 }}</span></td>
+                                            <td style="width: 18%;"><input class="form-control input-sm" type="text"   v-model="works.organization"  /></td>
+                                            <td style="width: 16%;"><input class="form-control input-sm" type="text"   v-model="works.date_employment" v-pick="works.date_employment"  /></td>
+                                            <td style="width: 16%;"><input class="form-control input-sm" type="text"   v-model="works.position"  /></td>
+                                            <td style="width: 16%;"><input class="form-control input-sm" type="text"   v-model="works.activity"  /></td>
+                                            <td style="width: 16%;"><input class="form-control input-sm" type="text"   v-model="works.address"  /></td>
+                                            <td style="width: 16%;"><input class="form-control input-sm" type="number" v-model="works.worker_count"  placeholder="1111" /></td>
+                                            <td style="width: 6%"><button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyWork(works)"></button></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -241,6 +259,7 @@
                                     </p>
                                     <h1>05 ГЭР БҮЛИЙН МЭДЭЭЛЭЛ</h1>
                                     <table class="cv-table cv-lg" >
+
                                         <tbody>
                                         <tr>
                                             <td style="width: 3%">№:</td>
@@ -315,12 +334,12 @@
                                         </tr>
                                         <tr v-for="(emergency, index) in user.emergencies">
                                             <td style="width: 3%"><span class="text text-black">{{ index + 1 }}</span></td>
-                                            <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="user.emergency.name"  /></td>
-                                            <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="user.emergency.relation"  /></td>
-                                            <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="user.emergency.job"  /></td>
-                                            <td style="width: 15%;"><masked-input mask="AA11111111" placeholder="АА00000000" class="form-control input-sm" type="text" v-model="user.emergency.register"></masked-input></td>
-                                            <td style="width: 15%;"><input  v-model="user.emergency.budged"   /></td>
-                                            <td style="width: 15%;"><masked-input class="form-control input-sm" type="text" v-model="user.emergency.phone_number"  mask="\+ (976) 1111-1111" placeholder="1111-1111"></masked-input></td>
+                                            <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="emergency.name"  /></td>
+                                            <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="emergency.relation"  /></td>
+                                            <td style="width: 15%;"><input class="form-control input-sm" type="text" v-model="emergency.job"  /></td>
+                                            <td style="width: 15%;"><masked-input mask="AA11111111" placeholder="АА00000000" class="form-control input-sm" type="text" v-model="emergency.register"></masked-input></td>
+                                            <td style="width: 15%;"><input  v-model="emergency.budged"   /></td>
+                                            <td style="width: 15%;"><masked-input class="form-control input-sm" type="text" v-model="emergency.phone_number"  mask="\+ (976) 1111-1111" placeholder="1111-1111"></masked-input></td>
                                             <td style="width: 6%;">
                                                 <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyEmergency(emergency)"></button>
                                             </td>
@@ -343,10 +362,6 @@
                                                 <button class="btn btn-sm btn-success" @click="addBudget()"><i class="fa fa-plus-circle"></i></button>
                                             </td>
                                         </tr>
-                                        </tbody>
-                                    </table>
-                                    <table>
-                                        <tbody>
                                         <tr v-for="(b, index) in user.budgets">
 
                                             <td><span class="text text-black">{{ index + 1 }}</span></td>
@@ -439,29 +454,30 @@
                                         </tr>
                                         <tr>
                                             <td>№</td>
-                                            <td><input class="form-control input-sm" v-auto type="text" v-model="user.credit.organization" data-target="#credit-input" @selected="setDataCredit(user.credit,'#credit-input')" /></td>
-                                            <td><input class="form-control input-sm" v-model.number="user.credit.loan_amount"   /></td>
-                                            <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_usage"  /></td>
-                                            <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_date"  /></td>
-                                            <td><input class="form-control input-sm" type="number" v-model="user.credit.loan_interest"   placeholder="11"/></td>
-                                            <td><input v-model="user.credit.loan_balance"   /></td>
-                                            <td><input v-model="user.credit.monthly_pay"   /></td>
+                                            <td><input class="form-control input-sm" v-auto type="text" v-model="user.credits.organization" data-target="#credit-input"
+                                                       @selected="setDataCredit(user.credits,'#credit-input')" /></td>
+                                            <td><input class="form-control input-sm" v-model="user.credits.loan_amount"   /></td>
+                                            <td><input class="form-control input-sm" type="text"   v-model="user.credits.loan_usage"  /></td>
+                                            <td><input class="form-control input-sm" type="text"   v-model="user.credits.loan_date"  /></td>
+                                            <td><input class="form-control input-sm" type="number" v-model="user.credits.loan_interest"  placeholder="11"/></td>
+                                            <td><input class="form-control input-sm" v-model="user.credits.loan_balance"   /></td>
+                                            <td><input class="form-control input-sm" v-model="user.credits.monthly_pay"   /></td>
                                             <td>
                                                 <button class="btn btn-sm btn-success" @click="addCredit()"><i class="fa fa-plus-circle"></i>
                                                 </button>
                                             </td>
                                         </tr>
-                                        <tr v-for="(credit, index) in user.credits">
+                                        <tr v-for="(credits, index) in user.active_loans">
                                             <td ><span class="text text-black">{{ index + 1 }}</span></td>
-                                            <td><input class="form-control input-sm" type="text" v-model="user.credit.organization"  /></td>
-                                            <td><input v-model="user.credit.loan_amount"   /></td>
-                                            <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_usage"  /></td>
-                                            <td><input class="form-control input-sm" type="text" v-model="user.credit.loan_date"  /></td>
-                                            <td><input class="form-control input-sm" type="number" v-model="user.credit.loan_interest"   placeholder="11"/></td>
-                                            <td><input v-model="user.credit.loan_balance"  class="form-control input-sm" /></td>
-                                            <td><input v-model="user.credit.monthly_pay" class="form-control input-sm"  /></td>
+                                            <td><input class="form-control input-sm" type="text"   v-model="credits.organization"  /></td>
+                                            <td><input class="form-control input-sm" type="text"   v-model="credits.loan_amount"  /></td>
+                                            <td><input class="form-control input-sm" type="text"   v-model="credits.loan_usage"  /></td>
+                                            <td><input class="form-control input-sm" type="text"   v-model="credits.loan_date"  /></td>
+                                            <td><input class="form-control input-sm" type="number" v-model="credits.loan_interest"   placeholder="11"/></td>
+                                            <td><input class="form-control input-sm" v-model="credits.loan_balance"   /></td>
+                                            <td><input class="form-control input-sm" v-model="credits.monthly_pay"   /></td>
                                             <td>
-                                                <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyCredit(credit)"></button>
+                                                <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyCredit(credits)"></button>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -488,7 +504,6 @@
                                                           :thumbnail-height="100"
                                                           :thumbnail-width="100"
                                                           v-on:vdropzone-sending="onFileChange"
-                                                          v-bind:preview-template="template"
                                                           v-on:vdropzone-success="showSuccess"
                                                           v-on:vdropzone-error="onError">
                                                 </dropzone>
@@ -659,7 +674,7 @@
                                         <div v-if="user.mode==false" class="btn-group pull-right">
                                             <button type="button" class="btn btn-sm btn-success" @click="save()">Хадгалах</button>
                                         </div>
-                                        <div v-if="user.mode==true" class="btn-group pull-right">
+                                        <div v-else-if="user.mode==true" class="btn-group pull-right">
                                             <button type="button" class="btn btn-sm btn-success" @click="update()">Засах</button>
                                         </div>
                                     </div>
@@ -714,7 +729,9 @@
                     bail_info:'',
                     profession:'',
                     mode:false,
-                    workplace: {
+                    workplaces: [],
+                    works: {
+                        id:null,
                         organization: null,
                         date_employment: null,
                         position: null,
@@ -742,8 +759,9 @@
                         budged: null,
                         phone_number: null
                     },
-                    credits:[],
-                    credit: {
+                    active_loans: [],
+                    credits: {
+                        id:null,
                         organization: null,
                         loan_amount: null,
                         loan_usage: null,
@@ -823,6 +841,7 @@
                 nextEmergencyId:1,
                 nextFamilyId:1,
                 nextCreditId:1,
+                nextWorkId:1,
                 owner_types:null,
                 pledge_types:null,
                 advertisements:null,
@@ -847,12 +866,8 @@
             'template': function () {
                 return `
                     <div class="dz-preview dz-file-preview vue-dropzone" >
-                      <div class="dz-image" style="width: 100px;height: 100px">
+                      <div class="dz-image" >
                           <img data-dz-thumbnail /></div>
-                      <div class="dz-details">
-                        <div class="dz-size"><span data-dz-size></span></div>
-                        <div class="dz-filename"><span data-dz-name></span></div>
-                      </div>
                       <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
                       <div class="dz-error-message"><span data-dz-errormessage></span></div>
                       <div class="dz-success-mark"><i class="fa fa-check"></i></div>
@@ -863,7 +878,7 @@
             ProfSuccess(file, response) {
                 this.user.profilePath = response.tempProfPath;
                 this.user.image = response.profPic;
-//                this.user.imageTemp = response.tempProfPath + '/' + response.profPic;
+
             },
             getFolderName(name) {
                 this.folder = name
@@ -872,7 +887,7 @@
                 formData.append('folder', this.folder);
                 this.folder = ''
             },
-            showSuccess(file, response) {sss
+            showSuccess(file, response) {
                 this.user.filePath = response.tempPath;
                 this.user.filePaths.push({
                     filePath: this.user.filePath
@@ -911,22 +926,25 @@
             findByRegister($register){
 
                 if ($register.length === 10 && ( $register[9]) != '_' )
+
                 {
-                    this.reset();
+
                     axios.get('/api/user/' + $register + '/find').then(response => {
 
                         if((response.data.user) !== null)
+
                         {
-                            console.log(response.data.user.id);
+
                             this.user = response.data.user;
                             this.user.imageTemp = response.data.user.image;
-                            this.user.workplace = response.data.user.workplaces;
+                            this.user.works = response.data.user.workplaces;
                             this.user.members = response.data.user.family;
                             this.user.emergency = response.data.user.emergencies;
                             this.user.budget = response.data.user.budgets;
                             this.user.asset = response.data.user.assets;
                             this.user.expense = response.data.user.expenses;
-                            this.user.credit = response.data.user.credit;
+                            this.user.credits = response.data.user.active_loans;
+                            this.user.request = response.data.user.request;
                             this.uid = response.data.user.id;
                             this.user.mode = true;
                             Vue.delete(this.user, 'created_at');
@@ -935,7 +953,9 @@
                             this.relations = response.data.relations;
                             this.loading = true;
                         }
+
                     })
+
                 }
                 else
                 {
@@ -944,8 +964,8 @@
             },
             update()
             {
-              axios.post('/api/cv/',this.uid,this.user).then(response=> {
-                  if (response.data.result){
+              axios.patch('/api/cv/'+this.uid,this.user).then(response=> {
+                  if (response.data.result === true){
                       var self = this;
                       swal({
                           title: 'Ажилттай!',
@@ -955,7 +975,7 @@
                           self.reset();
                       })
                   }
-              })  .catch(function (response) {
+              }).catch(function (response) {
                   swal('Уучлаарай!', 'Амжилтгүй боллоо!', 'error')
               })
             },
@@ -1003,6 +1023,7 @@
                         nextEmergencyId:1,
                         nextFamilyId:1,
                         nextCreditId:1,
+                        nextWorkId:1,
                         owner_types:null,
 //                        pledge_types:null,
                         advertisements:null,
@@ -1019,7 +1040,9 @@
                             birth_day: null,
                             age: null,
                             confirm_password: '',
-                            workplace: {
+                            workplaces: [],
+                            works: {
+                                id:null,
                                 organization: null,
                                 date_employment: null,
                                 position: null,
@@ -1049,6 +1072,7 @@
                             },
                             credits:[],
                             credit: {
+                                id:null,
                                 organization: null,
                                 loan_amount: null,
                                 loan_usage: null,
@@ -1059,7 +1083,6 @@
                             },
                             assets: [],
                             asset: {
-                                id:null,
                                 name: null,
                                 asset: null
                             },
@@ -1116,9 +1139,9 @@
                     }
             },
 
-            setDataCredit(credit,element)
+            setDataCredit(credits,element)
             {
-                credit.organization=$(element).val();
+                credits.organization=$(element).val();
             },
             setDataBudget(budget, element)
             {
@@ -1136,14 +1159,18 @@
             {
                 member.name = $(element).val();
             },
+            setDataWork(works, element)
+            {
+                works.organization = $(element).val();
+            },
             setDataEmergency(emergency, element)
             {
                 emergency.name = $(element).val();
             },
-            destroyCredit(credit)
+            destroyCredit(credits)
             {
                 try {
-                    this.user.credits.splice(this.user.credits.indexOf(credit), 1);
+                    this.user.credits.splice(this.user.credits.indexOf(credits), 1);
                 }
                 catch(error)
                 {
@@ -1160,6 +1187,22 @@
             {
                 try {
                     this.user.budgets.splice(this.user.budgets.indexOf(budget), 1);
+                }
+                catch(error)
+                {
+                    swal({
+                        title: 'Уучлаарай',
+                        text: 'Амжилтгүй боллоо! Дахин оролдоно уу',
+                        type: 'error'
+                    }, function(){
+                        self.loading = false;
+                    });
+                }
+            },
+            destroyWork(works)
+            {
+                try {
+                    this.user.workplaces.splice(this.user.workplaces.indexOf(works), 1);
                 }
                 catch(error)
                 {
@@ -1236,13 +1279,41 @@
                     });
                 }
             },
+            addWork()
+            {
+                try
+                {
+                    var self = this;
+                    this.loading = true;
+                    this.user.workplaces.push({
+                        id: this.nextWorkId++,
+                        organization: this.user.works.organization,
+                        date_employment: this.user.works.date_employment,
+                        position: this.user.works.position,
+                        activity: this.user.works.activity,
+                        address: this.user.works.address,
+                        worker_count: this.user.works.worker_count
+                    });
+                    this.loading=false;
+                }
+                catch(error)
+                {
+                    console.log(error);
+                    swal({
+                        title: 'Уучлаарай',
+                        text: 'Амжилтгүй боллоо! Дахин оролдоно уу',
+                        type: 'error'
+                    }, function(){
+                        self.loading = false;
+                    });
+                }
+            },
             addMember()
             {
                 try
                 {
                     var self = this;
                     this.loading = true;
-
                     this.user.family.push({
                         id: this.nextFamilyId++,
                         name: this.user.members.name,
@@ -1370,20 +1441,21 @@
                 {
                     var self = this;
                     this.loading = true;
-                    this.user.credits.push({
+                    this.user.active_loans.push({
                         id: this.nextCreditId++,
-                        organization: this.user.credit.organization,
-                        loan_amount: this.user.credit.loan_amount,
-                        loan_usage: this.user.credit.loan_usage,
-                        loan_date: this.user.credit.loan_date,
-                        loan_interest: this.user.credit.loan_interest,
-                        loan_balance:this.user.credit.loan_balance,
-                        monthly_pay: this.user.credit.monthly_pay
+                        organization: this.user.credits.organization,
+                        loan_amount: this.user.credits.loan_amount,
+                        loan_usage: this.user.credits.loan_usage,
+                        loan_date: this.user.credits.loan_date,
+                        loan_interest: this.user.credits.loan_interest,
+                        loan_balance: this.user.credits.loan_balance,
+                        monthly_pay: this.user.credits.monthly_pay
                     });
                     this.loading=false;
                 }
                 catch(error)
                 {
+                    console.log(error);
                     swal({
                         title: 'Уучлаарай',
                         text: 'Амжилтгүй боллоо! Дахин оролдоно уу',

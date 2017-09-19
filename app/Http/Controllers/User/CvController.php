@@ -6,11 +6,24 @@ use App\User\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Events\UserCreated;
+use App\Events\UserUpdated;
 use Illuminate\Support\Facades\Storage;
 use App\Support\FileType;
+use App\User\UserRepositoryInterface;
 
 class CvController extends Controller
 {
+    private $userRepository;
+
+    /**
+     * UserController constructor.
+     * @param UserRepositoryInterface $userRepository
+     */
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+
+        $this->userRepository = $userRepository;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -108,14 +121,15 @@ class CvController extends Controller
             {
                 Storage::move($parameters['filePath'],'/files/file_'.$user['id'] );
             }
-//            $user->assets()->createMany($request->get('assets'));
-//            $user->workplaces()->create($request->get('workplace'));
-//            $user->family()->createMany($request->get('family'));
-//            $user->emergencies()->createMany($request->get('emergencies'));
-//            $user->budgets()->createMany($request->get('budgets'));
-//            $user->expenses()->createMany($request->get('expenses'));
-//            $user->activeLoans()->createMany($request->get('credits'));
-//            $user->Request()->create($request->get('request'));
+
+            $user->assets()->createMany($request->get('assets'));
+            $user->workplaces()->createMany($request->get('workplaces'));
+            $user->family()->createMany($request->get('family'));
+            $user->emergencies()->createMany($request->get('emergencies'));
+            $user->budgets()->createMany($request->get('budgets'));
+            $user->expenses()->createMany($request->get('expenses'));
+            $user->activeLoans()->createMany($request->get('aLoans'));
+            $user->Request()->create($request->get('request'));
             return $user;
         });
 
@@ -132,42 +146,77 @@ class CvController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($id,Request $request)
+    public function update(Request $request,$id)
     {
-        $this->valid($request);
 
+        $this->valid($request);
+        $result = false;
         $parameters = $request->all();
 
-        $user = \DB::transaction(function() use($parameters, $request) {
+            $user = $this->userRepository->findById($parameters['id']);
 
-            $user = User::update($parameters);
-            dd($user);
+           if($user->update($parameters))
+           {
+
             if($request->has('profilePath'))
             {
                 Storage::move($parameters['profilePath'],'/images/profile_'.$user['id']);
                 $parameters['image']='/images/profile_'.$user['id'].'/'.$parameters['image'];
-                $user->update($parameters);
             }
 
             if($request->has('filePath'))
             {
                 Storage::move($parameters['filePath'],'/files/file_'.$user['id'] );
             }
-//            $user->assets()->createMany($request->get('assets'));
-//            $user->workplaces()->create($request->get('workplace'));
-//            $user->family()->createMany($request->get('family'));
-//            $user->emergencies()->createMany($request->get('emergencies'));
-//            $user->budgets()->createMany($request->get('budgets'));
-//            $user->expenses()->createMany($request->get('expenses'));
-//            $user->activeLoans()->createMany($request->get('credits'));
-//            $user->Request()->create($request->get('request'));
-            return $user;
-        });
 
-        event(new UserCreated($user, 'хэрэглэгч амжилттай засварлав', 'info'));
+            $assets = $request->get('assets');
+            $workplaces = $request->get('workplaces');
+            $members = $request->get('family');
+            $emergencies = $request->get('emergencies');
+            $budgets = $request->get('budgets');
+            $expenses = $request->get('expenses');
+            $activeLoans = $request->get('aLoans');
+            $requests = $request->get('request');
+
+            foreach ($assets as $asset)
+            {
+                $user->assets()->updateOrcreate($asset);
+            }
+            foreach ($workplaces as $workplace)
+            {
+                $user->workplaces()->updateOrcreate($workplace);
+            }
+            foreach ($members as $member)
+            {
+                $user->family()->updateOrcreate($member);
+            }
+            foreach ($emergencies as $emergency)
+            {
+                $user->emergencies()->updateOrcreate($emergency);
+            }
+            foreach ($budgets as $budget)
+            {
+                $user->budgets()->updateOrcreate($budget);
+            }
+            foreach ($expenses as $expens)
+            {
+                $user->expenses()->updateOrcreate($expens);
+            }
+            foreach ($activeLoans as $aloan)
+            {
+                $user->activeLoans()->updateOrcreate($aloan);
+            }
+            foreach ($requests as $loanrequest)
+            {
+                $user->Request()->updateOrcreate($loanrequest);
+            }
+
+            $result = true;
+
+           }
 
         return response()->json([
-            'result' => !is_null($user)
+            'result' => $result
         ]);
     }
 
