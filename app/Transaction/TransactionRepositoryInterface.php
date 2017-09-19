@@ -19,4 +19,10 @@ interface TransactionRepositoryInterface extends Repository
      * @return mixed
      */
     public function getTransactionNumber($transaction_date);
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function findByNumber($id);
 }

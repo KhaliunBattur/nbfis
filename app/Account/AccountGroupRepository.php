@@ -100,4 +100,16 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
         return $this->model->select('id', \DB::raw("CONCAT(code, ' ', name) as text"))
             ->get();
     }
+
+    /**
+     * @return Collection
+     */
+    public function findByListRawWithAccounts()
+    {
+        return $this->model
+            ->join('account', 'account_group.id', '=', 'account.group_id')
+            ->groupBy('account_group.id')
+            ->select('account_group.*')
+            ->with(['accounts'])->get();
+    }
 }

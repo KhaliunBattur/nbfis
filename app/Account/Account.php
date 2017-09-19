@@ -17,6 +17,7 @@ use App\Transaction\Receivable;
 use App\Transaction\Transaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laracasts\Presenter\PresentableTrait;
 
 class Account extends Model
@@ -148,6 +149,15 @@ class Account extends Model
     public function balance($season_id)
     {
         return $this->seasons()->count() ? $this->seasons()->where('season_id', $season_id)->sum('balance') : 0;
+    }
+
+    /**
+     * @param $season_id
+     * @return HasMany
+     */
+    public function transaction($season_id)
+    {
+        return $this->hasMany(Transaction::class, 'account_id')->where('season_id', $season_id);
     }
 
     /**

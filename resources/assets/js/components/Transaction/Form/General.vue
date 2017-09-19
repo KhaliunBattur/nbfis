@@ -40,10 +40,10 @@
                                 </td>
                                 <td>
                                     <div class="form-group">
-                                        <label class="control-label">Данс</label>
-                                        <select2 :options="accounts" :value="transaction.account_id" :selected="transaction" v-on:input="selectAccount"></select2>
-                                        <div class="text-danger" v-if="errorMessages.account_id">
-                                            {{ errorMessages.account_id[0] }}
+                                        <label class="control-label">Харицах данс</label>
+                                        <select2 :options="accounts" :value="transaction.account_id" :selected="transaction" v-on:input="selectToAccount"></select2>
+                                        <div class="text-danger" v-if="errorMessages.to_account_id">
+                                            {{ errorMessages.to_account_id[0] }}
                                         </div>
                                     </div>
                                 </td>
@@ -62,10 +62,10 @@
                             <tr>
                                 <td colspan="2">
                                     <div class="form-group">
-                                        <label class="control-label">Харицах данс</label>
-                                        <select2 :options="accounts" :value="transaction.account_id" :selected="transaction" v-on:input="selectToAccount"></select2>
-                                        <div class="text-danger" v-if="errorMessages.to_account_id">
-                                            {{ errorMessages.to_account_id[0] }}
+                                        <label class="control-label">Данс</label>
+                                        <select2 :options="accounts" :value="transaction.account_id" :selected="transaction" v-on:input="selectAccount"></select2>
+                                        <div class="text-danger" v-if="errorMessages.account_id">
+                                            {{ errorMessages.account_id[0] }}
                                         </div>
                                     </div>
                                 </td>
@@ -125,6 +125,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <div class="pull-left text-danger">
+                        {{ errorMessages.message }}
+                    </div>
                     <button type="button" class="btn btn-primary btn-sm" @click="saveTransaction">Хадгалах</button>
                 </div>
             </div>
@@ -210,6 +213,28 @@
                         type: 'success',
                         timer: 3000
                     }, function(){
+                        self.transaction = {
+                            receipt_number: null,
+                            transaction_date: null,
+                            customer_id: null,
+                            account_id: null,
+                            to_account_id: null,
+                            description: null,
+                            type: 'credit',
+                            amount: 0,
+                            exchange: 0,
+                            to_exchange: 0,
+                            marker: '₮',
+                            to_marker: '$'
+                        };
+                        self.errorMessages = {
+                            account_id: null,
+                            customer_id: null,
+                            description: null,
+                            receipt_number: null,
+                            to_account_id: null,
+                            transaction_date: null,
+                        };
                         $('#general_transactionModal').modal('hide');
                     });
                 }).catch(errors => {
@@ -252,12 +277,6 @@
                                 this.transaction.exchange = parseFloat(to_account[0].exchange)
                                 this.transaction.to_exchange = parseFloat(account[0].exchange)
                             }
-
-//                            this.transaction.exchange = account[0].is_current === 0
-//                                ? parseFloat(account[0].exchange) : parseFloat(to_account[0].exchange);
-//
-//                            this.transaction.to_exchange = account[0].is_current === 0
-//                                ? parseFloat(account[0].exchange) : parseFloat(to_account[0].exchange);
                         }
                         else
                         {

@@ -41,12 +41,16 @@
                                         <th>Кредит</th>
                                         <th>Харилцагч</th>
                                         <th>Үүсэгсэн</th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr v-for="tran in model.data">
                                         <td>{{ tran.transaction_number }}</td>
-                                        <td>{{ tran.account.name }}</td>
+                                        <td>
+                                            {{ tran.account.name }}
+                                            <div class="text-block">{{ tran.account.account_number }}</div>
+                                        </td>
                                         <td>{{ tran.transaction_date }}</td>
                                         <td>{{ tran.description }}</td>
                                         <td>
@@ -56,7 +60,7 @@
                                         </td>
                                         <td>
                                             <div v-if="tran.type == 'credit'">
-                                                {{ formatPrice(tran.amount) }}
+                                                {{ formatPrice(tran.amount * tran.exchange) }}
                                             </div>
                                         </td>
                                         <td>{{ tran.customer.first_name + ' ' + tran.customer.name }}</td>
@@ -64,11 +68,25 @@
                                             {{ tran.user.name }}
                                             <div class="text-block">{{ tran.created_at }}</div>
                                         </td>
+                                        <td>
+                                            <delete-confirm :item="tran" :url="'/api/transaction/' + tran.transaction_number" v-on:destroyed="destroy(tran)"></delete-confirm>
+                                        </td>
                                     </tr>
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <td colspan="8">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b>Пассив: {{ formatPrice(sumOfDebit) }}</b></td>
+                                        <td><b>Актив: {{ formatPrice(sumOfCredit) }}</b></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="9">
                                             <div class="pull-left">
                                                 <span>Нийт: {{ model.total }} мөр бичлэгийн {{ model.from }} -с {{ model.to }} харуулж байна</span>
                                             </div>
@@ -107,13 +125,49 @@
                 model: {},
                 query: {
                     page: 1,
-                    column: 'id',
+                    column: 'transaction_number',
                     direction: 'asc',
                     per_page: 10,
                     user_type: 'all',
                     search: {
                         name: null
                     }
+                }
+            }
+        },
+
+        computed: {
+            sumOfCredit() {
+                if(this.model.data)
+                {
+                    let credits = this.model.data.filter(function(transaction){
+                        return transaction.type == 'credit'
+                    });
+
+                    return credits.reduce(function(prev, transaction) {
+                        return parseFloat(prev) + parseFloat(transaction.amount * transaction.exchange)
+                    }, 0)
+                }
+                else
+                {
+                    return 0;
+                }
+            },
+            sumOfDebit()
+            {
+                if(this.model.data)
+                {
+                    let credits = this.model.data.filter(function(transaction){
+                        return transaction.type == 'debit'
+                    });
+
+                    return credits.reduce(function(prev, transaction) {
+                        return parseFloat(prev) + parseFloat(transaction.amount * transaction.exchange)
+                    }, 0)
+                }
+                else
+                {
+                    return 0;
                 }
             }
         },
@@ -164,7 +218,7 @@
             },
             destroy(transaction)
             {
-
+                this.fetchTransaction();
             },
             fetchJournal()
             {
@@ -174,7 +228,9 @@
             },
             fetchTransaction()
             {
-                axios.get('/api/transaction').then(response => {
+                axios.get('/api/transaction', {
+                    params: this.query
+                }).then(response => {
                     this.model = response.data.transaction;
                     this.loading = false
                 }).catch(errors => {});

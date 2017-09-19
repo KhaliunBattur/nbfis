@@ -7,8 +7,10 @@ use App\Account\AccountRepositoryInterface;
 use App\Account\JournalRepository;
 use App\Season\Season;
 use App\Season\SeasonRepositoryInterface;
+use App\Support\AccountBalanceChecker;
 use App\Transaction\Transaction;
 use App\Transaction\TransactionRepositoryInterface;
+use Dompdf\Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -34,6 +36,10 @@ class TransactionController extends Controller
      * @var JournalRepository
      */
     private $journalRepository;
+    /**
+     * @var AccountBalanceChecker
+     */
+    private $checker;
 
     /**
      * TransactionController constructor.
@@ -42,14 +48,16 @@ class TransactionController extends Controller
      * @param AccountRepositoryInterface $accountRepository
      * @param SeasonRepositoryInterface $seasonRepository
      * @param JournalRepository $journalRepository
+     * @param AccountBalanceChecker $checker
      */
-    public function __construct(TransactionRepositoryInterface $transactionRepository, AccountGroupRepositoryInterface $groupRepository, AccountRepositoryInterface $accountRepository, SeasonRepositoryInterface $seasonRepository, JournalRepository $journalRepository)
+    public function __construct(TransactionRepositoryInterface $transactionRepository, AccountGroupRepositoryInterface $groupRepository, AccountRepositoryInterface $accountRepository, SeasonRepositoryInterface $seasonRepository, JournalRepository $journalRepository, AccountBalanceChecker $checker)
     {
         $this->transactionRepository = $transactionRepository;
         $this->groupRepository = $groupRepository;
         $this->accountRepository = $accountRepository;
         $this->seasonRepository = $seasonRepository;
         $this->journalRepository = $journalRepository;
+        $this->checker = $checker;
     }
 
     /**
@@ -67,6 +75,9 @@ class TransactionController extends Controller
         ]);
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function lists()
     {
 
@@ -75,78 +86,6 @@ class TransactionController extends Controller
         return response()->json([
             'model' => $accounts
         ]);
-
-//        $groups = $this->groupRepository->findParents();
-//
-//        $accounts = $this->accountRepository->findAll()->groupBy('id')->toArray();
-//
-//        $season = $this->seasonRepository->findCurrent();
-//
-//        $array = [];
-//
-//        foreach ($groups as $key => $group)
-//        {
-//            $groupArray = $group->toArray();
-//            $groupArray['balance'] = 0;
-//            $groupArray['active'] = 0;
-//            $groupArray['passive'] = 0;
-//            $array[$key] = $groupArray;
-//            if($group->children->count())
-//            {
-//                $array[$key]['children'] = $this->recursive($group->children, $accounts, $season);
-//            }
-//            if($group->accounts->count())
-//            {
-//                $array[$key]['accounts'] = [];
-//                foreach ($group->accounts()->with(['currency', 'journal', 'group', 'bank', 'breakdown'])->get() as $account)
-//                {
-//                    if(array_key_exists($account->getKey(), $accounts))
-//                    {
-//                        $accountArray = $account->toArray();
-//                        $accountArray['balance'] = $account->balance($season);
-//                        $accountArray['exchange'] = $accounts[$account->getKey()][0];
-//                        array_push($array[$key]['accounts'], $accountArray);
-//                    }
-//                }
-//            }
-//        }
-//
-//        return response()->json([
-//            'model' => $array
-//        ]);
-    }
-
-    private function recursive($children, $accounts, $season)
-    {
-        $array = [];
-        foreach ($children as $key => $child)
-        {
-            $groupArray = $child->toArray();
-            $groupArray['balance'] = 0;
-            $groupArray['active'] = 0;
-            $groupArray['passive'] = 0;
-            $array[$key] = $groupArray;
-            if($child->children->count())
-            {
-                $array[$key]['children'] = $this->recursive($child->children, $accounts, $season);
-            }
-            if($child->accounts->count())
-            {
-                $array[$key]['accounts'] = [];
-                foreach ($child->accounts()->with(['currency', 'journal', 'group', 'bank', 'breakdown', 'breakdown.transactionAble'])->get() as $account)
-                {
-                    if(array_key_exists($account->getKey(), $accounts))
-                    {
-                        $accountArray = $account->toArray();
-                        $accountArray['balance'] = $account->balance($season);
-                        $accountArray['exchange'] = $accounts[$account->getKey()][0];
-                        array_push($array[$key]['accounts'], $accountArray);
-                    }
-                }
-            }
-        }
-
-        return $array;
     }
 
     /**
@@ -212,30 +151,51 @@ class TransactionController extends Controller
                 $request->request->add(['user_id' => \Auth::user()->getKey()]);
                 $request->request->add(['season_id' => $season->getKey()]);
 
-                //to transaction
                 $parameters = $request->all();
 
-                $account = $parameters['account_id'];
-                $to_account = $parameters['to_account_id'];
+                $account = $this->accountRepository->findById($parameters['account_id']);
+                $to_account = $this->accountRepository->findById($parameters['to_account_id']);
 
-                $parameters['account_id'] = $to_account;
-                $parameters['to_account_id'] = $account;
-                $parameters['type'] = $parameters['type'] == 'credit' ? 'debit' : 'credit';
+                $amount = $parameters['amount'];
+                $exchange = $parameters['exchange'];
+                $to_exchange = $parameters['to_exchange'];
+
+                if(!$this->checker->can_transaction($season->getKey(), $account, $to_account, $parameters['amount'], $parameters['type'], $parameters['exchange'], $parameters['to_exchange']))
+                {
+                    throw new Exception('Дансны үлдэгдэл хүрэлцэхгүй байна', 403);
+                }
+
+                if($account->currency->is_current == 1)
+                {
+                    $parameters['amount'] = $amount * $exchange;
+                    $parameters['exchange'] = 1;
+                }
+                else
+                {
+                    $parameters['amount'] = $amount;
+                    $parameters['exchange'] = $exchange;
+                }
+
                 $parameters['transaction_number'] = $this->transactionRepository->getTransactionNumber($parameters['transaction_date']);
 
-                $request->request->replace($parameters);
-                Transaction::create($request->all());
+                Transaction::create($parameters);
 
-                //transaction
-
-                $parameters['account_id'] = $account;
-                $parameters['to_account_id'] = $to_account;
-                $parameters['amount'] = $parameters['amount'] * $parameters['exchange'] / $parameters['to_exchange'];
-                $parameters['exchange'] = $parameters['to_exchange'];
+                $parameters['account_id'] = $to_account->getKey();
+                $parameters['to_account_id'] = $account->getKey();
                 $parameters['type'] = $parameters['type'] == 'credit' ? 'debit' : 'credit';
 
-                $request->request->replace($parameters);
-                Transaction::create($request->all());
+                if($to_account->currency->is_current == 1)
+                {
+                    $parameters['amount'] = $amount * $exchange;
+                    $parameters['exchange'] = 1;
+                }
+                else
+                {
+                    $parameters['amount'] = $amount;
+                    $parameters['exchange'] = $exchange;
+                }
+
+                Transaction::create($parameters);
 
                 return response()->json(['result' => true]);
 
@@ -245,7 +205,7 @@ class TransactionController extends Controller
 
         }catch (\Exception $exception)
         {
-            return response()->json(['message' => $exception->getMessage()]);
+            return response()->json(['message' => $exception->getMessage()], 406);
         }
     }
 
@@ -291,6 +251,10 @@ class TransactionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $transaction = $this->transactionRepository->findByNumber($id);
+
+        return response()->json([
+            'result' => $transaction->delete()
+        ]);
     }
 }

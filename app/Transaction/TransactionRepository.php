@@ -94,4 +94,13 @@ class TransactionRepository implements TransactionRepositoryInterface
             return $date . '001';
         }
     }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function findByNumber($id)
+    {
+        return $this->model->where('transaction_number', $id);
+    }
 }
