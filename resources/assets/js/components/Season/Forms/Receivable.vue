@@ -23,7 +23,7 @@
                                 <tr v-for="(t, index) in transaction">
                                     <td><input type="text" class="form-control input-sm" v-model="t.description" /></td>
                                     <td style="min-width: 150px">
-                                        <select2 :options="options" :value="t.transaction_able.customer_id" :selected="t" v-on:input="selectCustomer"></select2>
+                                        <select2 v-if="options.length > 0" :options="options" :value="t.transaction_able.customer_id" :selected="t" v-on:input="selectCustomer"></select2>
                                     </td>
                                     <td><input type="text" class="form-control input-sm" v-pick="t.transaction_able.closing_date" v-model="t.transaction_able.closing_date" /> </td>
                                     <td><money v-model="t.amount" v-bind="money" class="input-sm form-control" @input="selectInput(t.amount)"></money></td>

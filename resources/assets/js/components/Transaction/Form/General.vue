@@ -32,7 +32,7 @@
                                 <td>
                                     <div class="form-group">
                                         <label class="control-label">Харилцагч</label>
-                                        <select2 :options="customers" :value="transaction.customer_id" :selected="transaction" v-on:input="selectCustomer"></select2>
+                                        <select2 v-if="customers.length > 0" :options="customers" :value="transaction.customer_id" :selected="transaction" v-on:input="selectCustomer"></select2>
                                         <div class="text-danger" v-if="errorMessages.customer_id">
                                             {{ errorMessages.customer_id[0] }}
                                         </div>
@@ -41,7 +41,7 @@
                                 <td>
                                     <div class="form-group">
                                         <label class="control-label">Харицах данс</label>
-                                        <select2 :options="accounts" :value="transaction.account_id" :selected="transaction" v-on:input="selectToAccount"></select2>
+                                        <select2-group v-if="accounts.length > 0" :options="accounts" :value="transaction.to_account_id" :selected="transaction" v-on:input="selectToAccount"></select2-group>
                                         <div class="text-danger" v-if="errorMessages.to_account_id">
                                             {{ errorMessages.to_account_id[0] }}
                                         </div>
@@ -63,7 +63,7 @@
                                 <td colspan="2">
                                     <div class="form-group">
                                         <label class="control-label">Данс</label>
-                                        <select2 :options="accounts" :value="transaction.account_id" :selected="transaction" v-on:input="selectAccount"></select2>
+                                        <select2-group v-if="accounts.length > 0" :options="accounts" :value="transaction.account_id" :selected="transaction" v-on:input="selectAccount"></select2-group>
                                         <div class="text-danger" v-if="errorMessages.account_id">
                                             {{ errorMessages.account_id[0] }}
                                         </div>
@@ -139,6 +139,7 @@
 
     import {Money} from 'v-money';
     import Select2 from './../../Helper/Select2.vue';
+    import Select2Group from './../../Helper/Select2Group.vue';
 
     export default {
 
@@ -182,7 +183,8 @@
 
         components: {
             'money': Money,
-            'select2': Select2
+            'select2': Select2,
+            'select2-group': Select2Group
         },
 
         methods: {
@@ -249,39 +251,51 @@
 
             checkExchange()
             {
-                var account = this.accounts.filter(account => {
-                    return account.id == this.transaction.account_id;
+                var account = null;
+                this.accounts.forEach(entry => {
+                    entry.accounts.forEach(acc => {
+                        if(acc.id == this.transaction.account_id)
+                        {
+                            account = acc
+                        }
+                    })
                 });
 
-                var to_account = this.accounts.filter(account => {
-                    return account.id == this.transaction.to_account_id;
+                var to_account = null;
+                this.accounts.forEach(entry => {
+                    entry.accounts.forEach(acc => {
+                        if(acc.id == this.transaction.to_account_id)
+                        {
+                            to_account = acc
+                        }
+                    })
                 });
 
-                if(account.length > 0)
+                if(account !== null)
                 {
-                    this.transaction.marker = account[0].marker;
-                    if(to_account.length > 0)
+                    this.transaction.marker = account.currency.marker;
+                    if(to_account !== null)
                     {
-                        this.transaction.to_marker = to_account[0].marker;
-                        this.currency_current = (account[0].currency_id === to_account[0].currency_id);
-                        if(account[0].currency_id !== to_account[0].currency_id)
+                        this.transaction.to_marker = to_account.currency.marker;
+                        this.currency_current = (account.currency_id === to_account.currency_id);
+                        if(account.currency_id !== to_account.currency_id)
                         {
 
-                            if(account[0].is_current === 0)
+                            if(account.currency.is_current === 0)
                             {
-                                this.transaction.exchange = parseFloat(account[0].exchange)
-                                this.transaction.to_exchange = parseFloat(to_account[0].exchange)
+                                this.transaction.exchange = parseFloat(account.currency.exchange)
+                                this.transaction.to_exchange = parseFloat(to_account.currency.exchange)
                             }
                             else
                             {
-                                this.transaction.exchange = parseFloat(to_account[0].exchange)
-                                this.transaction.to_exchange = parseFloat(account[0].exchange)
+                                this.transaction.exchange = parseFloat(to_account.currency.exchange)
+                                this.transaction.to_exchange = parseFloat(account.currency.exchange)
                             }
                         }
                         else
                         {
-                            this.transaction.exchange = parseFloat(account[0].exchange);
-                            this.transaction.to_exchange = parseFloat(account[0].exchange)
+                            this.transaction.exchange = parseFloat(account.currency.exchange);
+                            this.transaction.to_exchange = parseFloat(account.currency.exchange)
                         }
                     }
                 }

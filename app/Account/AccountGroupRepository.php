@@ -110,6 +110,6 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
             ->join('account', 'account_group.id', '=', 'account.group_id')
             ->groupBy('account_group.id')
             ->select('account_group.*')
-            ->with(['accounts'])->get();
+            ->with(['accounts', 'accounts.currency'])->get();
     }
 }

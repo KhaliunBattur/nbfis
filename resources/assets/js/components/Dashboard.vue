@@ -28,8 +28,6 @@
                         </div>
                         <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
-
-                    <select2-group></select2-group>
                 </div>
                 <!-- ./col -->
                 <div class="col-lg-3 col-xs-6">
@@ -87,13 +85,7 @@
 
 <script>
 
-    import Select2Group from './Helper/Select2Group.vue'
-
     export default {
-
-        components: {
-            'select2-group' : Select2Group
-        }
 
     }
 

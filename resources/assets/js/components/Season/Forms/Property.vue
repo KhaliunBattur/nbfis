@@ -21,13 +21,13 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Хөрөнгийн ангилал</label>
-                                                <select2 :options="groups" :value="tran.transaction_able.group_id" :selected="tran" v-on:input="selectGroup"></select2>
+                                                <select2 v-if="groups.length > 0" :options="groups" :value="tran.transaction_able.group_id" :selected="tran" v-on:input="selectGroup"></select2>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Байрлал</label>
-                                                <select2 :options="branches" :value="tran.transaction_able.branch_id" :selected="tran" v-on:input="selectBranch"></select2>
+                                                <select2 v-if="branches.length > 0" :options="branches" :value="tran.transaction_able.branch_id" :selected="tran" v-on:input="selectBranch"></select2>
                                             </div>
                                         </td>
                                     </tr>
@@ -47,7 +47,7 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Эд хариуцагч</label>
-                                                <select2 :options="users" :value="tran.transaction_able.owner_id" :selected="tran" v-on:input="selectOwner"></select2>
+                                                <select2 v-if="users.length > 0" :options="users" :value="tran.transaction_able.owner_id" :selected="tran" v-on:input="selectOwner"></select2>
                                             </div>
                                         </td>
                                     </tr>

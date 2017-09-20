@@ -81,7 +81,7 @@ class TransactionController extends Controller
     public function lists()
     {
 
-        $accounts = $this->accountRepository->findByListRaw();
+        $accounts = $this->groupRepository->findByListRawWithAccounts();
 
         return response()->json([
             'model' => $accounts
