@@ -35,13 +35,15 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Код</label>
-                                                <input type="text" class="form-control input-sm" v-model="tran.transaction_able.code" />
+                                                <input v-validate.initial="'required|max:255'" :class="{'form-control input-sm': true, 'is-danger': errors.has('code') }" type="text" class="form-control input-sm" v-model="tran.transaction_able.code" />
+                                                <span v-show="errors.has('code')" class="help is-danger">{{ errors.first('code') }}</span>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Нэр</label>
-                                                <input type="text" class="form-control input-sm" v-model="tran.transaction_able.name" />
+                                                <input v-validate.initial="'required|max:255'" :class="{'form-control input-sm': true, 'is-danger': errors.has('code') }" maxlength="255" type="text" class="form-control input-sm" v-model="tran.transaction_able.name" />
+                                                <span v-show="errors.has('name')" class="help is-danger">{{ errors.first('name') }}</span>
                                             </div>
                                         </td>
                                         <td>
