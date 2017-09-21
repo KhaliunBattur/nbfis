@@ -87,7 +87,7 @@
                 money:{
                     decimal:'.',
                     thousands:',',
-                    precision:2,
+                    precision:0,
                     masked:false
                 },
                 options: []
@@ -151,6 +151,10 @@
             destroy(t)
             {
                 this.transaction.splice(this.transaction.indexOf(t), 1)
+                let total = this.transaction.reduce(function(prev, t){
+                    return parseFloat(prev) + parseFloat(t.amount);
+                }, 0);
+                this.total = total;
             },
             formatPrice(amount) {
                 let val = (amount/1).toFixed(2).replace(',', '.')
