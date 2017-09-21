@@ -135,13 +135,16 @@
                     showCancelButton: true,
                     closeOnConfirm: false,
                     showLoaderOnConfirm: true,
+                    confirmButtonText: "Тийм",
+                    cancelButtonText: "Үгүй",
                 }, function(){
                     axios.post('/api/season', self.season).then(response => {
                         swal({
                             title: 'Амжилттай',
                             text: 'Улирал нээгдлээ',
                             type: 'success',
-                            timer: 300
+                            timer: 300,
+                            confirmButtonText: "Хаах",
                         }, function(){
                             self.fetchSeason();
                             self.season = {
