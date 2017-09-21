@@ -952,6 +952,7 @@
                             this.owner_type = response.data.owner_type;
                             this.relations = response.data.relations;
                             this.loading = true;
+                            console.log(this.user.works.organization);
                         }
 
                     })

@@ -18,7 +18,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="(t, index) in transaction">
+                                <tr v-for="(t, index) in transactions">
                                     <td><input type="text" class="form-control input-sm" maxlength="255" v-model="t.description"  /></td>
                                     <span v-show="errors.has('description')" class="help is-danger">{{ errors.first('description') }}</span>
                                     <td><money class="form-control input-sm" v-model="t.amount" v-bind="money"  @input="selectInput(t.amount)" name="amount"></money></td>
@@ -52,7 +52,7 @@
         en: {
             custom: {
                 amount: {
-                    required: 'Нэр талбарыг заавал бөглөнө үү.',
+                    required: '0-с их утга оруулна уу!.',
                 }
             }
         }
@@ -61,36 +61,28 @@
 
         props: ['account'],
         validator:null,
-        watch: {
-            selectedValue: function() {
-                let total = this.transaction.reduce(function(prev, t){
-                    return parseFloat(prev) + parseFloat(t.amount);
-                }, 0);
-                this.total = total;
-            },
-            transAmount(val){
-                console.log(val);
-                this.validator.validate('amount',val);
-            }
-        },
-        computed:{
-          transAmount(){
-              return this.transaction.amount;
-          }
+
+//        computed:{
+//            transAmount(){
+//                console.log('hey', this.transactions.amount);
+//                return this.transactions.amount;
+//            }
+//        },
+        components:  {
+            'money': Money,
         },
         data()
         {
             return {
                 selectedValue: 0,
                 total: 0,
-                amount:'',
-                transaction: [
-                    {
+                amount: '',
+                transactions: [],
+                transaction: {
                         id: 0,
                         description: 'Эхний үлдэгдэл',
                         amount: 0
-                    }
-                ],
+                    },
                 money:{
                     decimal:'.',
                     thousands:',',
@@ -99,13 +91,21 @@
                 },
             }
         },
-        components:  {
-            'money': Money,
+        watch: {
+            selectedValue: function() {
+                let total = this.transactions.reduce(function(prev, t){
+                    return parseFloat(prev) + parseFloat(t.amount);
+                }, 0);
+                this.total = total;
+            },
+            transAmount(val){
+                console.log('watcher',val);
+                this.validator.validate('amount',val);
+            }
         },
-
         methods: {
             addRow() {
-                this.transaction.push({
+                this.transactions.push({
                     id: 0,
                     description: 'Эхний үлдэгдэл',
                     amount: 0
@@ -114,16 +114,17 @@
             selectInput(amount) {
                 this.selectedValue = amount;
             },
-            saveBreakDown() {
 
+            saveBreakDown()
+            {
+                console.log('save',this.transactions[0].amount);
                 try {
-                this.validator.validateAll({
-                    amount: this.transaction
-                }).then((result) => {
-                    console.log(this.validator.errors);
-                    console.log(this.validator.errors.first('amount'));
-                    if (result) {
-
+                    this.validator.validateAll({
+                        amount: this.transactions[0].amount
+                    }).then((result) => {
+                        console.log(this.validator.errors);
+                        console.log(this.validator.errors.first('amount'));
+                        if (result) {
                             if (this.total === 0) {
                                 return;
                             }
@@ -143,8 +144,8 @@
                             this.selectedValue = 0;
                             this.$emit('saved', data);
 
-                    }
-                });
+                        }
+                    });
                 }
                 catch (error) {
                     console.log(error);
@@ -152,7 +153,7 @@
                 }
             },
             close(){
-              this.error.clear();
+                this.error.clear();
             },
             created() {
                 this.$validator.updateDictionary(dict);
@@ -160,11 +161,6 @@
                     amount: 'required|min_value:1',
                 });
                 this.$set(this, 'errors', this.validator.errors);
-//                $(window).click(function(event) {
-//                    if ( $(".hello").has(event.target).length == 0 ){
-//                        console.log("Clear");
-//                    }
-//                });
             },
             beforeMount(){
                 this.errors.clear();
