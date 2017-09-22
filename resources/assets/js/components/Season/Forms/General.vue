@@ -18,11 +18,16 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="(t, index) in transactions">
-                                    <td><input type="text" class="form-control input-sm" maxlength="255" v-model="t.description"  /></td>
-                                    <span v-show="errors.has('description')" class="help is-danger">{{ errors.first('description') }}</span>
-                                    <td><money class="form-control input-sm" v-model="t.amount" v-bind="money"  @input="selectInput(t.amount)" name="amount"></money></td>
-                                    <span v-show="errors.has('amount')" class="help is-danger">{{ errors.first('amount') }}</span>
+                                <tr v-for="(t, index) in transaction">
+                                    <td><input v-model="t.description" v-validate="'required|max:255|'" name="description"
+                                               :class="{'form-control input-sm': true, 'is-danger': errors.has('description') }"
+                                               type="text" class="form-control input-sm" maxlength="255"  /></td>
+                                        <span v-if="errors.has('description')" class="help is-danger">{{ errors.first('description') }}</span>
+                                    <td><money v-model="t.amount" v-validate="'required|min_value:0.001|confirmed'"
+                                               :class="{'form-control input-sm': true, 'is-danger': errors.has('amount') }"
+                                               name="amount" class="form-control input-sm"
+                                               v-bind="money"  @input="selectInput(t.amount)" ></money></td>
+                                        <span v-if="errors.has('amount')" class="help is-danger">{{ errors.first('amount') }}</span>
                                     <td>
                                         <button class="btn btn-xs btn-danger" @click="destroy(t)"><i class="fa fa-trash-o"></i></button>
                                     </td>
@@ -47,27 +52,12 @@
 <script>
 
     import {Money} from 'v-money'
-    import { Validator } from 'vee-validate'
-    const dict = {
-        en: {
-            custom: {
-                amount: {
-                    required: '0-с их утга оруулна уу!.',
-                }
-            }
-        }
-    };
+
     export default {
 
         props: ['account'],
-        validator:null,
 
-//        computed:{
-//            transAmount(){
-//                console.log('hey', this.transactions.amount);
-//                return this.transactions.amount;
-//            }
-//        },
+
         components:  {
             'money': Money,
         },
@@ -77,12 +67,13 @@
                 selectedValue: 0,
                 total: 0,
                 amount: '',
-                transactions: [],
-                transaction: {
+                transaction:[
+                    {
                         id: 0,
                         description: 'Эхний үлдэгдэл',
                         amount: 0
-                    },
+                    }
+                ],
                 money:{
                     decimal:'.',
                     thousands:',',
@@ -93,19 +84,15 @@
         },
         watch: {
             selectedValue: function() {
-                let total = this.transactions.reduce(function(prev, t){
+                let total = this.transaction.reduce(function(prev, t){
                     return parseFloat(prev) + parseFloat(t.amount);
                 }, 0);
                 this.total = total;
-            },
-            transAmount(val){
-                console.log('watcher',val);
-                this.validator.validate('amount',val);
             }
         },
         methods: {
             addRow() {
-                this.transactions.push({
+                this.transaction.push({
                     id: 0,
                     description: 'Эхний үлдэгдэл',
                     amount: 0
@@ -117,54 +104,35 @@
 
             saveBreakDown()
             {
-                console.log('save',this.transactions[0].amount);
-                try {
-                    this.validator.validateAll({
-                        amount: this.transactions[0].amount
-                    }).then((result) => {
-                        console.log(this.validator.errors);
-                        console.log(this.validator.errors.first('amount'));
-                        if (result) {
-                            if (this.total === 0) {
-                                return;
-                            }
-                            let data = {
-                                total: this.total,
-                                transaction: this.transaction,
-                                class_name: null
-                            }
-                            this.transaction = [
-                                {
-                                    id: 0,
-                                    description: 'Эхний үлдэгдэл',
-                                    amount: 0
-                                }
-                            ]
-                            this.total = 0;
-                            this.selectedValue = 0;
-                            this.$emit('saved', data);
-
+                    this.$validator.validate();
+                    if(!this.errors.any())
+                    {
+                        if (this.total === 0) {
+                            return;
                         }
-                    });
-                }
-                catch (error) {
-                    console.log(error);
-                    swal('Уучлаарай!', 'Амжилтгүй боллоо!', 'error')
-                }
+                        let data = {
+                            total: this.total,
+                            transaction: this.transaction,
+                            class_name: null
+                        }
+                        this.transaction = [
+                            {
+                                id: 0,
+                                description: 'Эхний үлдэгдэл',
+                                amount: 0
+                            }
+                        ]
+                        this.total = 0;
+                        this.selectedValue = 0;
+                        this.$emit('saved', data);
+                    }
+                    else
+                    {
+                        console.log(this.errors.any());
+                    }
+
             },
-            close(){
-                this.error.clear();
-            },
-            created() {
-                this.$validator.updateDictionary(dict);
-                this.validator = new Validator({
-                    amount: 'required|min_value:1',
-                });
-                this.$set(this, 'errors', this.validator.errors);
-            },
-            beforeMount(){
-                this.errors.clear();
-            },
+
             destroy(t) {
                 this.transaction.splice(this.transaction.indexOf(t), 1)
             },

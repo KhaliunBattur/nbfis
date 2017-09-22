@@ -92,7 +92,11 @@
 </head>
 <body>
 <div class="cv">
-    <img src="{{base_path()}}/public{{$user->image}}" class="cv-picture" />
+        @if ($user->image === '' or $user->image == null)
+        <img src="" class="cv-picture" />
+        @else
+        <img src="{{base_path()}}/public{{$user->image}}" class="cv-picture" />
+        @endif
     <h1 style="margin-top: 130px">01 ЕРӨНХИЙ МЭДЭЭЛЭЛ</h1>
     <table class="cv-table cv-lg" >
         <tbody>

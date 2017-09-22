@@ -285,7 +285,6 @@ class UserController extends Controller
     public function info(Request $request, $id)
     {
         $user = $this->userRepository->findInfoById($id);
-
         view()->share('user',$user);
 
             $pdf = PDF::loadView('report/cvPDF',$user)->setPaper('a4')->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);

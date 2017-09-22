@@ -15,7 +15,9 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Гүйлгээний утга</label>
-                                                <input type="text" class="form-control input-sm" v-model="tran.description" />
+                                                <input type="text" class="form-control input-sm" v-model="tran.description" v-validate="'required|max:255'"
+                                                       maxlength="255" name="description" />
+                                                <span v-if="errors.has('description')" class="help is-danger">{{ errors.first('description') }}</span>
                                             </div>
                                         </td>
                                         <td>
@@ -35,15 +37,15 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Код</label>
-                                                <input v-validate.initial="'required|max:255'" :class="{'form-control input-sm': true, 'is-danger': errors.has('code') }" type="text" class="form-control input-sm" v-model="tran.transaction_able.code" />
-                                                <span v-show="errors.has('code')" class="help is-danger">{{ errors.first('code') }}</span>
+                                                <input v-validate="'required|max:255|'" name="code" maxlength="255" :class="{'form-control input-sm': true, 'is-danger': errors.has('code') }" type="text" class="form-control input-sm" v-model="tran.transaction_able.code" />
+                                                <span v-if="errors.has('code')" class="help is-danger">{{ errors.first('code') }}</span>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Нэр</label>
-                                                <input v-validate.initial="'required|max:255'" :class="{'form-control input-sm': true, 'is-danger': errors.has('code') }" maxlength="255" type="text" class="form-control input-sm" v-model="tran.transaction_able.name" />
-                                                <span v-show="errors.has('name')" class="help is-danger">{{ errors.first('name') }}</span>
+                                                <input v-validate="'required|max:255'" name="name" :class="{'form-control input-sm': true, 'is-danger': errors.has('name') }" maxlength="255" type="text" class="form-control input-sm" v-model="tran.transaction_able.name" />
+                                                <span v-if="errors.has('name')" class="help is-danger">{{ errors.first('name') }}</span>
                                             </div>
                                         </td>
                                         <td>
@@ -57,13 +59,15 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Нэгж өртөг</label>
-                                                <money v-model="tran.transaction_able.unit_amount" v-bind="money" class="input-sm form-control"></money>
+                                                <money v-validate="'required|min_value:0.001'" :class="{'form-control input-sm': true, 'is-danger': errors.has('uamount') }" name="uamount" v-model="tran.transaction_able.unit_amount" v-bind="money" class="input-sm form-control"></money>
+                                                <span v-if="errors.has('uamount')" class="help is-danger">{{ errors.first('uamount') }}</span>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Тоо ширхэг</label>
-                                                <money v-model="tran.transaction_able.count" v-bind="money" class="input-sm form-control"></money>
+                                                <money v-validate="'required|min_value:0.001'" :class="{'form-control input-sm': true, 'is-danger': errors.has('count') }" name="count" v-model="tran.transaction_able.count" v-bind="money" class="input-sm form-control"></money>
+                                                <span v-if="errors.has('count')" class="help is-danger">{{ errors.first('count') }}</span>
                                             </div>
                                         </td>
                                         <td>
@@ -83,7 +87,8 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Ашиглах хугацаа (жилээр)</label>
-                                                <money v-model="tran.transaction_able.use_time_count" v-bind="money" class="input-sm form-control" @input="calculate"></money>
+                                                <money v-validate="'required|min_value:1.00'" :class="{'form-control input-sm': true, 'is-danger': errors.has('timeCount') }" name="timeCount"  v-model="tran.transaction_able.use_time_count" v-bind="money" class="input-sm form-control" @input="calculate"></money>
+                                                <span v-if="errors.has('timeCount')" class="help is-danger">{{ errors.first('timeCount') }}</span>
                                             </div>
                                         </td>
                                         <td>
@@ -217,7 +222,11 @@
             'money': Money,
             'select2': Select2
         },
-
+//        created(){s
+//          Validator.extend('passphrase',{
+//              getMessage:field=>'0-с их'
+//          })
+//        },
         methods: {
             selectGroup(data)
             {
@@ -289,19 +298,28 @@
             },
             saveBreakDown()
             {
-                if(this.total == 0)
+                this.$validator.validateAll();
+                if(!this.errors.any())
                 {
-                    return;
+                    if(this.total == 0)
+                    {
+                        return;
+                    }
+                    let data = {
+                        total: this.total,
+                        transaction: this.transaction,
+                        class_name: this.class_name
+                    }
+                    this.transaction = [];
+                    this.total = 0;
+                    this.selectedValue = 0;
+                    this.$emit('saved', data);
                 }
-                let data = {
-                    total: this.total,
-                    transaction: this.transaction,
-                    class_name: this.class_name
+                else
+                {
+                    console.log(this.errors.any())
                 }
-                this.transaction = [];
-                this.total = 0;
-                this.selectedValue = 0;
-                this.$emit('saved', data);
+
             },
             edit(t)
             {
