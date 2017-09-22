@@ -129,10 +129,10 @@
                                 <tr v-for="(tran, index) in transaction">
                                     <td>{{ tran.transaction_able.code }}</td>
                                     <td>{{ tran.transaction_able.name }}</td>
-                                    <td>{{ tran.transaction_able.unit_amount }}</td>
-                                    <td>{{ tran.transaction_able.count }}</td>
-                                    <td>{{ tran.transaction_able.unit_amount * tran.transaction_able.count }}</td>
-                                    <td>{{ Math.round(tran.amount * 100) / 100 }}</td>
+                                    <td>{{ formatPrice(tran.transaction_able.unit_amount) }}</td>
+                                    <td>{{ formatPrice(tran.transaction_able.count) }}</td>
+                                    <td>{{ formatPrice(tran.transaction_able.unit_amount * tran.transaction_able.count) }}</td>
+                                    <td>{{ formatPrice(Math.round(tran.amount * 100) / 100) }}</td>
                                     <td>
                                         <button class="btn btn-xs btn-warning" @click="edit(tran)"><i class="fa fa-pencil"></i></button>
                                         <button class="btn btn-xs btn-danger" @click="destroy(tran)"><i class="fa fa-trash-o"></i></button>

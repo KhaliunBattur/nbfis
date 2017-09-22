@@ -87,7 +87,7 @@
                 money:{
                     decimal:'.',
                     thousands:',',
-                    precision:0,
+                    precision:2,
                     masked:false
                 },
                 options: []
