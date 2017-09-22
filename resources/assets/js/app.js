@@ -95,5 +95,22 @@ Vue.directive('auto', {
 
 const app = new Vue({
     el: '#app',
-    router: Router
+    router: Router,
+    data() {
+        return {
+            journals: []
+        }
+    },
+    mounted()
+    {
+        this.fetchJournal()
+    },
+    methods: {
+        fetchJournal()
+        {
+            axios.get('/api/journal/lists/root').then(response => {
+                this.journals = response.data.lists
+            })
+        }
+    }
 });

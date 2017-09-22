@@ -97,6 +97,9 @@ const router = new VueRouter({
             children: [
                 {
                     path: '', component: General
+                },
+                {
+                    path: ':id', component: General
                 }
             ]
         },

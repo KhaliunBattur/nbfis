@@ -135,6 +135,19 @@
                             <i class="fa fa-credit-card"></i> <span>Данс</span>
                         </router-link>
                     </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-list"></i> <span>Журнал</span> <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>
+                                <router-link to="/transaction"><i class="fa fa-circle-o"></i> Ерөнхий журнал</router-link>
+                            </li>
+                            <li v-for="journal in journals">
+                                <router-link :to="'/transaction/' + journal.id"><i class="fa fa-circle-o"></i> @{{ journal.name }}</router-link>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </section>
             <!-- /.sidebar -->

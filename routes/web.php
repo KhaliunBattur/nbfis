@@ -41,6 +41,7 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::get('account/group/{group}/others', ['as' => 'group.others', 'uses' => 'GroupController@others']);
         Route::resource('journal', 'JournalController', ['except' => ['create', 'show', 'edit', 'update']]);
         Route::get('journal/lists', ['as' => 'journal.lists', 'uses' => 'JournalController@lists']);
+        Route::get('journal/lists/root', ['as' => 'journal.lists', 'uses' => 'JournalController@rootLists']);
         Route::get('journal/lists/have/account', ['as' => 'journal.lists.have.account', 'uses' => 'JournalController@listHaveAccount']);
         Route::get('journal/{id}/group', ['as' => 'journal.lists', 'uses' => 'GroupController@journalGroups']);
     });
