@@ -92,7 +92,7 @@
                 money:{
                     decimal:'.',
                     thousands:',',
-                    precision:false,
+                    precision:2,
                     masked:false
                 },
                 group: {

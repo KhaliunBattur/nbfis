@@ -14,7 +14,7 @@
                     </div>
                     <div class="box-body">
                         <ul class="list-inline">
-                            <li><b>Эхлэл баланс </b></li>
+                            <li><b>Валютын ханш </b></li>
                             <li v-for="currency in season.currencies">{{ currency.name + ': ' + currency.pivot.exchange + '₮' }}</li>
                         </ul>
                         <div class="list-tree-view" v-if="accounts">
