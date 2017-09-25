@@ -5,7 +5,7 @@
             <h4 class="modal-title" id="general_transactionModalLabel">Ажил гүйлгээ шинээр бүртгэх</h4>
         </div>
         <div class="modal-body">
-            <div class="table-responsive">
+            <div class="table-responsive with-chosen">
                 <table class="table table-bordered property-table" style="font-size: 12px !important">
                     <tbody>
                     <tr>
@@ -120,12 +120,12 @@
                     </tr>
                     </tbody>
                 </table>
-                <div class="pull-left text-danger">
-                    {{ errorMessages.message }}
-                </div>
             </div>
         </div>
         <div class="modal-footer">
+            <div class="pull-left text-danger text-sm">
+                {{ errorMessages.message }}
+            </div>
             <button type="button" class="btn btn-primary btn-sm" @click="saveTransaction">Хадгалах</button>
         </div>
     </div>

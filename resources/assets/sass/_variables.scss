@@ -212,6 +212,11 @@ $panel-default-heading-bg: #fff;
   color: #929292;
 }
 
-.chosen-container .chosen-results {
-  max-height: 65px !important;
+.text-sm {
+  font-size: 12px;
+}
+
+.with-chosen {
+  overflow-x: inherit !important;
+  overflow-y: visible !important;
 }

@@ -113,7 +113,14 @@ class TransactionController extends Controller
         {
             if($request->get('journal') == 0)
             {
-                return $this->saveGeneral($request, $season);
+                if($request->has('multiple'))
+                {
+                    return $this->saveGeneralMulti($request, $season);
+                }
+                else
+                {
+                    return $this->saveGeneral($request, $season);
+                }
             }
             else
             {
@@ -126,6 +133,71 @@ class TransactionController extends Controller
         }
     }
 
+    private function saveGeneralMulti($request, $season)
+    {
+        $this->validate($request, [
+            'receipt_number' => 'required',
+            'transaction_date' => 'required',
+            'customer_id' => 'required',
+            'account_id' => 'required',
+            'to_transaction' => 'required',
+            'description' => 'required'
+        ]);
+
+        try
+        {
+            $response = \DB::transaction(function() use ($request, $season){
+
+                $request->request->add(['user_id' => \Auth::user()->getKey()]);
+                $request->request->add(['season_id' => $season->getKey()]);
+
+                $parameters = $request->all();
+
+                $parameters['transaction_number'] = $this->transactionRepository->getTransactionNumber($parameters['transaction_date']);
+
+                $account = $this->accountRepository->findById($parameters['account_id']);
+
+                //transaction
+                $parameters['amount'] = 0;
+
+                foreach ($request->get('to_transaction') as $transaction)
+                {
+                    $parameters['amount'] += ($transaction['amount'] * $transaction['to_exchange']);
+                }
+
+                $this->checker->can_transaction($season->getKey(), $account, $parameters);
+
+                Transaction::create($parameters);
+
+                //to transaction
+                $parameters['type'] = $parameters['type'] == 'credit' ? 'debit' : 'credit';
+
+                foreach($request->get('to_transaction') as $transaction)
+                {
+                    $to_account = $this->accountRepository->findById($transaction['to_account_id']);
+
+                    $parameters['account_id'] = $to_account->getKey();
+                    $parameters['to_account_id'] = $account->getKey();
+
+                    $parameters['amount'] = $transaction['amount'];
+                    $parameters['exchange'] = $transaction['to_exchange'];
+
+                    $this->checker->can_transaction($season->getKey(), $to_account, $parameters);
+
+                    Transaction::create($parameters);
+                }
+
+                return response()->json(['result' => true]);
+
+            });
+
+            return $response;
+        }
+        catch (\Exception $exception)
+        {
+            return response()->json(['message' => $exception->getMessage()], 406);
+        }
+    }
 
     /**
      * @param Request $request
