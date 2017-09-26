@@ -71,7 +71,7 @@
     }
 
     .cv-md {
-        width: 48%;
+        width: 100%;
     }
 
     .cv-md-margin-left {
@@ -92,11 +92,13 @@
 </head>
 <body>
 <div class="cv">
+
         @if ($user->image === '' or $user->image == null)
         <img src="" class="cv-picture" />
         @else
         <img src="{{base_path()}}/public{{$user->image}}" class="cv-picture" />
         @endif
+
     <h1 style="margin-top: 130px">01 ЕРӨНХИЙ МЭДЭЭЛЭЛ</h1>
     <table class="cv-table cv-lg" >
         <tbody>
@@ -190,49 +192,59 @@
     </table>
     <h1>03 БАРЬЦАА ХӨРӨНГИЙН МЭДЭЭЛЭЛ</h1>
         <div class="cv-lg">
-            <table class="cv-table cv-md" >
+            <table class="cv-md">
                 <tbody>
                 <tr>
-                    <td style="width: 100%;" colspan="2">Байр барьцаалах бол 4%</td>
-                </tr>
-                <tr>
-                    <td style="width: 50%;">Ашиглалтанд орсон огноо:</td>
-                    <td style="width: 50%;">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td style="width: 50%;">Хаяг:</td>
-                    <td style="width: 50%;">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td style="width: 50%;">Хэдэн М2::</td>
-                    <td style="width: 50%;">Хэдэн өрөө: М2:</td>
-                </tr>
-                <tr>
-                    <td style="width: 50%;">Зах зээлийн үнэ:</td>
-                    <td style="width: 50%;">&nbsp;</td>
-                </tr>
-                </tbody>
-            </table>
-            <table class="cv-table cv-md cv-md-margin-left" >
-                <tbody>
-                <tr>
-                    <td colspan="2">Машин барьцаалах бол 3.5-4%</td>
-                </tr>
-                <tr>
-                    <td style="width: 50%;">Марк/өнгө:</td>
-                    <td style="width: 50%;">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td style="width: 50%;">Үйлдвэрлэсэн огноо:</td>
-                    <td style="width: 50%;">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td style="width: 50%;">Орж ирсэн огноо:</td>
-                    <td style="width: 50%;">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td style="width: 50%;">Зах зээлийн үнэ:</td>
-                    <td style="width: 50%;">&nbsp;</td>
+                    <td style="width: 50%;">
+                        <table class="cv-table cv-md" >
+                            <tbody>
+                            <tr>
+                                <td style="width: 100%;" colspan="2">Байр барьцаалах бол 4%</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%;">Ашиглалтанд орсон огноо:</td>
+                                <td style="width: 50%;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%;">Хаяг:</td>
+                                <td style="width: 50%;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%;">Хэдэн М2::</td>
+                                <td style="width: 50%;">Хэдэн өрөө: М2:</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%;">Зах зээлийн үнэ:</td>
+                                <td style="width: 50%;">&nbsp;</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td style="width: 50%;">
+                        <table class="cv-table cv-md cv-md-margin-left" >
+                            <tbody>
+                            <tr>
+                                <td colspan="2">Машин барьцаалах бол 3.5-4%</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%;">Марк/өнгө:</td>
+                                <td style="width: 50%;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%;">Үйлдвэрлэсэн огноо:</td>
+                                <td style="width: 50%;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%;">Орж ирсэн огноо:</td>
+                                <td style="width: 50%;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%;">Зах зээлийн үнэ:</td>
+                                <td style="width: 50%;">&nbsp;</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -303,7 +315,6 @@
             <td style="width: 16%;">{{$member->phone_number}}</td>
         </tr>
         @endforeach
-
         </tbody>
     </table>
     <h1>06 ШААРДЛАГАТАЙ ҮЕД ХОЛБОО БАРИХ ХҮНИЙ МЭДЭЭЛЭЛ</h1>
@@ -332,34 +343,44 @@
         </tbody>
     </table>
     <h1>07 ӨРХИЙН САРЫН НИЙТ ОРЛОГО ЗАРЛАГА</h1>
-    <h4>Өрхийн зарлага</h4>
-    <table class="cv-table cv-md">
+    <table class="cv-md">
         <tbody>
         <tr>
-            <td>Сарын зарлага</td>
-            <td>Сарын дүн</td>
+            <td style="width: 50%;">
+                <h4>Өрхийн зарлага</h4>
+                <table class="cv-table cv-md">
+                    <tbody>
+                    <tr>
+                        <td>Сарын зарлага</td>
+                        <td>Сарын дүн</td>
+                    </tr>
+                    @foreach($user->expenses as $expense)
+                        <tr>
+                            <td style="width: 65%;">{{$expense->name}}</td>
+                            <td style="width: 40%;">{{$expense->expense}} </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </td>
+            <td style="width: 50%;">
+                <h4 style="margin-left: 2%">Өрхийн орлого</h4>
+                <table class="cv-table cv-md cv-md-margin-left">
+                    <tbody>
+                    <tr>
+                        <td>Сарын орлого</td>
+                        <td>Сарын дүн</td>
+                    </tr>
+                    @foreach($user->budgets as $budget)
+                        <tr>
+                            <td style="width: 60%;">{{$budget->name}}</td>
+                            <td style="width: 40%;">{{$budget->budget}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </td>
         </tr>
-        @foreach($user->expenses as $expense)
-        <tr>
-            <td style="width: 65%;">{{$expense->name}}</td>
-            <td style="width: 40%;">{{$expense->expense}} </td>
-        </tr>
-        @endforeach
-        </tbody>
-    </table>
-    <h4>Өрхийн орлого</h4>
-    <table class="cv-table cv-md">
-        <tbody>
-        <tr>
-            <td>Сарын орлого</td>
-            <td>Сарын дүн</td>
-        </tr>
-        @foreach($user->budgets as $budget)
-        <tr>
-            <td style="width: 60%;">{{$budget->name}}</td>
-            <td style="width: 40%;">{{$budget->budget}}</td>
-        </tr>
-        @endforeach
         </tbody>
     </table>
     <h4>Хөрөнгө</h4>
@@ -371,11 +392,11 @@
             <td style="width: 30%;">Тайлбар</td>
         </tr>
         @foreach($user->assets as $asset)
-        <tr>
-            <td style="width: 30%;">{{$asset->name}}</td>
-            <td style="width: 20%;">{{$asset->asset}}</td>
-            <td style="width: 30%;">{{$asset->description}}</td>
-        </tr>
+            <tr>
+                <td style="width: 30%;">{{$asset->name}}</td>
+                <td style="width: 20%;">{{$asset->asset}}</td>
+                <td style="width: 30%;">{{$asset->description}}</td>
+            </tr>
         @endforeach
         </tbody>
     </table>

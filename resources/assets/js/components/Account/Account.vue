@@ -56,8 +56,8 @@
                 </div>
             </div>
         </section>
-        <group-form-editor :group="group" :title="title" v-modal v-on:saved="saveGroup" v-on:saveGroup="saveGroup" :id="'groupForm' + group.id"></group-form-editor>
-        <account-form-editor :account="account" :title="title" v-modal v-on:saved="saveAccount" :id="'accountForm' + account.id"></account-form-editor>
+        <group-form-editor :group="group" :title="title" v-modal v-on:saved="saveGroup" v-on:saveGroup="saveGroup" :id="'groupForm' + group.id" ></group-form-editor>
+        <account-form-editor :account="account" :title="title" v-modal v-on:saved="saveAccount" :id="'accountForm' + account.id" ></account-form-editor>
     </div>
 </template>
 
@@ -118,8 +118,8 @@
             this.fetchRoles();
             this.fetchAccounts();
         },
-
         methods: {
+
             filter()
             {
                 var self = this;
@@ -150,7 +150,11 @@
             },
             createGroup()
             {
-                $('#groupForm' + this.group.id).modal('show');
+                $('#groupForm' + this.group.id).modal('show',function () {
+                    this.errors.clear();
+                    console.log('error cleared');
+                });
+                this.errors.clear();
             },
             createAccount()
             {

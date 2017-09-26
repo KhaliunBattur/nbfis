@@ -1,9 +1,9 @@
 <template>
-    <div class="modal fade" id="accountForm" tabindex="-1" role="dialog" aria-labelledby="accountFormLabel" v-if="account">
+    <div class="modal fade" id="accountForm" tabindex="-1" role="dialog" aria-labelledby="accountFormLabel" v-if="account"  @click.self="checkError">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click.self="checkError" ><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="accountFormLabel">{{ title }}</h4>
                 </div>
                 <div class="modal-body">
@@ -11,7 +11,8 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Харья бүлэг <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <v-select v-model="account.group" :debounce="250" :on-search="fetchGroup" :on-change="setAccountNumber()" :options="groups" label="name" placeholder="Харьяа бүлэг"></v-select>
+                                <v-select v-validate="'required'" name="group" v-model="account.group" :debounce="250" :on-search="fetchGroup" :on-change="setAccountNumber()" :options="groups" label="name" placeholder="Харьяа бүлэг"></v-select>
+                                <span v-if="errors.has('group')" class="help is-danger">{{ errors.first('group') }}</span>
                                 <div class="text-danger" v-if="errorMessages.group">
                                     {{ errorMessages.group[0] }}
                                 </div>
@@ -20,7 +21,8 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Нэр <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" v-model="account.name" />
+                                <input v-validate="'required'" name="name" type="text" class="form-control" v-model="account.name"  />
+                                <span v-if="errors.has('name')" class="help is-danger">{{ errors.first('name') }}</span>
                                 <div class="text-danger" v-if="errorMessages.name">
                                     {{ errorMessages.name[0] }}
                                 </div>
@@ -38,7 +40,8 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Дансны дугаар <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" v-model="account.account_number" />
+                                <input v-validate="'required'" name="number" type="text" class="form-control" v-model="account.account_number" />
+                                <span v-if="errors.has('number')" class="help is-danger">{{ errors.first('number') }}</span>
                                 <div class="text-danger" v-if="errorMessages.account_number">
                                     {{ errorMessages.account_number[0] }}
                                 </div>
@@ -58,7 +61,8 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Журнал <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <v-select v-model="account.journal" :debounce="250" :on-search="fetchJournal" :options="journals" label="name" placeholder="Журнал..."></v-select>
+                                <v-select v-validate="'required'" name="journal" v-model="account.journal" :debounce="250" :on-search="fetchJournal" :options="journals" label="name" placeholder="Журнал..." ></v-select>
+                                <span v-if="errors.has('journal')" class="help is-danger">{{ errors.first('journal') }}</span>
                                 <div class="text-danger" v-if="errorMessages.journal">
                                     {{ errorMessages.journal[0] }}
                                 </div>
@@ -67,7 +71,8 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Валют <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <v-select v-model="account.currency" :debounce="250" :on-search="fetchCurrency" :options="currencies" label="name" placeholder="Валют..."></v-select>
+                                <v-select v-validate="'required'" name="currency" v-model="account.currency" :debounce="250" :on-search="fetchCurrency" :options="currencies" label="name" placeholder="Валют..."></v-select>
+                                <span v-if="errors.has('currency')" class="help is-danger">{{ errors.first('currency') }}</span>
                                 <div class="text-danger" v-if="errorMessages.currency">
                                     {{ errorMessages.currency[0] }}
                                 </div>
@@ -76,13 +81,14 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Банк</label>
                             <div class="col-sm-9">
-                                <v-select v-model="account.bank" :debounce="250" :on-search="fetchBank" :options="banks" label="name" placeholder="Банк..."></v-select>
+                                <v-select v-validate="'required'" v-model="account.bank" :debounce="250" :on-search="fetchBank" :options="banks" label="name" placeholder="Банк..."></v-select>
                             </div>
                         </div>
                         <div class="form-group" v-if="account.bank">
                             <label class="col-sm-3 control-label">Банкны дансны дугаар <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" v-model="account.bank_account_number" />
+                                <input v-validate="'required'" name="bank" type="text" class="form-control" v-model="account.bank_account_number" />
+                                <span v-if="errors.has('bank')" class="help is-danger">{{ errors.first('bank') }}</span>
                                 <div class="text-danger" v-if="errorMessages.bank_account_number">
                                     {{ errorMessages.bank_account_number[0] }}
                                 </div>
@@ -91,14 +97,14 @@
                         <div class="form-group">
                             <div class="col-sm-9 col-sm-offset-3">
                                 <div class="checkbox">
-                                    <input type="checkbox" v-model="account.is_temporary" /> Түр данс эсэх
+                                    <input  type="checkbox" v-model="account.is_temporary" /> Түр данс эсэх
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Хаах</button>
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" @click="checkError()">Хаах</button>
                     <button type="button" class="btn btn-primary btn-sm" @click="save()">Хадгалах</button>
                 </div>
             </div>
@@ -136,7 +142,6 @@
         components: {
             'v-select': vSelect
         },
-
         methods: {
             setAccountNumber()
             {
@@ -185,26 +190,60 @@
                     loading(false)
                 })
             },
+            reset()
+            {
+                return {
+                    groups: [],
+                    currencies: [],
+                    journals: [],
+                    banks: [],
+                    selected: null,
+                    errorMessages: {
+                        account_number: null,
+                        code: null,
+                        group: null,
+                        journal: null,
+                        name: null,
+                        currency: null,
+                    },
+                }
+            },
+            checkError()
+            {
+                if(this.errors.any()){
+                    this.errors.clear();
+                    this.reset();
+                }
+            },
             save()
             {
-                var self = this;
-                axios.post('/api/account', this.account).then(response => {
-                    if(response.data.result)
-                    {
-                        swal({
-                            title: 'Амжилттай',
-                            text: 'Данс бүртгэгдлээ',
-                            type: 'success',
-                            timer: 3000
-                        }, function(){
-                            $('#accountForm' + self.account.id).modal('hide');
-                            self.$emit('saved');
-                        });
-                    }
-                }).catch(error => {
-                    this.errorMessages = error.response.data;
-                    swal('Уучлаарай', 'Бүртгэл амжилтгүй! Та дахин оролдоно уу', 'error');
-                })
+                this.$validator.validateAll();
+                if(!this.errors.any()){
+                    var self = this;
+                    axios.post('/api/account', this.account).then(response => {
+                        if(response.data.result)
+                        {
+                            swal({
+                                title: 'Амжилттай',
+                                text: 'Данс бүртгэгдлээ',
+                                type: 'success',
+                                timer: 3000
+                            }, function(){
+                                $('#accountForm' + self.account.id).modal('hide',function () {
+                                    self.errors.clear();
+                                });
+                                self.$emit('saved');
+                            });
+                        }
+                    }).catch(error => {
+                        this.errorMessages = error.response.data;
+                        swal('Уучлаарай', 'Бүртгэл амжилтгүй! Та дахин оролдоно уу', 'error');
+                    })
+                }
+                else {
+                    console.log(this.errors.any());
+                }
+
             }
         }
 

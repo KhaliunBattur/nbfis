@@ -19,7 +19,7 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li><a class="links" @click="showModal(null)">Ерөнхий журнал</a></li>
-                                        <li v-for="(journal, index) in journals"><a class="links" @click="showModal(journal.index)">{{ journal }}</a></li>
+                                        <li v-for="(journal, index) in journals"><a class="links" @click="showModal(index)">{{ journal }}</a></li>
                                     </ul>
                                 </div>
                                 <div class="input-group input-group-sm input-small with-margin-bottom pull-right">
@@ -105,6 +105,10 @@
             </div>
         </div>
         <general v-on:modalHided="fetchTransaction"></general>
+        <form-00001 v-on:modalHided="fetchTransaction"></form-00001>
+        <form-00011 v-on:modalHided="fetchTransaction"></form-00011>
+        <form-00012 v-on:modalHided="fetchTransaction"></form-00012>
+        <form-00002 v-on:modalHided="fetchTransaction"></form-00002>
     </section>
 </template>
 
@@ -113,6 +117,10 @@
     import Sort from './../Helper/Sort.vue';
     import DeleteConfirm from './../Helper/DeleteConfirm.vue';
     import General from './Form/General.vue';
+    import Form_00001 from './Form/Journal/form_00001.vue';
+    import Form_00011 from './Form/Journal/form_00011.vue';
+    import Form_00012 from './Form/Journal/form_00012.vue';
+    import Form_00002 from './Form/Journal/form_00002.vue';
 
     export default {
 
@@ -181,7 +189,11 @@
         components: {
             'sort' : Sort,
             'delete-confirm': DeleteConfirm,
-            'general': General
+            'general': General,
+            'form-00001': Form_00001,
+            'form-00011': Form_00011,
+            'form-00012': Form_00012,
+            'form-00002': Form_00002
         },
 
         methods: {
@@ -190,6 +202,9 @@
                 if(journal === null)
                 {
                     $('#general_transactionModal').modal('show');
+                }else
+                {
+                    $('#form_' + journal).modal('show');
                 }
             },
             changePerPage()

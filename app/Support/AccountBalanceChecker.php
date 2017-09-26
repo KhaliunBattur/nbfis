@@ -8,16 +8,8 @@
 
 namespace App\Support;
 
-
-use App\Account\Account;
-
 class AccountBalanceChecker
 {
-    public function __construct()
-    {
-
-    }
-
     /**
      * @param $season_id
      * @param $account
@@ -29,6 +21,11 @@ class AccountBalanceChecker
     {
         $account_balance = $account->present()->balance($season_id);
 
+        if(!($parameters['amount'] > 0))
+        {
+            throw new \Exception("Үнийн дүн 0-с их байх ёстой", 403);
+        }
+
         if($parameters['type'] == 'credit')
         {
             if($account->type == 'active')
@@ -39,7 +36,7 @@ class AccountBalanceChecker
                 }
                 else
                 {
-                    throw new \Exception('Дансны үлдэгдэл хүрэхгүй байна', 403);
+                    throw new \Exception($account->name . '(' . $account->account_number . ')' . ' дансны үлдэгдэл хүрэхгүй байна', 403);
                 }
             }
             else
@@ -57,7 +54,7 @@ class AccountBalanceChecker
                 }
                 else
                 {
-                    throw new \Exception('Илүү дүнгийн бичилт', 403);
+                    throw new \Exception($account->name . '(' . $account->account_number . ')' . ' дансанд илүү дүнгийн бичилт хийж болохгүй', 403);
                 }
             }
             else

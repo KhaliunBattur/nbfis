@@ -2,7 +2,8 @@
     <div class="modal fade" id="general_transactionModal" tabindex="-1" role="dialog" aria-labelledby="general_transactionModalLabel" v-modal v-on:showModal="init()" v-on:hideModal="hiddenModal()">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <single v-if="customers.length > 0 && accounts.length > 0" :accounts="accounts" :customers="customers" :to_accounts="to_accounts"></single>
+                <single v-if="customers.length > 0 && accounts.length > 0 && !multiple" :accounts="accounts" :customers="customers" :to_accounts="to_accounts"></single>
+                <multiple v-if="customers.length > 0 && accounts.length > 0 && multiple" :accounts="accounts" :customers="customers" :to_accounts="to_accounts"></multiple>
             </div>
             <div class="checkbox pull-left" style="color: #FFF">
                 <label>
@@ -16,6 +17,7 @@
 <script>
 
     import Single from './Single.vue';
+    import Multiple from './Multiple.vue';
 
     export default {
 
@@ -31,7 +33,8 @@
         },
 
         components: {
-            'single' : Single
+            'single' : Single,
+            'multiple' : Multiple
         },
 
         methods: {

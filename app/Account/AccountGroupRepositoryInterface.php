@@ -34,7 +34,8 @@ interface AccountGroupRepositoryInterface extends Repository
     public function findJournalGroups($id);
 
     /**
+     * @param array $journals
      * @return Collection
      */
-    public function findByListRawWithAccounts();
+    public function findByListRawWithAccounts($journals);
 }

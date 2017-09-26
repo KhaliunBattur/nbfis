@@ -19,7 +19,7 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="(t, index) in transaction">
-                                    <td><input v-model="t.description" v-validate="'required|max:255|'" name="description"
+                                    <td><input v-model="t.description" v-validate="'required|max:255'" name="description"
                                                :class="{'form-control input-sm': true, 'is-danger': errors.has('description') }"
                                                type="text" class="form-control input-sm" maxlength="255"  /></td>
                                         <span v-if="errors.has('description')" class="help is-danger">{{ errors.first('description') }}</span>
@@ -56,7 +56,6 @@
     export default {
 
         props: ['account'],
-
 
         components:  {
             'money': Money,
