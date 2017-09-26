@@ -112,4 +112,36 @@ class JournalRepository implements JournalRepositoryInterface
         return $this->model
             ->whereNull('root_id')->get();
     }
+
+    /**
+     * @param $code
+     * @return array
+     */
+    public function findByCode($code)
+    {
+        $journal_ids = [];
+
+        $journals = $this->model->where('form_code_transaction', $code)->get();
+
+        foreach ($journals as $journal)
+        {
+            array_push($journal_ids, $journal->getKey());
+
+            $journal_ids = $this->recursive($journal_ids, $journal->children);
+        }
+
+        return $journal_ids;
+    }
+
+    private function recursive($array, $children)
+    {
+        foreach ($children as $child)
+        {
+            array_push($array, $child->getKey());
+
+            $array = $this->recursive($array, $child->children);
+        }
+
+        return $array;
+    }
 }

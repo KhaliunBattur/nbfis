@@ -37,6 +37,14 @@ class Journal extends Model
     /**
      * @return HasMany
      */
+    public function children()
+    {
+        return $this->hasMany(Journal::class, 'root_id');
+    }
+
+    /**
+     * @return HasMany
+     */
     public function accounts()
     {
         return $this->hasMany(Account::class, 'journal_id');

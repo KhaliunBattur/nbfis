@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Transaction;
 
 use App\Account\AccountGroupRepositoryInterface;
 use App\Account\AccountRepositoryInterface;
-use App\Account\JournalRepository;
+use App\Account\JournalRepositoryInterface;
 use App\Season\Season;
 use App\Season\SeasonRepositoryInterface;
 use App\Support\AccountBalanceChecker;
+use App\Transaction\Receivable;
 use App\Transaction\Transaction;
 use App\Transaction\TransactionRepositoryInterface;
 use Dompdf\Exception;
@@ -33,7 +34,7 @@ class TransactionController extends Controller
      */
     private $seasonRepository;
     /**
-     * @var JournalRepository
+     * @var JournalRepositoryInterface
      */
     private $journalRepository;
     /**
@@ -47,10 +48,10 @@ class TransactionController extends Controller
      * @param AccountGroupRepositoryInterface $groupRepository
      * @param AccountRepositoryInterface $accountRepository
      * @param SeasonRepositoryInterface $seasonRepository
-     * @param JournalRepository $journalRepository
+     * @param JournalRepositoryInterface $journalRepository
      * @param AccountBalanceChecker $checker
      */
-    public function __construct(TransactionRepositoryInterface $transactionRepository, AccountGroupRepositoryInterface $groupRepository, AccountRepositoryInterface $accountRepository, SeasonRepositoryInterface $seasonRepository, JournalRepository $journalRepository, AccountBalanceChecker $checker)
+    public function __construct(TransactionRepositoryInterface $transactionRepository, AccountGroupRepositoryInterface $groupRepository, AccountRepositoryInterface $accountRepository, SeasonRepositoryInterface $seasonRepository, JournalRepositoryInterface $journalRepository, AccountBalanceChecker $checker)
     {
         $this->transactionRepository = $transactionRepository;
         $this->groupRepository = $groupRepository;
@@ -76,12 +77,19 @@ class TransactionController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function lists()
+    public function lists(Request $request)
     {
+        $journal_ids = null;
 
-        $accounts = $this->groupRepository->findByListRawWithAccounts();
+        if($request->has('code'))
+        {
+            $journal_ids = $this->journalRepository->findByCode($request->get('code'));
+        }
+
+        $accounts = $this->groupRepository->findByListRawWithAccounts($journal_ids);
 
         return response()->json([
             'model' => $accounts
@@ -115,7 +123,14 @@ class TransactionController extends Controller
             {
                 if($request->has('multiple'))
                 {
-                    return $this->saveGeneralMulti($request, $season);
+                    if($request->has('receivable'))
+                    {
+                        return $this->saveReceivable($request, $season);
+                    }
+                    else
+                    {
+                        return $this->saveGeneralMulti($request, $season);
+                    }
                 }
                 else
                 {
@@ -130,6 +145,101 @@ class TransactionController extends Controller
         else
         {
             throw new \Exception('Тайлант үеийн огноо таарахгүй байна', 403);
+        }
+    }
+
+    private function saveReceivable($request, $season)
+    {
+        $rules = [
+            'receipt_number' => 'required',
+            'transaction_date' => 'required',
+            'customer_id' => 'required',
+            'account_id' => 'required',
+            'to_transaction' => 'required',
+            'description' => 'required'
+        ];
+
+        if($request->get('type') == 'debit')
+        {
+            $rules['receivable_id'] = 'required';
+        }
+
+        if($request->get('type') == 'credit')
+        {
+            $rules['closing_date'] = 'required';
+        }
+
+        $this->validate($request, $rules);
+
+        try
+        {
+            $response = \DB::transaction(function() use ($request, $season){
+
+                $request->request->add(['user_id' => \Auth::user()->getKey()]);
+                $request->request->add(['season_id' => $season->getKey()]);
+
+                $parameters = $request->all();
+
+                $parameters['transaction_number'] = $this->transactionRepository->getTransactionNumber($parameters['transaction_date']);
+
+                $account = $this->accountRepository->findById($parameters['account_id']);
+
+                //transaction
+                $parameters['amount'] = 0;
+
+                foreach ($request->get('to_transaction') as $transaction)
+                {
+                    $parameters['amount'] += ($transaction['amount'] * $transaction['to_exchange']);
+                }
+
+                $this->checker->can_transaction($season->getKey(), $account, $parameters);
+
+                if($parameters['type'] == 'debit')
+                {
+                    $parameters['transaction_able'] = 'App\Transaction\Receivable';
+                    $parameters['transaction_able_id'] = $parameters['receivable_id'];
+                }
+                else
+                {
+                    $receivable = Receivable::create([
+                        'customer_id' => $parameters['customer_id'],
+                        'closing_date' => $parameters['closing_date']
+                    ]);
+                    $parameters['transaction_able'] = 'App\Transaction\Receivable';
+                    $parameters['transaction_able_id'] = $receivable->getKey();
+                }
+
+                Transaction::create($parameters);
+
+                //to transaction
+                $parameters['type'] = $parameters['type'] == 'credit' ? 'debit' : 'credit';
+
+                $parameters['transaction_able'] = null;
+                $parameters['transaction_able_id'] = null;
+
+                foreach($request->get('to_transaction') as $transaction)
+                {
+                    $to_account = $this->accountRepository->findById($transaction['to_account_id']);
+
+                    $parameters['account_id'] = $to_account->getKey();
+                    $parameters['to_account_id'] = $account->getKey();
+
+                    $parameters['amount'] = $transaction['amount'];
+                    $parameters['exchange'] = $transaction['to_exchange'];
+
+                    $this->checker->can_transaction($season->getKey(), $to_account, $parameters);
+
+                    Transaction::create($parameters);
+                }
+
+                return response()->json(['result' => true]);
+
+            });
+
+            return $response;
+        }catch (\Exception $exception)
+        {
+            return response()->json(['message' => $exception->getMessage()], 406);
         }
     }
 

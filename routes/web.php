@@ -49,6 +49,7 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
     Route::group(['namespace' => 'Transaction', 'as' => 'transaction.'], function (){
        Route::resource('transaction', 'TransactionController');
        Route::get('account/list', ['as' => 'list', 'uses' => 'TransactionController@lists']);
+       Route::get('receivable/list/open', ['as' => 'list', 'uses' => 'ReceivableController@openList']);
     });
 
     Route::resource('season', 'Season\SeasonController', ['expect' => ['create']]);

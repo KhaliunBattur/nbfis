@@ -31,4 +31,10 @@ interface JournalRepositoryInterface extends Repository
      * @return Collection
      */
     public function rootLists();
+
+    /**
+     * @param $code
+     * @return array
+     */
+    public function findByCode($code);
 }

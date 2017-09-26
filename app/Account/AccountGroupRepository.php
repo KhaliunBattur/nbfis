@@ -102,14 +102,29 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
     }
 
     /**
-     * @return Collection
+     * @param array $journals
+     * @return Collection|void
      */
-    public function findByListRawWithAccounts()
+    public function findByListRawWithAccounts($journals)
     {
-        return $this->model
-            ->join('account', 'account_group.id', '=', 'account.group_id')
-            ->groupBy('account_group.id')
-            ->select('account_group.*')
-            ->with(['accounts', 'accounts.currency'])->get();
+        if(is_null($journals))
+        {
+            return $this->model
+                ->join('account', 'account_group.id', '=', 'account.group_id')
+                ->groupBy('account_group.id')
+                ->select('account_group.*')
+                ->with(['accounts', 'accounts.currency'])->get();
+        }
+        else
+        {
+            return $this->model
+                ->join('account', 'account_group.id', '=', 'account.group_id')
+                ->groupBy('account_group.id')
+                ->select('account_group.*')
+                ->with(['accounts', 'accounts.currency'])
+                ->whereIn('account.journal_id', $journals)
+                ->get();
+        }
     }
+
 }
