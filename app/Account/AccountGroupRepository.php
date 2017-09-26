@@ -121,7 +121,9 @@ class AccountGroupRepository implements AccountGroupRepositoryInterface
                 ->join('account', 'account_group.id', '=', 'account.group_id')
                 ->groupBy('account_group.id')
                 ->select('account_group.*')
-                ->with(['accounts', 'accounts.currency'])
+                ->with(['accounts' => function($query) use($journals) {
+                    $query->whereIn('journal_id', $journals);
+                }, 'accounts.currency'])
                 ->whereIn('account.journal_id', $journals)
                 ->get();
         }

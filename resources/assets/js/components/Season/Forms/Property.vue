@@ -19,9 +19,9 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="form-group">
+                                            <div class="form-group" style="pointer-events: none">
                                                 <label class="control-label">Хөрөнгийн ангилал</label>
-                                                <select2 v-if="groups.length > 0" :options="groups" :value="tran.transaction_able.group_id" :selected="tran" v-on:input="selectGroup"></select2>
+                                                <select2-group v-if="accounts.length > 0" :options="accounts" :value="tran.transaction_able.account_id" :selected="tran" v-on:input="selectGroup" readonly="readonly"></select2-group>
                                             </div>
                                         </td>
                                         <td>
@@ -159,6 +159,7 @@
 
     import {Money} from 'v-money'
     import Select2 from './../../Helper/Select2.vue';
+    import Select2Group from './../../Helper/Select2Group.vue';
 
     export default {
 
@@ -183,7 +184,7 @@
                 total: 0,
                 class_name: "Property",
                 branches: [],
-                groups: [],
+                accounts: [],
                 users: [],
                 mode: false,
                 tran: {
@@ -192,7 +193,7 @@
                     amount: 0,
                     transaction_able: {
                         branch_id: null,
-                        group_id: null,
+                        account_id: this.account.id,
                         code: null,
                         name: null,
                         owner_id: null,
@@ -213,13 +214,14 @@
         },
         components:  {
             'money': Money,
-            'select2': Select2
+            'select2': Select2,
+            'select2-group': Select2Group
         },
 
         methods: {
             selectGroup(data)
             {
-                this.tran.transaction_able.group_id = data.value;
+                this.tran.transaction_able.account_id = data.value;
             },
             selectBranch(data)
             {
@@ -270,7 +272,7 @@
                     amount: 0,
                     transaction_able: {
                         branch_id: null,
-                        group_id: null,
+                        account_id: this.account.id,
                         code: null,
                         name: null,
                         owner_id: null,
@@ -321,7 +323,7 @@
             init()
             {
                 this.fetchBranch();
-                this.fetchGroups();
+                this.fetchAccounts();
                 this.fetchUsers();
                 if(this.account['breakdown'] !== undefined)
                 {
@@ -334,11 +336,11 @@
                     this.branches = response.data.branches;
                 })
             },
-            fetchGroups()
+            fetchAccounts()
             {
-                axios.get('/api/journal/' + this.account.journal.id + '/group').then(response => {
-                    this.groups = response.data.groups;
-                })
+                axios.get('/api/account/list?code=00003').then(response => {
+                    this.accounts = response.data.model
+                }).catch(errors => {})
             },
             fetchUsers()
             {

@@ -109,6 +109,7 @@
         <form-00011 v-on:modalHided="fetchTransaction"></form-00011>
         <form-00012 v-on:modalHided="fetchTransaction"></form-00012>
         <form-00002 v-on:modalHided="fetchTransaction"></form-00002>
+        <form-00003 v-on:modalHided="fetchTransaction"></form-00003>
     </section>
 </template>
 
@@ -121,6 +122,7 @@
     import Form_00011 from './Form/Journal/form_00011.vue';
     import Form_00012 from './Form/Journal/form_00012.vue';
     import Form_00002 from './Form/Journal/form_00002.vue';
+    import Form_00003 from './Form/Journal/form_00003.vue';
 
     export default {
 
@@ -193,7 +195,8 @@
             'form-00001': Form_00001,
             'form-00011': Form_00011,
             'form-00012': Form_00012,
-            'form-00002': Form_00002
+            'form-00002': Form_00002,
+            'form-00003': Form_00003
         },
 
         methods: {
