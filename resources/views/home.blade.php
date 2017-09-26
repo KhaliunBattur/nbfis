@@ -135,6 +135,19 @@
                             <i class="fa fa-credit-card"></i> <span>Данс</span>
                         </router-link>
                     </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-list"></i> <span>Журнал</span> <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>
+                                <router-link to="/transaction"><i class="fa fa-circle-o"></i> Ерөнхий журнал</router-link>
+                            </li>
+                            <li v-for="journal in journals">
+                                <router-link :to="'/transaction/' + journal.id"><i class="fa fa-circle-o"></i> @{{ journal.name }}</router-link>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </section>
             <!-- /.sidebar -->
@@ -234,16 +247,5 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
-    <script>
-        $(window).click(function(event) {
-            var sidebar = $(".control-sidebar");
-            if (
-                $(".settingsBtn").has(event.target).length == 0 && !$(".settingsBtn").is(event.target)
-                && $(".control-sidebar-tabs").has(event.target).length == 0 && !$(".control-sidebar-tabs").is(event.target)
-            ){
-                $(".control-sidebar").removeClass("control-sidebar-open")
-            }
-        });
-    </script>
 </body>
 </html>

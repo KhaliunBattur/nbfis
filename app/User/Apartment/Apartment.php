@@ -6,7 +6,7 @@
  * Time: 5:04 PM
  */
 
-namespace App\User\Bail_apart;
+namespace App\User\Apartment;
 
 
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +17,7 @@ class Apartment extends Model
     /**
      * @var string
      */
-    protected $table = 'bail_apart';
+    protected $table = 'bail_apartment';
 
     /**
      * @var array

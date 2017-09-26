@@ -14,7 +14,7 @@
                             <div class="container-fluid" style="padding: 0px">
                                 <div class="btn-group pull-left" role="group">
                                     <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Шинээр нэмэх
+                                        Шинээр гүйлгээ
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">

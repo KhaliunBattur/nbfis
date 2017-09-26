@@ -31,7 +31,8 @@
                             swal({
                                 title: 'Амжилттай!',
                                 text: 'Aмжилттай устгагдлаа',
-                                type: 'success'
+                                type: 'success',
+                                confirmButtonText: "Хаах"
                             }, function(){
                                 self.$emit('destroyed');
                             })

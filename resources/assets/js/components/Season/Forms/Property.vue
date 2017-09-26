@@ -23,13 +23,13 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Хөрөнгийн ангилал</label>
-                                                <select2 :options="groups" :value="tran.transaction_able.group_id" :selected="tran" v-on:input="selectGroup"></select2>
+                                                <select2 v-if="groups.length > 0" :options="groups" :value="tran.transaction_able.group_id" :selected="tran" v-on:input="selectGroup"></select2>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Байрлал</label>
-                                                <select2 :options="branches" :value="tran.transaction_able.branch_id" :selected="tran" v-on:input="selectBranch"></select2>
+                                                <select2 v-if="branches.length > 0" :options="branches" :value="tran.transaction_able.branch_id" :selected="tran" v-on:input="selectBranch"></select2>
                                             </div>
                                         </td>
                                     </tr>
@@ -51,7 +51,7 @@
                                         <td>
                                             <div class="form-group">
                                                 <label class="control-label">Эд хариуцагч</label>
-                                                <select2 :options="users" :value="tran.transaction_able.owner_id" :selected="tran" v-on:input="selectOwner"></select2>
+                                                <select2 v-if="users.length > 0" :options="users" :value="tran.transaction_able.owner_id" :selected="tran" v-on:input="selectOwner"></select2>
                                             </div>
                                         </td>
                                     </tr>
@@ -136,10 +136,10 @@
                                 <tr v-for="(tran, index) in transaction">
                                     <td>{{ tran.transaction_able.code }}</td>
                                     <td>{{ tran.transaction_able.name }}</td>
-                                    <td>{{ tran.transaction_able.unit_amount }}</td>
-                                    <td>{{ tran.transaction_able.count }}</td>
-                                    <td>{{ tran.transaction_able.unit_amount * tran.transaction_able.count }}</td>
-                                    <td>{{ Math.round(tran.amount * 100) / 100 }}</td>
+                                    <td>{{ formatPrice(tran.transaction_able.unit_amount) }}</td>
+                                    <td>{{ formatPrice(tran.transaction_able.count) }}</td>
+                                    <td>{{ formatPrice(tran.transaction_able.unit_amount * tran.transaction_able.count) }}</td>
+                                    <td>{{ formatPrice(Math.round(tran.amount * 100) / 100) }}</td>
                                     <td>
                                         <button class="btn btn-xs btn-warning" @click="edit(tran)"><i class="fa fa-pencil"></i></button>
                                         <button class="btn btn-xs btn-danger" @click="destroy(tran)"><i class="fa fa-trash-o"></i></button>
@@ -329,6 +329,10 @@
             destroy(t)
             {
                 this.transaction.splice(this.transaction.indexOf(t), 1)
+                let total = this.transaction.reduce(function(prev, t){
+                    return parseFloat(prev) + parseFloat(t.amount);
+                }, 0);
+                this.total = total;
             },
             formatPrice(amount) {
                 let val = (amount/1).toFixed(2).replace(',', '.')

@@ -211,3 +211,7 @@ $panel-default-heading-bg: #fff;
   font-size: 10px;
   color: #929292;
 }
+
+.chosen-container .chosen-results {
+  max-height: 65px !important;
+}

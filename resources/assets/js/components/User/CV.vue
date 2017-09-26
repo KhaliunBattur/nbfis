@@ -128,8 +128,8 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 30%;">Хүсэж буй зээлийн хэмжээ:</td>
-                                            <td style="width: 70%;"><input class="form-control input-sm" v-model="user.request.loan_term"   /></td>
+                                            <td style="width: 30%;">Хүсэж буй зээлийн хэмжээ: </td>
+                                            <td style="width: 70%;"><input class="form-control input-sm" v-model="user.request.loan_term"/></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 30%;">Зээлийн эргэн төлөх хугацаа:</td>
@@ -789,14 +789,14 @@
                         expense: null
                     },
                     request: {
-                        loanable: null,
-                        loanable_id: null,
+                        pledge_type: null,
                         loan_term: null,
                         period_time: null,
                         payment_day: null,
+                        loanable: null,
+                        loanable_id: null,
                         expire_date: null,
-//                        pledge_type:null,
-                        description:null
+                        description: null,
                     },
                     apartment: {
                         commissioned: null,
@@ -952,7 +952,6 @@
                             this.owner_type = response.data.owner_type;
                             this.relations = response.data.relations;
                             this.loading = true;
-                            console.log(this.user.works.organization);
                         }
 
                     })

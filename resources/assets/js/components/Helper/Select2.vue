@@ -1,5 +1,6 @@
 <template>
-    <select v-model="selectedValue">
+    <select class="chosen form-control" v-if="options" v-model="selectedValue">
+        <option></option>
         <option v-for="option in options" :value="option.id">{{ option.text }}</option>
     </select>
 </template>
@@ -25,20 +26,24 @@
         },
         mounted: function() {
             var self = this;
-            $(this.$el).select2({
-                placeholder: 'Сонгох...',
-                allowClear: true
+            $(this.$el).chosen({
+                allow_single_deselect: true,
+                width: '99%'
+            }).on('change', function(){
+                var data = {
+                    value: this.value,
+                    selected: self.selected
+                }
+                self.$emit('input', data)
             })
-                .on('change', function(){
-                    var data = {
-                        value: this.value,
-                        selected: self.selected
-                    }
-                    self.$emit('input', data)
-                })
+        },
+        watch:{
+            value(val){
+                $(this.$el).val(val).trigger('chosen:updated');
+            }
         },
         destroyed: function(){
-            $(this.$el).off().select2('destroy')
+            $(this.$el).off().chosen('destroy')
         }
     }
 

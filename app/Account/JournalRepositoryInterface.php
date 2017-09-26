@@ -26,4 +26,9 @@ interface JournalRepositoryInterface extends Repository
      * @return Collection
      */
     public function findWithAccounts();
+
+    /**
+     * @return Collection
+     */
+    public function rootLists();
 }

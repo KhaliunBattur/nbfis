@@ -103,4 +103,13 @@ class JournalRepository implements JournalRepositoryInterface
             ->havingRaw('account_count > 0')
             ->get();
     }
+
+    /**
+     * @return Collection
+     */
+    public function rootLists()
+    {
+        return $this->model
+            ->whereNull('root_id')->get();
+    }
 }

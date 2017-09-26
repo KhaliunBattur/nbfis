@@ -2,16 +2,16 @@
 /**
  * Created by PhpStorm.
  * User: uugan
- * Date: 9/9/2017
- * Time: 3:24 PM
+ * Date: 9/8/2017
+ * Time: 5:08 PM
  */
 
-namespace App\User\Bail_other;
+namespace App\User\Apartment;
+
 use App\Core\Repository;
 use illuminate\Database\Eloquent\Collection;
 
-
-interface OtherRepositoryInterface extends Repository
+interface ApartRepositoryInterface extends Repository
 {
     public function findByUserAll($id);
 }

@@ -119,4 +119,16 @@ class JournalController extends Controller
             'lists' => $journals
         ]);
     }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rootLists()
+    {
+        $journals = $this->journalRepository->rootLists();
+
+        return response()->json([
+            'lists' => $journals
+        ]);
+    }
 }

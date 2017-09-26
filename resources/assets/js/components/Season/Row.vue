@@ -52,7 +52,7 @@
                             <div v-if="!acc.currency.is_current">
                                 <money :value="parseFloat(acc.balance) * acc.exchange" v-bind="money" readonly="readonly" class="input-sm form-control" @input="selectInput(acc.balance)"></money>
                             </div>
-                            <div class="input-group-btn">
+                            <div class="input-group-addon" v-if="!acc.currency.is_current">
                                 ₮
                             </div>
                         </div>

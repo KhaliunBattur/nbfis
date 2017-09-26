@@ -81,7 +81,7 @@ class TransactionController extends Controller
     public function lists()
     {
 
-        $accounts = $this->accountRepository->findByListRaw();
+        $accounts = $this->groupRepository->findByListRawWithAccounts();
 
         return response()->json([
             'model' => $accounts
@@ -160,11 +160,6 @@ class TransactionController extends Controller
                 $exchange = $parameters['exchange'];
                 $to_exchange = $parameters['to_exchange'];
 
-                if(!$this->checker->can_transaction($season->getKey(), $account, $to_account, $parameters['amount'], $parameters['type'], $parameters['exchange'], $parameters['to_exchange']))
-                {
-                    throw new Exception('Дансны үлдэгдэл хүрэлцэхгүй байна', 403);
-                }
-
                 if($account->currency->is_current == 1)
                 {
                     $parameters['amount'] = $amount * $exchange;
@@ -177,6 +172,8 @@ class TransactionController extends Controller
                 }
 
                 $parameters['transaction_number'] = $this->transactionRepository->getTransactionNumber($parameters['transaction_date']);
+
+                $this->checker->can_transaction($season->getKey(), $account, $parameters);
 
                 Transaction::create($parameters);
 
@@ -194,6 +191,8 @@ class TransactionController extends Controller
                     $parameters['amount'] = $amount;
                     $parameters['exchange'] = $exchange;
                 }
+
+                $this->checker->can_transaction($season->getKey(), $to_account, $parameters);
 
                 Transaction::create($parameters);
 

@@ -6,7 +6,7 @@
  * Time: 2:31 PM
  */
 
-namespace App\User\Bail_car;
+namespace App\User\Car;
 
 use App\Core\Repository;
 use illuminate\Database\Eloquent\Collection;

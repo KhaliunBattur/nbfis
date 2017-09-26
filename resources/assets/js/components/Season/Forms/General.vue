@@ -23,7 +23,7 @@
                                                :class="{'form-control input-sm': true, 'is-danger': errors.has('description') }"
                                                type="text" class="form-control input-sm" maxlength="255"  /></td>
                                         <span v-if="errors.has('description')" class="help is-danger">{{ errors.first('description') }}</span>
-                                    <td><money v-model="t.amount" v-validate="'required|min_value:0.001|confirmed'"
+                                    <td><money v-model="t.amount" v-validate="'required|min_value:0.001'"
                                                :class="{'form-control input-sm': true, 'is-danger': errors.has('amount') }"
                                                name="amount" class="form-control input-sm"
                                                v-bind="money"  @input="selectInput(t.amount)" ></money></td>
@@ -105,23 +105,22 @@
             saveBreakDown()
             {
                     this.$validator.validate();
-                    if(!this.errors.any())
-                    {
+                    if(!this.errors.any()) {
                         if (this.total === 0) {
                             return;
                         }
                         let data = {
                             total: this.total,
                             transaction: this.transaction,
-                            class_name: null
-                        }
+                            class_name: null,
+                        };
                         this.transaction = [
                             {
                                 id: 0,
                                 description: 'Эхний үлдэгдэл',
                                 amount: 0
                             }
-                        ]
+                        ];
                         this.total = 0;
                         this.selectedValue = 0;
                         this.$emit('saved', data);
@@ -135,6 +134,10 @@
 
             destroy(t) {
                 this.transaction.splice(this.transaction.indexOf(t), 1)
+                let total = this.transaction.reduce(function(prev, t){
+                    return parseFloat(prev) + parseFloat(t.amount);
+                }, 0);
+                this.total = total;
             },
             formatPrice(amount) {
                 let val = (amount / 1).toFixed(2).replace(',', '.')

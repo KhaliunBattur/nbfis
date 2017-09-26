@@ -25,7 +25,7 @@
                                                :class="{'form-control input-sm': true, 'is-danger': errors.has('description') }" maxlength="255" /></td>
                                         <span v-if="errors.has('description')" class="help is-danger">{{ errors.first('description') }}</span>
                                     <td style="min-width: 150px">
-                                        <select2 :options="options" :value="t.transaction_able.customer_id" :selected="t" v-on:input="selectCustomer"></select2>
+                                        <select2 v-if="options.length > 0" :options="options" :value="t.transaction_able.customer_id" :selected="t" v-on:input="selectCustomer"></select2>
                                     </td>
                                     <td><input type="text" class="form-control input-sm"  v-pick="t.transaction_able.closing_date"
                                                v-model="t.transaction_able.closing_date"  /> </td>
@@ -166,6 +166,10 @@
             destroy(t)
             {
                 this.transaction.splice(this.transaction.indexOf(t), 1)
+                let total = this.transaction.reduce(function(prev, t){
+                    return parseFloat(prev) + parseFloat(t.amount);
+                }, 0);
+                this.total = total;
             },
             formatPrice(amount) {
                 let val = (amount/1).toFixed(2).replace(',', '.')
