@@ -46,20 +46,20 @@
                                         <label class="control-label">Тооцоо</label>
                                         <br />
                                         <div class="radio-inline">
-                                            <input name="type" type="radio" v-model="transaction.type" value="credit" checked="checked"> Үүсгэх
+                                            <input name="type" type="radio" v-model="transaction.type" value="credit" checked="checked"> {{ label_credit }}
                                         </div>
                                         <div class="radio-inline">
-                                            <input name="type" type="radio" v-model="transaction.type" value="debit"> Хаах
+                                            <input name="type" type="radio" v-model="transaction.type" value="debit"> {{ label_debit }}
                                         </div>
                                     </div>
-                                    <div class="form-group pull-left" style="margin-left: 30px" v-if="transaction.type === 'credit'">
+                                    <div class="form-group pull-left" style="margin-left: 30px" v-if="(transaction.type === 'credit' && account_type == 'passive') || (transaction.type === 'debit' && account_type == 'active')">
                                         <label class="control-label">Тооцоо хаах огноо</label>
                                         <input type="text" class="form-control input-sm" v-model="transaction.closing_date" v-pick />
                                         <div class="text-danger" v-if="errorMessages.closing_date">
                                             {{ errorMessages.closing_date[0] }}
                                         </div>
                                     </div>
-                                    <div class="form-group pull-left" style="margin-left: 30px" v-if="transaction.type === 'debit'">
+                                    <div class="form-group pull-left" style="margin-left: 30px" v-if="(transaction.type === 'credit' && account_type == 'active') || (transaction.type === 'debit' && account_type == 'passive')">
                                         <label class="control-label">Өглөг авлага сонгох</label>
                                         <select2 v-if="receivables.length > 0" :options="receivables" :value="transaction.receivable_id" :selected="transaction" v-on:input="selectReceivable"></select2>
                                         <div class="text-danger" v-if="errorMessages.receivable_id">
@@ -172,6 +172,9 @@
                 to_accounts: [],
                 total: 0,
                 receivables: [],
+                label_credit: 'Үүсгэх',
+                label_debit: 'Хаах',
+                account_type: 'passive',
                 transaction: {
                     receipt_number: null,
                     transaction_date: null,
@@ -283,6 +286,17 @@
                 this.transaction.exchange = parseFloat(account.currency.exchange);
                 this.transaction.currency_id = account.currency_id;
                 this.transaction.marker = account.currency.marker;
+                this.account_type = account.type
+                if(this.account_type === 'active')
+                {
+                    this.label_credit = 'Хаах';
+                    this.label_debit = 'Үүсгэх';
+                }
+                else
+                {
+                    this.label_credit = 'Үүсгэх';
+                    this.label_debit = 'Хаах';
+                }
             },
             selectCustomer(data)
             {

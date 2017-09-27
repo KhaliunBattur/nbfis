@@ -260,6 +260,11 @@ class TransactionController extends Controller
      */
     private function saveReceivable($request, $season)
     {
+        if(!$request->has('account_id'))
+        {
+            return response()->json(['message' => 'Данс сонгоогүй байна'], 406);
+        }
+
         $rules = [
             'receipt_number' => 'required',
             'transaction_date' => 'required',
@@ -269,12 +274,14 @@ class TransactionController extends Controller
             'description' => 'required'
         ];
 
-        if($request->get('type') == 'debit')
+        $account = $this->accountRepository->findById($request->get('account_id'));
+
+        if(($request->get('type') == 'debit' && $account->type == 'passive') || ($request->get('type') == 'credit' && $account->type == 'active'))
         {
             $rules['receivable_id'] = 'required';
         }
 
-        if($request->get('type') == 'credit')
+        if(($request->get('type') == 'debit' && $account->type == 'active') || ($request->get('type') == 'credit' && $account->type == 'passive'))
         {
             $rules['closing_date'] = 'required';
         }
@@ -283,7 +290,7 @@ class TransactionController extends Controller
 
         try
         {
-            $response = \DB::transaction(function() use ($request, $season){
+            $response = \DB::transaction(function() use ($request, $season, $account){
 
                 $request->request->add(['user_id' => \Auth::user()->getKey()]);
                 $request->request->add(['season_id' => $season->getKey()]);
@@ -291,8 +298,6 @@ class TransactionController extends Controller
                 $parameters = $request->all();
 
                 $parameters['transaction_number'] = $this->transactionRepository->getTransactionNumber($parameters['transaction_date']);
-
-                $account = $this->accountRepository->findById($parameters['account_id']);
 
                 //transaction
                 $parameters['amount'] = 0;
