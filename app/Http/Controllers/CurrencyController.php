@@ -63,7 +63,8 @@ class CurrencyController extends Controller
                 'result' => !is_null($currency)
             ]);
 
-        }else
+        }
+        else
         {
             $currency = $this->currencyRepository->findById($request->get('id'));
 

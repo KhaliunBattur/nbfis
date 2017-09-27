@@ -1,9 +1,9 @@
 <template>
-    <div class="modal fade" id="accountForm" tabindex="-1" role="dialog" aria-labelledby="accountFormLabel" v-if="account"  @click.self="checkError">
+    <div class="modal fade" id="accountForm" tabindex="-1" role="dialog" aria-labelledby="accountFormLabel" v-if="account" v-bind:clear="checkError"  @click.self="checkError">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click.self="checkError" ><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="checkError" ><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="accountFormLabel">{{ title }}</h4>
                 </div>
                 <div class="modal-body">
@@ -11,8 +11,8 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Харья бүлэг <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <v-select v-validate="'required'" name="group" v-model="account.group" :debounce="250" :on-search="fetchGroup" :on-change="setAccountNumber()" :options="groups" label="name" placeholder="Харьяа бүлэг"></v-select>
-                                <span v-if="errors.has('group')" class="help is-danger">{{ errors.first('group') }}</span>
+                                <v-select  v-model="account.group" :debounce="250" :on-search="fetchGroup" :on-change="setAccountNumber()" :options="groups" label="name" placeholder="Харьяа бүлэг"></v-select>
+                                <!--<span v-if="errors.has('group')" class="help is-danger">{{ errors.first('group') }}</span>-->
                                 <div class="text-danger" v-if="errorMessages.group">
                                     {{ errorMessages.group[0] }}
                                 </div>
@@ -61,8 +61,8 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Журнал <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <v-select v-validate="'required'" name="journal" v-model="account.journal" :debounce="250" :on-search="fetchJournal" :options="journals" label="name" placeholder="Журнал..." ></v-select>
-                                <span v-if="errors.has('journal')" class="help is-danger">{{ errors.first('journal') }}</span>
+                                <v-select  v-model="account.journal" :debounce="250" :on-search="fetchJournal" :options="journals" label="name" placeholder="Журнал..." ></v-select>
+                                <!--<span v-if="errors.has('journal')" class="help is-danger">{{ errors.first('journal') }}</span>-->
                                 <div class="text-danger" v-if="errorMessages.journal">
                                     {{ errorMessages.journal[0] }}
                                 </div>
@@ -71,8 +71,8 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Валют <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <v-select v-validate="'required'" name="currency" v-model="account.currency" :debounce="250" :on-search="fetchCurrency" :options="currencies" label="name" placeholder="Валют..."></v-select>
-                                <span v-if="errors.has('currency')" class="help is-danger">{{ errors.first('currency') }}</span>
+                                <v-select  v-model="account.currency" :debounce="250" :on-search="fetchCurrency" :options="currencies" label="name" placeholder="Валют..."></v-select>
+                                <!--<span v-if="errors.has('currency')" class="help is-danger">{{ errors.first('currency') }}</span>-->
                                 <div class="text-danger" v-if="errorMessages.currency">
                                     {{ errorMessages.currency[0] }}
                                 </div>
@@ -81,7 +81,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Банк</label>
                             <div class="col-sm-9">
-                                <v-select v-validate="'required'" v-model="account.bank" :debounce="250" :on-search="fetchBank" :options="banks" label="name" placeholder="Банк..."></v-select>
+                                <v-select  v-model="account.bank" :debounce="250" :on-search="fetchBank" :options="banks" label="name" placeholder="Банк..."></v-select>
                             </div>
                         </div>
                         <div class="form-group" v-if="account.bank">
@@ -136,6 +136,7 @@
                     name: null,
                     currency: null,
                 },
+                loading:false
             }
         },
 
@@ -192,27 +193,27 @@
             },
             reset()
             {
-                return {
-                    groups: [],
-                    currencies: [],
-                    journals: [],
-                    banks: [],
-                    selected: null,
-                    errorMessages: {
+                    this.groups = [];
+                    this.currencies = [];
+                    this.journals = [];
+                    this.banks = [];
+                    this.selected = [];
+                    this.errorMessages = {
                         account_number: null,
                         code: null,
                         group: null,
                         journal: null,
                         name: null,
                         currency: null,
-                    },
-                }
+                    };
+                console.log(this.groups);
             },
             checkError()
             {
                 if(this.errors.any()){
                     this.errors.clear();
                     this.reset();
+                    this.$emit('reset');
                 }
             },
             save()
@@ -229,9 +230,7 @@
                                 type: 'success',
                                 timer: 3000
                             }, function(){
-                                $('#accountForm' + self.account.id).modal('hide',function () {
-                                    self.errors.clear();
-                                });
+                                $('#accountForm' + self.account.id).modal('hide');
                                 self.$emit('saved');
                             });
                         }

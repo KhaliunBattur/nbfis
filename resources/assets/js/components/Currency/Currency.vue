@@ -74,9 +74,9 @@
                                             <sort :column="'name'" :query="query" :text="'Нэр'" v-on:sorted="sort"></sort>
                                             <th>Ханш</th>
                                             <th>Тэмдэг</th>
-                                            <th class="action-controls-sm">
-
-                                            </th>
+                                            <th class="action-controls-sm"></th>
+                                            <th>Сонгох</th>
+                                            <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -88,6 +88,8 @@
                                                 <button class="btn btn-warning btn-xs" @click="edit(currency)"><i class="fa fa-pencil-square"></i></button>
                                                 <delete-confirm :item="currency" :url="'/api/currency/' + currency.id" v-on:destroyed="destroy(currency)"></delete-confirm>
                                             </td>
+                                            <td><input name="currency" type="radio" v-model="currency.is_current" @change="CurCheck(currency.id)"/></td>
+                                            <td>{{currency.is_current}}</td>
                                         </tr>
                                         </tbody>
                                         <tfoot>
@@ -125,6 +127,7 @@
         data()
         {
             return {
+
                 mode:'Вальют нэмэх',
                 model: [],
                 loading: false,
@@ -133,7 +136,8 @@
                     id: 0,
                     name: null,
                     exchange:null,
-                    maker:null
+                    maker:null,
+                    is_current:false
                 },
                 query: {
                     page: 1,
@@ -163,6 +167,7 @@
         },
 
         methods: {
+
             changePerPage()
             {
                 this.fetchCurrency();
@@ -192,9 +197,18 @@
                 this.currency = currency;
                 this.mode = 'Вальют засварлах'
             },
+            CurCheck(currency)
+            {
+
+                if(currency === this.currency.id)
+                {
+                    console.log(this.currency.id);
+                }
+            },
             save()
             {
                 var self = this;
+                console.log(this.currency);
                 axios.post('/api/currency', this.currency).then(response => {
                     if(response.data.result)
                     {
@@ -227,14 +241,14 @@
             next()
             {
                 if(this.model.next_page_url) {
-                    this.query.page++
+                    this.query.page++;
                     this.fetchCurrency()
                 }
             },
             prev()
             {
                 if(this.model.prev_page_url) {
-                    this.query.page--
+                    this.query.page--;
                     this.fetchCurrency()
                 }
             },

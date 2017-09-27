@@ -825,7 +825,8 @@
                         path:null,
                         file:null
                     }
-                },loading:false,
+                },
+                loading:false,
                 money:{
                     decimal:'.',
                     thousands:',',
@@ -1014,20 +1015,18 @@
                 this.$refs.profUpload8.removeAllFiles();
                 this.$refs.profUpload9.removeAllFiles();
 
-                return {
-
-                        mediaUpload: '/api/cv/filesUpload',
-                        nextBudgetId:1,
-                        nextAssetId:1,
-                        nextExpenseId:1,
-                        nextEmergencyId:1,
-                        nextFamilyId:1,
-                        nextCreditId:1,
-                        nextWorkId:1,
-                        owner_types:null,
+                        this.mediaUpload= '/api/cv/filesUpload';
+                        this.nextBudgetId = 1;
+                        this.nextAssetId = 1;
+                        this.nextExpenseId = 1;
+                        this.nextEmergencyId = 1;
+                        this.nextFamilyId = 1;
+                        this.nextCreditId = 1;
+                        this.nextWorkId = 1;
+                        this.owner_types = null;
 //                        pledge_types:null,
-                        advertisements:null,
-                        user: {
+                        this.advertisements = null;
+                        this.user = {
                             image: '',
                             first_name: '',
                             name: '',
@@ -1135,8 +1134,8 @@
                                 path:null,
                                 file:null
                             }
-                        },loading: true,
-                    }
+                        };
+                        this.loading = true;
             },
 
             setDataCredit(credits,element)
