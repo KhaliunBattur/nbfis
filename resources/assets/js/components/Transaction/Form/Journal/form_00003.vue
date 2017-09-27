@@ -8,7 +8,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="table-responsive with-chosen">
-                        <table class="table table-bordered property-table" style="font-size: 12px !important">
+                        <table class="table table-bordered property-table table-sm-text">
                             <tbody>
                             <tr>
                                 <td>
@@ -51,7 +51,7 @@
                                 <td>
                                     <div class="form-group">
                                         <label class="control-label">Огноо</label>
-                                        <input type="text" class="form-control input-sm" v-on:changeDate="setStartDate" v-model="transaction.transaction_date" v-pick />
+                                        <input type="text" class="form-control input-sm" v-model="transaction.transaction_date" v-pick="transaction.transaction_date" v-on:input="setStartDate" />
                                     </div>
                                 </td>
                                 <td>
@@ -152,6 +152,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <div class="pull-left text-danger">
+                        {{ errorMessages.message }}
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm" @click="saveTransaction">Хадгалах</button>
                 </div>
             </div>
         </div>
@@ -167,23 +171,7 @@
     export default {
 
         watch: {
-            'transaction.to_transaction': function() {
-                this.calculate();
-            },
-            'transaction.to_transaction.to_exchange': function() {
-                this.calculate();
-            },
-            'transaction.to_transaction.amount': function() {
-                this.calculate();
-            },
-            'transaction.to_transaction.to_account_id': function() {
-                this.calculate();
-            },
-            'transaction.type': function()
-            {
-                this.fetchReceivable();
-                this.calculate();
-            }
+
         },
 
         data()
@@ -286,42 +274,9 @@
                 }
 
             },
-            addToTransaction()
-            {
-                this.transaction.to_transaction.push({
-                    to_account_id: null,
-                    to_exchange: 0,
-                    amount: 0,
-                    currency_id: null
-                })
-            },
-            deleteTransaction(tran)
-            {
-                this.transaction.to_transaction.splice(this.transaction.to_transaction.indexOf(tran), 1);
-                this.calculate();
-            },
-            selectReceivable(data)
-            {
-                this.transaction.receivable_id = data.value;
-
-                var receivable = null;
-
-                this.receivables.forEach(entry => {
-                    if(entry.id == data.value)
-                    {
-                        receivable = entry;
-                    }
-                });
-            },
             selectToAccount(data)
             {
-                let index = this.transaction.to_transaction.indexOf(data.selected);
-                this.transaction.to_transaction[index].to_account_id = data.value;
-                this.setCurrency(data, index);
-                this.calculate();
-            },
-            setCurrency(data, index)
-            {
+                this.transaction.to_account_id = data.value;
                 var account = null;
                 this.to_accounts.forEach(entry => {
                     entry.accounts.forEach(acc => {
@@ -331,9 +286,8 @@
                         }
                     })
                 });
-
-                this.transaction.to_transaction[index].currency_id = account.currency_id;
-                this.transaction.to_transaction[index].to_exchange = parseFloat(account.currency.exchange);
+                this.transaction.to_exchange = parseFloat(account.currency.exchange);
+                this.transaction.to_currency_id = account.currency_id;
             },
             selectAccount(data)
             {
@@ -358,7 +312,7 @@
             saveTransaction()
             {
                 var self = this;
-                axios.post('/api/transaction?journal=0&multiple=true&receivable=true', this.transaction).then(response => {
+                axios.post('/api/transaction?journal=0&property=true', this.transaction).then(response => {
                     swal({
                         title : 'Амжилттай',
                         text: 'Гүйлгээ хийгдлээ',
@@ -371,19 +325,23 @@
                             customer_id: null,
                             account_id: null,
                             description: null,
-                            receivable_id: null,
-                            closing_date: null,
-                            type: 'credit',
-                            exchange: 0,
+                            type: 'debit',
+                            exchange: 1,
+                            marker: '₮',
                             currency_id: null,
-                            to_transaction: [
-                                {
-                                    to_account_id: null,
-                                    to_exchange: 0,
-                                    amount: 0,
-                                    currency_id: null
-                                }
-                            ]
+                            to_account_id: null,
+                            to_exchange: 0,
+                            to_currency_id: null,
+                            //property
+                            code: null,
+                            name: null,
+                            branch_id: null,
+                            owner_id: null,
+                            unit_amount: 0,
+                            count: 1,
+                            use_time_count: 0,
+                            start_date: null,
+                            amount: 0
                         };
                         self.errorMessages = {
                             account_id: null,
@@ -391,11 +349,9 @@
                             description: null,
                             receipt_number: null,
                             to_account_id: null,
-                            receivable_id: null,
-                            transaction_date: null,
                             closing_date: null
                         };
-                        $('#form_00002').modal('hide');
+                        $('#form_00003').modal('hide');
                     });
                 }).catch(errors => {
                     this.errorMessages = errors.response.data;
@@ -431,14 +387,6 @@
                 axios.get('/api/receivable/list/open').then(response => {
                     this.receivables = response.data.list
                 }).catch(errors => {})
-            },
-            calculate()
-            {
-                var sum = 0;
-                this.transaction.to_transaction.forEach(entry => {
-                    sum += (parseFloat(entry.amount) * parseFloat(entry.to_exchange))
-                });
-                this.total = sum;
             },
             hiddenModal()
             {

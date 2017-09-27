@@ -8,6 +8,7 @@ use App\Account\JournalRepositoryInterface;
 use App\Season\Season;
 use App\Season\SeasonRepositoryInterface;
 use App\Support\AccountBalanceChecker;
+use App\Transaction\Property;
 use App\Transaction\Receivable;
 use App\Transaction\Transaction;
 use App\Transaction\TransactionRepositoryInterface;
@@ -134,7 +135,14 @@ class TransactionController extends Controller
                 }
                 else
                 {
-                    return $this->saveGeneral($request, $season);
+                    if($request->has('property'))
+                    {
+                        return $this->saveProperty($request, $season);
+                    }
+                    else
+                    {
+                        return $this->saveGeneral($request, $season);
+                    }
                 }
             }
             else
@@ -148,6 +156,108 @@ class TransactionController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @param Season $season
+     * @return \Illuminate\Http\JsonResponse
+     */
+    private function saveProperty($request, $season)
+    {
+        $this->validate($request, [
+            'receipt_number' => 'required',
+            'transaction_date' => 'required',
+            'customer_id' => 'required',
+            'account_id' => 'required',
+            'to_account_id' => 'required',
+            'description' => 'required'
+        ]);
+
+        try
+        {
+            $response = \DB::transaction(function() use ($request, $season){
+
+                $request->request->add(['user_id' => \Auth::user()->getKey()]);
+                $request->request->add(['season_id' => $season->getKey()]);
+
+                $parameters = $request->all();
+
+                $account = $this->accountRepository->findById($parameters['account_id']);
+                $to_account = $this->accountRepository->findById($parameters['to_account_id']);
+
+                $amount = $parameters['amount'];
+                $exchange = $parameters['exchange'];
+                $to_exchange = $parameters['to_exchange'];
+
+                if($account->currency->is_current == 1)
+                {
+                    $parameters['amount'] = $amount * $exchange;
+                    $parameters['exchange'] = 1;
+                }
+                else
+                {
+                    $parameters['amount'] = $amount;
+                    $parameters['exchange'] = $exchange;
+                }
+
+                $parameters['transaction_number'] = $this->transactionRepository->getTransactionNumber($parameters['transaction_date']);
+
+                $this->checker->can_transaction($season->getKey(), $account, $parameters);
+
+                $property = Property::create([
+                    'account_id' => $account->getKey(),
+                    'branch_id' => $parameters['branch_id'],
+                    'code' => $parameters['code'],
+                    'name' => $parameters['name'],
+                    'owner_id' => $parameters['owner_id'],
+                    'unit_amount' => $parameters['unit_amount'],
+                    'count' => $parameters['count'],
+                    'start_date' => $parameters['start_date'],
+                    'use_time_count' => $parameters['use_time_count']
+                ]);
+
+                $parameters['transaction_able'] = 'App\Transaction\Property';
+                $parameters['transaction_able_id'] = $property->getKey();
+
+                Transaction::create($parameters);
+
+                $parameters['transaction_able'] = null;
+                $parameters['transaction_able_id'] = null;
+
+                $parameters['account_id'] = $to_account->getKey();
+                $parameters['to_account_id'] = $account->getKey();
+                $parameters['type'] = $parameters['type'] == 'credit' ? 'debit' : 'credit';
+
+                if($to_account->currency->is_current == 1)
+                {
+                    $parameters['amount'] = $amount * $exchange;
+                    $parameters['exchange'] = 1;
+                }
+                else
+                {
+                    $parameters['amount'] = $amount;
+                    $parameters['exchange'] = $exchange;
+                }
+
+                $this->checker->can_transaction($season->getKey(), $to_account, $parameters);
+
+                Transaction::create($parameters);
+
+                return response()->json(['result' => true]);
+
+            });
+
+            return $response;
+        }catch (\Exception $exception)
+        {
+            return response()->json(['message' => $exception->getMessage()], 406);
+        }
+    }
+
+    /**
+     * @param $request
+     * @param $season
+     * @return \Illuminate\Http\JsonResponse
+     */
     private function saveReceivable($request, $season)
     {
         $rules = [
@@ -243,6 +353,11 @@ class TransactionController extends Controller
         }
     }
 
+    /**
+     * @param $request
+     * @param $season
+     * @return \Illuminate\Http\JsonResponse
+     */
     private function saveGeneralMulti($request, $season)
     {
         $this->validate($request, [

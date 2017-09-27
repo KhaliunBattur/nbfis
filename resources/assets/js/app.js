@@ -53,7 +53,7 @@ Vue.directive('pick', {
 Vue.directive('modal', {
     "twoWay": true,
     bind: function(el, binding, vnode) {
-        $(el).on('show.bs.modal', function(e) {
+        $(el).on('shown.bs.modal', function(e) {
             el.dispatchEvent(new Event('showModal', { target: e.target }))
         });
         $(el).on('hidden.bs.modal', function(e) {
