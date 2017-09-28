@@ -76,20 +76,18 @@
                                             <th>Тэмдэг</th>
                                             <th class="action-controls-sm"></th>
                                             <th>Сонгох</th>
-                                            <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr v-for="currency in model.data">
-                                            <td>{{currency.name }}</td>
+                                            <td>{{currency.name}}</td>
                                             <td>{{currency.exchange}}</td>
                                             <td>{{currency.marker}}</td>
                                             <td>
                                                 <button class="btn btn-warning btn-xs" @click="edit(currency)"><i class="fa fa-pencil-square"></i></button>
                                                 <delete-confirm :item="currency" :url="'/api/currency/' + currency.id" v-on:destroyed="destroy(currency)"></delete-confirm>
                                             </td>
-                                            <td><input name="currency" type="radio" v-model="currency.is_current" @change="CurCheck(currency.id)"/></td>
-                                            <td>{{currency.is_current}}</td>
+                                            <td><input name="Currency" type="radio" :value="currency.is_current" @change="CurCheck(currency)" /></td>
                                         </tr>
                                         </tbody>
                                         <tfoot>
@@ -127,11 +125,11 @@
         data()
         {
             return {
-
                 mode:'Вальют нэмэх',
                 model: [],
                 loading: false,
                 roots: [],
+                cur:null,
                 currency: {
                     id: 0,
                     name: null,
@@ -199,16 +197,39 @@
             },
             CurCheck(currency)
             {
+                var self = this;
 
-                if(currency === this.currency.id)
+                if(currency.is_current === 0 || currency.is_current === null)
                 {
-                    console.log(this.currency.id);
+                    currency.is_current = 1;
+                    axios.patch('api/currency/'+currency.id,currency).then(response => {
+                        if(response.data.result)
+                        {
+                            swal({
+                                title:'Амжилттай',
+                                text: 'Вальют сонгогдлоо',
+                                type: 'success',
+                                timer: 3000
+                            },function () {
+                                self.currency={
+                                    id:0,
+                                    name:null
+                                };
+                                self.errorMessages = {
+                                    name: null
+                                };
+                                self.fetchCurrency();
+                            })
+                        }
+                    }).catch(error =>{
+                        this.errorMessages = error.response.data;
+                    })
                 }
             },
             save()
             {
                 var self = this;
-                console.log(this.currency);
+
                 axios.post('/api/currency', this.currency).then(response => {
                     if(response.data.result)
                     {

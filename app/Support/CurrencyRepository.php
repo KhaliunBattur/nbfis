@@ -76,6 +76,17 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * @param $id
+     * @return Collection|static[]
+     */
+    public function notIn($id)
+    {
+        return $this->model
+            ->where(function($query) use($id){
+                $query->where('id','<>','%'. $id .'%');
+            })->get();
+    }
+    /**
      * @param $get
      * @return mixed
      */
