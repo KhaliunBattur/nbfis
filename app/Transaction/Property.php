@@ -23,7 +23,7 @@ class Property extends Model
     /**
      * @var array
      */
-    protected $fillable = ['group_id', 'branch_id', 'code', 'name', 'owner_id', 'unit_amount', 'count', 'start_date', 'use_time_count'];
+    protected $fillable = ['account_id', 'branch_id', 'code', 'name', 'owner_id', 'unit_amount', 'count', 'start_date', 'use_time_count'];
 
     /**
      * @return MorphOne
