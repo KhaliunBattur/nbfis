@@ -24,18 +24,19 @@ class ReceivableController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function openList()
+    public function openList(Request $request)
     {
-        $receivables = $this->receivableRepository->findOpen();
+        $receivables = $this->receivableRepository->findOpen($request);
 
         $array = [];
 
         foreach ($receivables as $receivable)
         {
             $item['id'] = $receivable->getKey();
-            $item['text'] = $receivable->customer->first_name . ' '. $receivable->customer->name .' ' . $receivable->closing_date .'-ны өдөр төлөх ' . number_format($receivable->transaction->amount * $receivable->transaction->exchange) .'₮';
+            $item['text'] = $receivable->customer->first_name . ' '. $receivable->customer->name .' ' . $receivable->closing_date .'-ны өдөр '. ($receivable->transaction->account->type == 'active' ? 'авах ' : 'төлөх ') . number_format($receivable->transaction->amount * $receivable->transaction->exchange) .'₮';
             $item['amount'] = $receivable->transaction->amount;
             $item['exchange'] = $receivable->transaction->exchange;
             array_push($array, $item);

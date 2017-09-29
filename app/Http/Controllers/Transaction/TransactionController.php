@@ -70,6 +70,11 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
+        if($request->has('journal_id'))
+        {
+            $request->request->add(['accounts' => $this->accountRepository->findIdsListByJournal($request->get('journal_id'))]);
+        }
+
         $transaction = $this->transactionRepository->findByPaginate($request->get('per_page'), $request->all());
 
         return response()->json([
@@ -118,7 +123,7 @@ class TransactionController extends Controller
     {
         $season = $this->seasonRepository->findCurrentByObject();
 
-        if(date_create($season->open_date) < date_create($request->get('transaction_date')))
+        if(date_create($season->open_date) <= date_create($request->get('transaction_date')))
         {
             if($request->get('journal') == 0)
             {
@@ -309,12 +314,12 @@ class TransactionController extends Controller
 
                 $this->checker->can_transaction($season->getKey(), $account, $parameters);
 
-                if($parameters['type'] == 'debit')
+                if(($parameters['type'] == 'debit' && $account->type == 'passive') || ($parameters['type'] == 'credit' && $account->type == 'active'))
                 {
                     $parameters['transaction_able'] = 'App\Transaction\Receivable';
                     $parameters['transaction_able_id'] = $parameters['receivable_id'];
                 }
-                else
+                else if(($parameters['type'] == 'debit' && $account->type == 'active') || ($parameters['type'] == 'credit' && $account->type == 'passive'))
                 {
                     $receivable = Receivable::create([
                         'customer_id' => $parameters['customer_id'],
@@ -322,6 +327,10 @@ class TransactionController extends Controller
                     ]);
                     $parameters['transaction_able'] = 'App\Transaction\Receivable';
                     $parameters['transaction_able_id'] = $receivable->getKey();
+                }
+                else
+                {
+                    throw new \Exception('Алдаа танигдсангүй! Дахин оролдоно уу', 403);
                 }
 
                 Transaction::create($parameters);

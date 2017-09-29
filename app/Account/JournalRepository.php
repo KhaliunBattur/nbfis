@@ -133,6 +133,11 @@ class JournalRepository implements JournalRepositoryInterface
         return $journal_ids;
     }
 
+    /**
+     * @param $array
+     * @param $children
+     * @return mixed
+     */
     private function recursive($array, $children)
     {
         foreach ($children as $child)

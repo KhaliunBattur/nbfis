@@ -24,4 +24,10 @@ interface AccountRepositoryInterface extends Repository
      * @return Collection
      */
     public function findByListRaw();
+
+    /**
+     * @param $get
+     * @return array
+     */
+    public function findIdsListByJournal($get);
 }

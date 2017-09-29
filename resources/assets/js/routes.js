@@ -35,7 +35,8 @@ import Balance from './components/Season/Balance.vue'
 
 //Гүйлгээ
 import Transaction from './components/Transaction/Transaction.vue';
-import General from './components/Transaction/General.vue'
+import General from './components/Transaction/General.vue';
+import JournalTransaction from './components/Transaction/Journal.vue';
 
 Vue.use(VueRouter)
 
@@ -99,7 +100,7 @@ const router = new VueRouter({
                     path: '', component: General
                 },
                 {
-                    path: ':id', component: General
+                    path: ':id', component: JournalTransaction
                 }
             ]
         },

@@ -78,12 +78,44 @@ class JournalController extends Controller
 
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function listHaveAccount()
     {
         $journal = $this->journalRepository->findWithAccounts();
 
         return response()->json([
             'lists' => $journal
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getJournal($id, Request $request)
+    {
+        $journal = $this->journalRepository->findById($id);
+
+        $array = [];
+
+        foreach (\Config::get('enums.codes') as $key => $codes)
+        {
+            if($journal->form_code != $key)
+            {
+                continue;
+            }
+            foreach($codes['forms'] as $key1 => $code)
+            {
+                $array[$key1] = $code['name'];
+            }
+        }
+
+        return response()->json([
+            'journal' => $journal,
+            'codes' => $array
         ]);
     }
 

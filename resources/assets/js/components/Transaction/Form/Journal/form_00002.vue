@@ -148,6 +148,9 @@
             'transaction.to_transaction': function() {
                 this.calculate();
             },
+            'transaction.account_id': function() {
+                this.fetchReceivable();
+            },
             'transaction.to_transaction.to_exchange': function() {
                 this.calculate();
             },
@@ -159,7 +162,10 @@
             },
             'transaction.type': function()
             {
-                this.fetchReceivable();
+                if(this.transaction.account_id !== null)
+                {
+                    this.fetchReceivable();
+                }
                 this.calculate();
             }
         },
@@ -361,12 +367,14 @@
                 axios.get('/api/account/list').then(response => {
                     this.to_accounts = response.data.model
                 }).catch(errors => {})
-
-                this.fetchReceivable();
             },
             fetchReceivable()
             {
-                axios.get('/api/receivable/list/open').then(response => {
+                axios.get('/api/receivable/list/open', {
+                    params: {
+                        type: this.account_type
+                    }
+                }).then(response => {
                     this.receivables = response.data.list
                 }).catch(errors => {})
             },

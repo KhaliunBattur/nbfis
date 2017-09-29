@@ -70,12 +70,36 @@ class ReceivableRepository implements ReceivableRepositoryInterface
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @return Collection
      */
-    public function findOpen()
+    public function findOpen($request)
     {
-        return $this->model->whereHas('transaction', function($query){
-            $query->where('type', '!=', 'debit')->orWhereNull('type');
+        return $this->model->whereHas('transaction', function($query) use($request) {
+            if($request->get('type') == 'passive')
+            {
+                $query->where(function($query){
+                    $query->where('type', '!=', 'debit')->whereHas('account', function($query){
+                        $query->where('type', 'passive');
+                    });
+                })->orWhere(function($query){
+                    $query->whereNull('type')->whereHas('account', function($query){
+                        $query->where('type', 'passive');
+                    });
+                });
+            }
+            else
+            {
+                $query->where(function($query){
+                    $query->where('type', '!=', 'credit')->whereHas('account', function($query){
+                        $query->where('type', 'active');
+                    });
+                })->orWhere(function($query){
+                    $query->whereNull('type')->whereHas('account', function($query){
+                        $query->where('type', 'active');
+                    });
+                });
+            }
         })->with(['transaction', 'customer'])->get();
     }
 }
