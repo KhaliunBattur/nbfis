@@ -20,6 +20,10 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UserUpdated' => [
             'App\Listeners\UserUpdatedListener',
         ],
+
+        'App\Events\TransactionDestroyed' => [
+            'App\Listeners\TransactionDestroyedListener',
+        ],
     ];
 
     /**

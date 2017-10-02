@@ -1,0 +1,263 @@
+<template>
+    <div>
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box" v-if="journal">
+                    <div class="box-header with-border">
+                        <div class="box-title">
+                            {{ journal.name }}
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div>
+                            <div class="container-fluid" style="padding: 0px">
+                                <div class="btn-group pull-left" role="group">
+                                    <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Шинээр гүйлгээ
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li v-for="(journal, index) in journals"><a class="links" @click="showModal(index)">{{ journal }}</a></li>
+                                    </ul>
+                                </div>
+                                <!--<button type="button" class="btn btn-success btn-sm" @click="showModal(journal.form_code)">Шинээр гүйлгээ</button>-->
+                                <div class="input-group input-group-sm input-small with-margin-bottom pull-right">
+                                    <input type="text" v-model="query.per_page" class="form-control" />
+                                    <div class="input-group-btn">
+                                        <button class="btn" @click="changePerPage()">-р хуудаслах</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
+                                <table class="table table-bordered table-hover" style="font-size: 12px">
+                                    <thead>
+                                    <tr>
+                                        <th>Гүйлгээний дугаар</th>
+                                        <th>Данс</th>
+                                        <th>Огноо</th>
+                                        <th>Гүйлгээний утга</th>
+                                        <th>Дебет</th>
+                                        <th>Кредит</th>
+                                        <th>Харилцагч</th>
+                                        <th>Үүсэгсэн</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="tran in model.data">
+                                        <td>{{ tran.transaction_number }}</td>
+                                        <td>
+                                            {{ tran.account.name }}
+                                            <div class="text-block">{{ tran.account.account_number }}</div>
+                                        </td>
+                                        <td>{{ tran.transaction_date }}</td>
+                                        <td>{{ tran.description }}</td>
+                                        <td>
+                                            <div v-if="tran.type == 'debit'">
+                                                {{ formatPrice(tran.amount * tran.exchange) }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div v-if="tran.type == 'credit'">
+                                                {{ formatPrice(tran.amount * tran.exchange) }}
+                                            </div>
+                                        </td>
+                                        <td>{{ tran.customer.first_name + ' ' + tran.customer.name }}</td>
+                                        <td>
+                                            {{ tran.user.name }}
+                                            <div class="text-block">{{ tran.created_at }}</div>
+                                        </td>
+                                        <td>
+                                            <delete-confirm :item="tran" :url="'/api/transaction/' + tran.transaction_number" v-on:destroyed="destroy(tran)"></delete-confirm>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b>Орлого: {{ formatPrice(sumOfDebit) }}</b></td>
+                                        <td><b>Зарлага: {{ formatPrice(sumOfCredit) }}</b></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="9">
+                                            <div class="pull-left">
+                                                <span>Нийт: {{ model.total }} мөр бичлэгийн {{ model.from }} -с {{ model.to }} харуулж байна</span>
+                                            </div>
+                                            <div class="pull-right">
+                                                <a @click="prev()" v-if="model.prev_page_url" class="btn btn-default btn-xs"><i class="fa fa-arrow-left"></i> Өмнөх</a>
+                                                <a @click="next()" v-if="model.next_page_url" class="btn btn-default btn-xs">Дараах <i class="fa fa-arrow-right"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form-00001 v-on:modalHided="fetchTransaction"></form-00001>
+        <form-00011 v-on:modalHided="fetchTransaction"></form-00011>
+        <form-00012 v-on:modalHided="fetchTransaction"></form-00012>
+        <form-00002 v-on:modalHided="fetchTransaction"></form-00002>
+        <form-00003 v-on:modalHided="fetchTransaction"></form-00003>
+    </div>
+</template>
+
+<script>
+
+    import Sort from './../../Helper/Sort.vue';
+    import DeleteConfirm from './../../Helper/DeleteConfirm.vue';
+    import Form_00001 from './../Form/Journal/form_00001.vue';
+    import Form_00011 from './../Form/Journal/form_00011.vue';
+    import Form_00012 from './../Form/Journal/form_00012.vue';
+    import Form_00002 from './../Form/Journal/form_00002.vue';
+    import Form_00003 from './../Form/Journal/form_00003.vue';
+
+    export default {
+
+        props: ['journals', 'journal'],
+
+        watch: {
+            '$route.params.id': function(){
+                this.fetchTransaction();
+            }
+        },
+
+        data() {
+            return {
+                closed: true,
+                loading: true,
+                advancedSearch: false,
+                model: {},
+                query: {
+                    page: 1,
+                    journal_id: null,
+                    column: 'transaction_number',
+                    direction: 'asc',
+                    per_page: 10,
+                    user_type: 'all',
+                    search: {
+                        name: null
+                    }
+                }
+            }
+        },
+
+        computed: {
+            sumOfCredit() {
+                if(this.model.data)
+                {
+                    let credits = this.model.data.filter(function(transaction){
+                        return transaction.type == 'credit'
+                    });
+
+                    return credits.reduce(function(prev, transaction) {
+                        return parseFloat(prev) + parseFloat(transaction.amount * transaction.exchange)
+                    }, 0)
+                }
+                else
+                {
+                    return 0;
+                }
+            },
+            sumOfDebit()
+            {
+                if(this.model.data)
+                {
+                    let credits = this.model.data.filter(function(transaction){
+                        return transaction.type == 'debit'
+                    });
+
+                    return credits.reduce(function(prev, transaction) {
+                        return parseFloat(prev) + parseFloat(transaction.amount * transaction.exchange)
+                    }, 0)
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        },
+
+        created()
+        {
+            this.query.journal_id = this.journal.id;
+            this.fetchTransaction();
+        },
+
+        components: {
+            'sort' : Sort,
+            'delete-confirm': DeleteConfirm,
+            'form-00001': Form_00001,
+            'form-00011': Form_00011,
+            'form-00012': Form_00012,
+            'form-00002': Form_00002,
+            'form-00003': Form_00003
+        },
+
+        methods: {
+            showModal(journal)
+            {
+                if(journal === null)
+                {
+                    $('#general_transactionModal').modal('show');
+                }else
+                {
+                    $('#form_' + journal).modal('show');
+                }
+            },
+            changePerPage()
+            {
+                this.fetchTransaction();
+            },
+            sort(query)
+            {
+                this.query = query;
+
+                this.fetchTransaction();
+            },
+            next()
+            {
+                if(this.model.next_page_url) {
+                    this.query.page++
+                    this.fetchTransaction()
+                }
+            },
+            prev()
+            {
+                if(this.model.prev_page_url) {
+                    this.query.page--
+                    this.fetchTransaction()
+                }
+            },
+            destroy(transaction)
+            {
+                this.fetchTransaction();
+            },
+            fetchTransaction()
+            {
+                axios.get('/api/transaction', {
+                    params: this.query
+                }).then(response => {
+                    this.model = response.data.transaction;
+                    this.loading = false
+                }).catch(errors => {});
+            },
+            formatPrice(amount) {
+                let val = (amount/1).toFixed(2).replace(',', '.')
+                return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            },
+        }
+
+    }
+
+</script>

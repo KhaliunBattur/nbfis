@@ -92,6 +92,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function findIdsListByJournal($get)
     {
-        return $this->model->where('journal_id', $get)->pluck('id')->toArray();
+        return $this->model->whereIn('journal_id', $get)->pluck('id')->toArray();
     }
 }

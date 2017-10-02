@@ -13,6 +13,7 @@ use App\Account\Account;
 use App\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Transaction extends Model
@@ -34,6 +35,14 @@ class Transaction extends Model
     public function transactionAble()
     {
         return $this->morphTo('transactionAble', 'transaction_able', 'transaction_able_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function otherTransactions()
+    {
+        return $this->hasMany(Transaction::class, 'transaction_number', 'transaction_number')->with('account', 'user');
     }
 
     /**

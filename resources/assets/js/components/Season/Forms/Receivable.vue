@@ -7,13 +7,14 @@
                     <h4 class="modal-title" id="breakdownModalLabel">Балансын задаргаа оруулах (Өглөг авлага)</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="table-responsive">
-                        <div style="max-height: 250px; float: left; width: 100%">
+                    <div class="table-responsive with-chosen">
+                        <div>
                             <table class="table table-bordered" style="max-height: 200px;">
                                 <thead>
                                 <tr>
                                     <th>Гүйлгээний утга</th>
                                     <th>Харилцагч</th>
+                                    <th>Нээсэн огноо</th>
                                     <th>Тооцоо хаагдах огноо</th>
                                     <th>Мөнгөн дүн</th>
                                     <th></th>
@@ -25,6 +26,7 @@
                                     <td style="min-width: 150px">
                                         <select2 v-if="options.length > 0" :options="options" :value="t.transaction_able.customer_id" :selected="t" v-on:input="selectCustomer"></select2>
                                     </td>
+                                    <td><input type="text" class="form-control input-sm" v-pick="t.transaction_able.start_date" v-model="t.transaction_able.start_date" /> </td>
                                     <td><input type="text" class="form-control input-sm" v-pick="t.transaction_able.closing_date" v-model="t.transaction_able.closing_date" /> </td>
                                     <td><money v-model="t.amount" v-bind="money" class="input-sm form-control" @input="selectInput(t.amount)"></money></td>
                                     <td>
@@ -80,6 +82,7 @@
                         transaction_able: {
                             id: 0,
                             customer_id: null,
+                            start_date: null,
                             closing_date: null
                         }
                     }
@@ -108,6 +111,7 @@
                     transaction_able: {
                         id: 0,
                         customer_id: null,
+                        start_date: null,
                         closing_date: null
                     }
                 });
@@ -140,6 +144,7 @@
                         transaction_able: {
                             id: 0,
                             customer_id: null,
+                            start_date: null,
                             closing_date: null
                         }
                     }

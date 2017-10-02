@@ -388,6 +388,53 @@
             },
             hiddenModal()
             {
+                Object.assign(this.$data, {
+                    accounts: [],
+                    customers: [],
+                    to_accounts: [],
+                    total: 0,
+                    receivables: [],
+                    label_credit: 'Үүсгэх',
+                    label_debit: 'Хаах',
+                    account_type: 'passive',
+                    transaction: {
+                        receipt_number: null,
+                        transaction_date: null,
+                        customer_id: null,
+                        account_id: null,
+                        description: null,
+                        receivable_id: null,
+                        closing_date: null,
+                        type: 'credit',
+                        exchange: 1,
+                        marker: '₮',
+                        currency_id: null,
+                        to_transaction: [
+                            {
+                                to_account_id: null,
+                                to_exchange: 0,
+                                amount: 0,
+                                currency_id: null
+                            }
+                        ]
+                    },
+                    errorMessages: {
+                        account_id: null,
+                        customer_id: null,
+                        description: null,
+                        receipt_number: null,
+                        to_account_id: null,
+                        receivable_id: null,
+                        transaction_date: null,
+                        closing_date: null
+                    },
+                    money:{
+                        decimal:'.',
+                        thousands:',',
+                        precision:2,
+                        masked:false
+                    },
+                });
                 this.$emit('modalHided');
             },
             formatPrice(amount) {

@@ -20,7 +20,7 @@
 
             </div>
             <div class="col-lg-1 col-md-1 col-sm-1">
-                <button class="btn btn-xs btn-warning" @click="editGroup(account)"><i class="fa fa-pencil"></i></button>
+                <button class="btn btn-xs btn-warning" @click="editGroup(account)" data-toggle="tooltip" data-placement="top" title="Засварлах" v-tip><i class="fa fa-pencil"></i></button>
                 <delete-confirm :item="group" :url="'/api/account/group/' + account.id" v-on:destroyed="destroyGroup(account)"></delete-confirm>
             </div>
         </div>

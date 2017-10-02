@@ -55,7 +55,7 @@ class ReceivableRepository implements ReceivableRepositoryInterface
      */
     public function findByPaginate($howMany, $params = [])
     {
-        return $this->model->paginate($howMany);
+        return $this->model->with(['transactions', 'customer'])->paginate($howMany);
     }
 
     /**
@@ -79,7 +79,7 @@ class ReceivableRepository implements ReceivableRepositoryInterface
             if($request->get('type') == 'passive')
             {
                 $query->where(function($query){
-                    $query->where('type', '!=', 'debit')->whereHas('account', function($query){
+                    $query->whereHas('account', function($query){
                         $query->where('type', 'passive');
                     });
                 })->orWhere(function($query){
@@ -91,7 +91,7 @@ class ReceivableRepository implements ReceivableRepositoryInterface
             else
             {
                 $query->where(function($query){
-                    $query->where('type', '!=', 'credit')->whereHas('account', function($query){
+                    $query->whereHas('account', function($query){
                         $query->where('type', 'active');
                     });
                 })->orWhere(function($query){
@@ -100,6 +100,6 @@ class ReceivableRepository implements ReceivableRepositoryInterface
                     });
                 });
             }
-        })->with(['transaction', 'customer'])->get();
+        })->where('is_closed', 0)->with(['transaction', 'customer'])->get();
     }
 }
