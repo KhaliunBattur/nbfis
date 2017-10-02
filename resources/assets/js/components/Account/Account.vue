@@ -14,7 +14,7 @@
         <section class="content">
             <!-- Small boxes (Stat box) -->
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-12" v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'" >
                     <div class="box">
                         <div class="box-header with-border">
                             <div class="box-title">
@@ -56,8 +56,8 @@
                 </div>
             </div>
         </section>
-        <group-form-editor :group="group" :title="title" v-modal v-on:saved="saveGroup" v-on:saveGroup="saveGroup" :id="'groupForm' + group.id"></group-form-editor>
-        <account-form-editor :account="account" :title="title" v-modal v-on:saved="saveAccount" :id="'accountForm' + account.id"></account-form-editor>
+        <group-form-editor :group="group" :title="title" v-modal v-on:reset="reset" v-on:saved="saveGroup" v-on:saveGroup="saveGroup" :id="'groupForm' + group.id" ></group-form-editor>
+        <account-form-editor :account="account" :title="title" v-modal v-on:reset="reset"  v-on:saved="saveAccount" :id="'accountForm' + account.id" ></account-form-editor>
     </div>
 </template>
 
@@ -103,7 +103,8 @@
                     root_id: null,
                     root: null
                 },
-                title: 'Шинээр нэмэх'
+                title: 'Шинээр нэмэх',
+                loading:false
             }
         },
 
@@ -118,8 +119,8 @@
             this.fetchRoles();
             this.fetchAccounts();
         },
-
         methods: {
+
             filter()
             {
                 var self = this;
@@ -154,7 +155,11 @@
             },
             createAccount()
             {
-                $('#accountForm' + this.account.id).modal('show');
+                $('#accountForm' + this.account.id).modal('show',function () {
+                    this.$on('clear');
+                    console.log('emit');
+                });
+
             },
             saveGroup()
             {
@@ -186,7 +191,9 @@
             },
             deleteGroup(group)
             {
+                console.log('delete');
                 this.accounts.splice(this.accounts.indexOf(group), 1);
+                this.fetchAccounts();
             },
             fetchAccounts()
             {
@@ -204,6 +211,30 @@
                 }).catch(function (errors) {
                     self.$router.push('/')
                 })
+            },
+            reset()
+            {
+                this.account= {
+                    id: 0,
+                        name: null,
+                        code: null,
+                        account_number: null,
+                        group: null,
+                        journal: null,
+                        currency: null,
+                        bank: null,
+                        bank_account_number: null,
+                        is_temporary: false,
+                        type: 'active'
+                };
+                this.group = {
+                    id: 0,
+                    code: null,
+                    name: null,
+                    root_id: null,
+                    root: null
+                }
+
             }
         }
 

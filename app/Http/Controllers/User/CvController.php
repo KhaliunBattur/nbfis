@@ -110,30 +110,33 @@ class CvController extends Controller
 
         $user = User::create($parameters);
 
-            if($request->has('profilePath'))
-            {
-                Storage::move($parameters['profilePath'],'/images/profile_'.$user['id']);
-                $parameters['image']='/images/profile_'.$user['id'].'/'.$parameters['image'];
-                $user->update($parameters);
-            }
-
-            if($request->has('filePath'))
-            {
-                Storage::move($parameters['filePath'],'/files/file_'.$user['id'] );
-            }
-
-            $user->assets()->createMany($request->get('assets'));
-            $user->workplaces()->createMany($request->get('workplaces'));
-            $user->family()->createMany($request->get('family'));
-            $user->emergencies()->createMany($request->get('emergencies'));
-            $user->budgets()->createMany($request->get('budgets'));
-            $user->expenses()->createMany($request->get('expenses'));
-            $user->activeLoans()->createMany($request->get('aLoans'));
-            $user->Request()->create($request->get('request'));
+//            $user->assets()->createMany($request->get('assets'));
+//            $user->workplaces()->createMany($request->get('workplaces'));
+//            $user->family()->createMany($request->get('family'));
+//            $user->emergencies()->createMany($request->get('emergencies'));
+//            $user->budgets()->createMany($request->get('budgets'));
+//            $user->expenses()->createMany($request->get('expenses'));
+//            $user->activeLoans()->createMany($request->get('active_loans'));
+//            $user->Request()->create($request->get('request'));
+            $user->Apartment()->create($request->get('apartment'));
+            $user->Car()->create($request->get('car'));
+            $user->Other()->create($request->get('other'));
             return $user;
         });
 
         event(new UserCreated($user, 'хэрэглэгч шинээр бүртгэв', 'info'));
+
+        if($request->has('profilePath'))
+        {
+            Storage::move($parameters['profilePath'],'/images/profile_'.$user['id']);
+            $parameters['image']='/images/profile_'.$user['id'].'/'.$parameters['image'];
+            $user->update($parameters);
+        }
+
+        if($request->has('filePath'))
+        {
+            Storage::move($parameters['filePath'],'/files/file_'.$user['id'] );
+        }
 
         return response()->json([
             'result' => !is_null($user)
@@ -177,6 +180,24 @@ class CvController extends Controller
             $expenses = $request->get('expenses');
             $activeLoans = $request->get('aLoans');
             $requests = $request->get('request');
+            $cars = $request->get('car');
+            $apartments = $request->get('apartment');
+            $others = $request->get('other');
+
+            foreach ($cars as $car)
+            {
+                $user->Car()->updateOrcreate($car);
+            }
+
+            foreach ($apartments as $apartment)
+            {
+                $user->Apartment()->updateOrcreate($apartment);
+            }
+
+            foreach ($others as $other)
+            {
+                $user->Other()->updateOrcreate($other);
+            }
 
             foreach ($assets as $asset)
             {

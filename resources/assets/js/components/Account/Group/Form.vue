@@ -68,6 +68,7 @@
         },
 
         methods: {
+
             fetchGroup(search, loading) {
                 loading(true);
                 axios.get('/api/account/group/' + this.group.id + '/others?q=' + search).then(response => {
@@ -89,10 +90,13 @@
                     }, function(){
                         $('#groupForm' + self.group.id).modal('hide');
                         self.$emit('saved');
+
+                        this.errors.clear();
                     })
                 }).catch(errors => {
                     this.errorMessages = errors.response.data;
                     swal('Уучлаарай', 'Амжилтгүй боллоо! Та дахин оролдоно уу', 'error')
+                    this.errors.clear();
                 })
             }
         }

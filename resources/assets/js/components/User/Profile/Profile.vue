@@ -338,10 +338,11 @@
                 axios.get('/api/users/' + this.$route.params.id).then(response => {
                     this.user = response.data.user;
                     this.user.roles = response.data.roles;
-                    this.owner_type= response.data.owner_type;
+                    this.owner_type = response.data.owner_type;
                     this.user.birth_day = null;
                     this.user.age = null;
                     this.setRegister();
+                    console.log(this.user);
                 }).catch(function (response) {
                     swal('Уучлаарай!', 'Хэрэглэгчийн мэдээлэл татаж чадсангүй', 'error')
                 })

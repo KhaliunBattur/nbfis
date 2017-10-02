@@ -22,13 +22,19 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="(t, index) in transaction">
-                                    <td><input type="text" class="form-control input-sm" v-model="t.description" /></td>
+                                    <td><input type="text" class="form-control input-sm" v-model="t.description" name="description" v-validate="'required|max:255'"
+                                               :class="{'form-control input-sm': true, 'is-danger': errors.has('description') }" maxlength="255" /></td>
+                                        <span v-if="errors.has('description')" class="help is-danger">{{ errors.first('description') }}</span>
                                     <td style="min-width: 150px">
                                         <select2 v-if="options.length > 0" :options="options" :value="t.transaction_able.customer_id" :selected="t" v-on:input="selectCustomer"></select2>
                                     </td>
                                     <td><input type="text" class="form-control input-sm" v-pick="t.transaction_able.start_date" v-model="t.transaction_able.start_date" /> </td>
-                                    <td><input type="text" class="form-control input-sm" v-pick="t.transaction_able.closing_date" v-model="t.transaction_able.closing_date" /> </td>
                                     <td><money v-model="t.amount" v-bind="money" class="input-sm form-control" @input="selectInput(t.amount)"></money></td>
+                                    <td><input type="text" class="form-control input-sm"  v-pick="t.transaction_able.closing_date" v-model="t.transaction_able.closing_date"  /> </td>
+                                    <td>
+                                        <money v-model="t.amount" v-bind="money" v-validate="'required|min_value:0.001'" :class="{'form-control input-sm': true, 'is-danger': errors.has('amount') }" name="amount" class="input-sm form-control" @input="selectInput(t.amount)"></money>
+                                        <span v-if="errors.has('amount')" class="help is-danger">{{ errors.first('amount') }}</span>
+                                    </td>
                                     <td>
                                         <button class="btn btn-xs btn-danger" @click="destroy(t)"><i class="fa fa-trash-o"></i></button>
                                     </td>
@@ -65,7 +71,8 @@
                     return parseFloat(prev) + parseFloat(t.amount);
                 }, 0);
                 this.total = total;
-            }
+            },
+
         },
 
         data()
@@ -126,32 +133,43 @@
             },
             saveBreakDown()
             {
-                if(this.total == 0)
+                this.$validator.validateAll();
+                if(!this.errors.any())
                 {
-                    return;
-                }
-                let data = {
-                    total: this.total,
-                    transaction: this.transaction,
-                    class_name: this.class_name
-                }
-
-                this.transaction = [
+                    if(this.total == 0)
                     {
-                        id: 0,
-                        description: 'Эхний үлдэгдэл',
-                        amount: 0,
-                        transaction_able: {
+                        return;
+                    }
+                    let data = {
+                        total: this.total,
+                        transaction: this.transaction,
+                        class_name: this.class_name
+                    }
+
+                    this.transaction = [
+                        {
                             id: 0,
                             customer_id: null,
                             start_date: null,
-                            closing_date: null
+                            closing_date: null,
+                            description: 'Эхний үлдэгдэл',
+                            amount: 0,
+                            transaction_able: {
+                                id: 0,
+                                customer_id: null,
+                                closing_date: null
+                            }
                         }
-                    }
-                ]
-                this.total = 0;
-                this.selectedValue = 0;
-                this.$emit('saved', data);
+                    ]
+                    this.total = 0;
+                    this.selectedValue = 0;
+                    this.$emit('saved', data);
+                }
+                else
+                {
+                    console.log(this.errors);
+                }
+
             },
             destroy(t)
             {

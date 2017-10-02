@@ -6,7 +6,7 @@
  * Time: 5:07 PM
  */
 
-namespace App\User\Bail_apart;
+namespace App\User\Apartment;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;

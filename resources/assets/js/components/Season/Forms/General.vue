@@ -19,8 +19,15 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="(t, index) in transaction">
-                                    <td><input type="text" class="form-control input-sm" v-model="t.description" /></td>
-                                    <td><money v-model="t.amount" v-bind="money" class="input-sm form-control" @input="selectInput(t.amount)"></money></td>
+                                    <td><input v-model="t.description" v-validate="'required|max:255'" name="description"
+                                               :class="{'form-control input-sm': true, 'is-danger': errors.has('description') }"
+                                               type="text" class="form-control input-sm" maxlength="255"  /></td>
+                                        <span v-if="errors.has('description')" class="help is-danger">{{ errors.first('description') }}</span>
+                                    <td><money v-model="t.amount" v-validate="'required|min_value:0.001'"
+                                               :class="{'form-control input-sm': true, 'is-danger': errors.has('amount') }"
+                                               name="amount" class="form-control input-sm"
+                                               v-bind="money"  @input="selectInput(t.amount)" ></money></td>
+                                        <span v-if="errors.has('amount')" class="help is-danger">{{ errors.first('amount') }}</span>
                                     <td>
                                         <button class="btn btn-xs btn-danger" @click="destroy(t)"><i class="fa fa-trash-o"></i></button>
                                     </td>
@@ -50,6 +57,30 @@
 
         props: ['account'],
 
+        components:  {
+            'money': Money,
+        },
+        data()
+        {
+            return {
+                selectedValue: 0,
+                total: 0,
+                amount: '',
+                transaction:[
+                    {
+                        id: 0,
+                        description: 'Эхний үлдэгдэл',
+                        amount: 0
+                    }
+                ],
+                money:{
+                    decimal:'.',
+                    thousands:',',
+                    precision:2,
+                    masked:false
+                },
+            }
+        },
         watch: {
             selectedValue: function() {
                 let total = this.transaction.reduce(function(prev, t){
@@ -58,65 +89,49 @@
                 this.total = total;
             }
         },
-
-        data()
-        {
-            return {
-                selectedValue: 0,
-                total: 0,
-                transaction: [
-                    {
-                        id: 0,
-                        amount: 0
-                    }
-                ],
-                money:{
-                    decimal:'.',
-                    thousands:',',
-                    precision:0,
-                    masked:false
-                },
-            }
-        },
-        components:  {
-            'money': Money,
-        },
-
         methods: {
-            addRow()
-            {
+            addRow() {
                 this.transaction.push({
                     id: 0,
+                    description: 'Эхний үлдэгдэл',
                     amount: 0
                 });
             },
-            selectInput(amount)
-            {
+            selectInput(amount) {
                 this.selectedValue = amount;
             },
+
             saveBreakDown()
             {
-                if(this.total == 0)
-                {
-                    return;
-                }
-                let data = {
-                    total: this.total,
-                    transaction: this.transaction,
-                    class_name: null
-                }
-                this.transaction = [
-                    {
-                        id: 0,
-                        amount: 0
+                    this.$validator.validate();
+                    if(!this.errors.any()) {
+                        if (this.total === 0) {
+                            return;
+                        }
+                        let data = {
+                            total: this.total,
+                            transaction: this.transaction,
+                            class_name: null,
+                        };
+                        this.transaction = [
+                            {
+                                id: 0,
+                                description: 'Эхний үлдэгдэл',
+                                amount: 0
+                            }
+                        ];
+                        this.total = 0;
+                        this.selectedValue = 0;
+                        this.$emit('saved', data);
                     }
-                ]
-                this.total = 0;
-                this.selectedValue = 0;
-                this.$emit('saved', data);
+                    else
+                    {
+                        console.log(this.errors.any());
+                    }
+
             },
-            destroy(t)
-            {
+
+            destroy(t) {
                 this.transaction.splice(this.transaction.indexOf(t), 1)
                 let total = this.transaction.reduce(function(prev, t){
                     return parseFloat(prev) + parseFloat(t.amount);
@@ -124,16 +139,15 @@
                 this.total = total;
             },
             formatPrice(amount) {
-                let val = (amount/1).toFixed(2).replace(',', '.')
+                let val = (amount / 1).toFixed(2).replace(',', '.')
                 return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
             },
-            init()
-            {
-                if(this.account['breakdown'] !== undefined)
-                {
+            init() {
+                if (this.account['breakdown'] !== undefined) {
                     this.transaction = this.account['breakdown'];
                 }
             }
+
         }
 
     }

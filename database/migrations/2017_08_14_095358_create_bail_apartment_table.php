@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class BailOtherTable extends Migration
+class CreateBailApartmentTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,17 @@ class BailOtherTable extends Migration
      */
     public function up()
     {
-        Schema::create('bail_other', function (Blueprint $table) {
+        Schema::create('bail_apartment', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->integer('user_id')->index()->unsigned();
+            $table->date('address');
+            $table->string('apart_meter');
+            $table->string('rooms');
             $table->decimal('price',18,2);
-            $table->text('description');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')
+                ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -29,6 +34,6 @@ class BailOtherTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bail_other');
+        Schema::dropIfExists('bail_apartment');
     }
 }

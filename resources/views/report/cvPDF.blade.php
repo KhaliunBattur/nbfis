@@ -92,11 +92,13 @@
 </head>
 <body>
 <div class="cv">
-    @if ($user->image === '' or $user->image == null)
+
+        @if ($user->image === '' or $user->image == null)
         <img src="" class="cv-picture" />
-    @else
+        @else
         <img src="{{base_path()}}/public{{$user->image}}" class="cv-picture" />
-    @endif
+        @endif
+
     <h1 style="margin-top: 130px">01 ЕРӨНХИЙ МЭДЭЭЛЭЛ</h1>
     <table class="cv-table cv-lg" >
         <tbody>
@@ -313,7 +315,6 @@
             <td style="width: 16%;">{{$member->phone_number}}</td>
         </tr>
         @endforeach
-
         </tbody>
     </table>
     <h1>06 ШААРДЛАГАТАЙ ҮЕД ХОЛБОО БАРИХ ХҮНИЙ МЭДЭЭЛЭЛ</h1>
