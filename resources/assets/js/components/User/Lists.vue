@@ -13,7 +13,7 @@
                         </div>
                     </div>
                     <div class="box-body">
-                        <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'">
+                        <div v-bind:class="loading ? 'table-responsive table-sm loading' : 'table-responsive table-sm'" style="overflow-x: hidden">
                             <div class="input-group input-group-sm input-small with-margin-bottom pull-left">
                                 <input type="text" v-model="query.per_page" class="form-control" @keyup.enter="changePerPage()" />
                                 <div class="input-group-btn">
@@ -120,21 +120,6 @@
             type()
             {
                 this.fetchUser();
-            },
-            'query.search.first_name': function(){
-                this.search();
-            },
-            'query.search.name' : function () {
-                this.search();
-            },
-            'query.search.email' : function () {
-                this.search();
-            },
-            'query.search.phone_number' : function () {
-                this.search();
-            },
-            'query.search.register' : function () {
-                this.search();
             }
         },
 

@@ -104,7 +104,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6" v-if="user.user_type === 'staff'">
+            <div class="col-lg-6">
                 <div class="box">
                     <div class="box-header with-border">
                         <div class="box-title">
