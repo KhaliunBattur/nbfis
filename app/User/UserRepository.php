@@ -72,7 +72,11 @@ class UserRepository implements UserRepositoryInterface
             }
             if(array_key_exists('phone_number', $search) && !is_null($search['phone_number']))
             {
-                $query->where('phone_number', 'LIKE', $search['phone_number'] . '%');
+                $query->where('phone_number', 'LIKE', '%' . $search['phone_number'] . '%');
+            }
+            if(array_key_exists('register', $search) && !is_null($search['register']))
+            {
+                $query->where('register', 'LIKE', $search['register'] . '%');
             }
         })->where(function($query) use($params){
             if($params['type'] != 'all')

@@ -36,9 +36,9 @@
                                 <tr>
                                     <sort :column="'first_name'" :query="query" :text="'Овог'" v-on:sorted="sort"></sort>
                                     <sort :column="'name'" :query="query" :text="'Нэр'" v-on:sorted="sort"></sort>
-                                    <sort :column="'email'" :query="query" :text="'Email'" v-on:sorted="sort"></sort>
+                                    <sort :column="'register'" :query="query" :text="'Регистерийн дугаар'" v-on:sorted="sort"></sort>
                                     <sort :column="'phone_number'" :query="query" :text="'Утас'" v-on:sorted="sort"></sort>
-                                    <th>Албан тушаал</th>
+                                    <sort :column="'email'" :query="query" :text="'Email'" v-on:sorted="sort"></sort>
                                     <th class="action-controls-sm" v-if="!advancedSearch">
                                         <button class="btn btn-info btn-sm" @click="toggleAdvancedSearch">Дэлгэрэнгүй хайлт</button>
                                     </th>
@@ -51,17 +51,20 @@
                                         <input type="text" class="form-control input-sm" v-model="query.search.name" @keyup.enter="search()"/>
                                     </th>
                                     <th>
-                                        <input type="text" class="form-control input-sm" v-model="query.search.email" @keyup.enter="search()"/>
+                                        <input type="text" class="form-control input-sm" v-model="query.search.register" @keyup.enter="search()"/>
                                     </th>
                                     <th>
                                         <input type="text" class="form-control input-sm" v-model="query.search.phone_number" @keyup.enter="search()"/>
+                                    </th>
+                                    <th>
+                                        <input type="text" class="form-control input-sm" v-model="query.search.email" @keyup.enter="search()"/>
                                     </th>
                                     <th colspan="2">
                                         <button class="btn btn-sm btn-info" @click="search()">
                                             <i class="fa fa-search"></i> Хайх
                                         </button>
-                                        <button class="btn btn-sm btn-danger">
-                                            <i class="fa fa-close" @click="toggleAdvancedSearch"></i>
+                                        <button class="btn btn-sm btn-danger" @click="toggleAdvancedSearch">
+                                            <i class="fa fa-close"></i>
                                         </button>
                                     </th>
                                 </tr>
@@ -70,11 +73,11 @@
                                 <tr v-for="user in model.data">
                                     <td>{{ user.first_name }}</td>
                                     <td>{{ user.name }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>{{ user.phone_number }}</td>
-                                    <td >
-                                        <label class="text" v-for="role in user.roles">{{ role.display_name + ', ' }}</label>
+                                    <td >{{ user.register }}
+                                        <!--<label class="text" v-for="role in user.roles">{{ role.display_name + ', ' }}</label>-->
                                     </td>
+                                    <td>{{ user.phone_number }}</td>
+                                    <td>{{ user.email }}</td>
                                     <td>
                                         <router-link v-bind:to="'/users/' + user.id + '/profile'" class="btn btn-xs btn-info"><i class="fa fa-eye"></i></router-link>
                                         <router-link v-bind:to="'/users/' + user.id + '/edit'" class="btn btn-xs btn-warning"><i class="fa fa-pencil-square"></i></router-link>
@@ -117,6 +120,21 @@
             type()
             {
                 this.fetchUser();
+            },
+            'query.search.first_name': function(){
+                this.search();
+            },
+            'query.search.name' : function () {
+                this.search();
+            },
+            'query.search.email' : function () {
+                this.search();
+            },
+            'query.search.phone_number' : function () {
+                this.search();
+            },
+            'query.search.register' : function () {
+                this.search();
             }
         },
 
@@ -136,6 +154,7 @@
                         name: null,
                         email: null,
                         phone_number: null,
+                        register: null,
                     }
                 }
             }
@@ -176,6 +195,7 @@
                         name: null,
                         email: null,
                         phone_number: null,
+                        register: null,
                     }
                     this.fetchUser();
                 }else
