@@ -10,6 +10,9 @@ use App\User\Expense\Expense;
 use App\User\Family\Family;
 use App\User\LoanRequest\Request;
 use App\User\Workplace\Workplace;
+use App\User\Apartment\Apartment;
+use App\User\Car\Car;
+use App\User\Other\Other;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -25,7 +28,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'name', 'image', 'phone_number', 'address', 'live_year', 'owner_type', 'email', 'user_type', 'register', 'password','bail_info','profession'
+        'first_name', 'name', 'image', 'phone_number', 'address', 'live_year', 'owner_type',
+        'email', 'user_type', 'register', 'password','bail_info','profession'
     ];
 
     /**
@@ -117,11 +121,17 @@ class User extends Authenticatable
         return $this->hasMany(Request::class,'user_id');
     }
 
+    /**
+     * @return HasMany
+     */
     public function Other()
     {
         return $this->hasMany(Request::class,'user_id');
     }
 
+    /**
+     * @return HasMany
+     */
     public function credit()
     {
         return $this->hasMany(Request::class,'user_id');

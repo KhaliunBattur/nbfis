@@ -6,7 +6,7 @@
  * Time: 3:24 PM
  */
 
-namespace App\User\Bail_other;
+namespace App\User\Other;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -21,28 +21,17 @@ class OtherRepository implements OtherRepositoryInterface
      * CarRepository constructor.
      * @param Car $model
      */
+
     public function __construct(Other $model)
     {
         $this->model=$model;
     }
-
-
-    /**
-     * @param $id
-     * @return Collection|static[]
-     */
-    public function findByUserAll($id)
-    {
-        return $this->model->where('user_id',$id)->get();
-    }
-
-
     /**
      * @return Collection
      */
     public function findAll()
     {
-        // TODO: Implement findAll() method.
+        return $this->model->all();
     }
 
     /**
@@ -51,7 +40,7 @@ class OtherRepository implements OtherRepositoryInterface
      */
     public function findById($id)
     {
-        // TODO: Implement findById() method.
+        return $this->model->findOrFail($id);
     }
 
     /**
@@ -61,7 +50,7 @@ class OtherRepository implements OtherRepositoryInterface
      */
     public function findByPaginate($howMany, $params = [])
     {
-        // TODO: Implement findByPaginate() method.
+        return $this->model->paginate($howMany);
     }
 
     /**
@@ -72,6 +61,14 @@ class OtherRepository implements OtherRepositoryInterface
      */
     public function findByList($value, $name, $ignoreId = 0)
     {
-        // TODO: Implement findByList() method.
+        return $this->model->where('id','!=',$ignoreId)->pluck($name,$value);
+    }
+    /**
+     * @param $id
+     * @return Collection|static[]
+     */
+    public function findByUserAll($id)
+    {
+        return $this->model->where('user_id',$id)->get();
     }
 }

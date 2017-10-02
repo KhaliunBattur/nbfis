@@ -19,4 +19,10 @@ interface CurrencyRepositoryInterface extends Repository
      * @return mixed
      */
     public function search($get);
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function notIn($id);
 }

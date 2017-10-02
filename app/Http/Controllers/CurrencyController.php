@@ -45,7 +45,6 @@ class CurrencyController extends Controller
     {
         //
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -63,7 +62,8 @@ class CurrencyController extends Controller
                 'result' => !is_null($currency)
             ]);
 
-        }else
+        }
+        else
         {
             $currency = $this->currencyRepository->findById($request->get('id'));
 
@@ -104,7 +104,17 @@ class CurrencyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $currency = $this->currencyRepository->findById($id);
+        $notCurrents = $this->currencyRepository->notIn($id);
+
+        foreach ($notCurrents as $notCurrent)
+        {
+                $notCurrent::where('is_current',1)
+                           ->update(['is_current' => 0]);
+        }
+            return response()->json([
+                'result' => $currency->update($request->all())
+            ]);
     }
 
     /**
@@ -131,6 +141,10 @@ class CurrencyController extends Controller
             'lists' => $currencies
         ]);
     }
+
+    /**
+     * @param $request
+     */
     private function valid($request)
     {
         $this->validate($request, [

@@ -74,20 +74,20 @@
                                             <sort :column="'name'" :query="query" :text="'Нэр'" v-on:sorted="sort"></sort>
                                             <th>Ханш</th>
                                             <th>Тэмдэг</th>
-                                            <th class="action-controls-sm">
-
-                                            </th>
+                                            <th class="action-controls-sm"></th>
+                                            <th>Сонгох</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr v-for="currency in model.data">
-                                            <td>{{currency.name }}</td>
+                                            <td>{{currency.name}}</td>
                                             <td>{{currency.exchange}}</td>
                                             <td>{{currency.marker}}</td>
                                             <td>
                                                 <button class="btn btn-warning btn-xs" @click="edit(currency)"><i class="fa fa-pencil-square"></i></button>
                                                 <delete-confirm :item="currency" :url="'/api/currency/' + currency.id" v-on:destroyed="destroy(currency)"></delete-confirm>
                                             </td>
+                                            <td><input name="Currency" type="radio" :value="currency.is_current" @change="CurCheck(currency)" /></td>
                                         </tr>
                                         </tbody>
                                         <tfoot>
@@ -129,11 +129,13 @@
                 model: [],
                 loading: false,
                 roots: [],
+                cur:null,
                 currency: {
                     id: 0,
                     name: null,
                     exchange:null,
-                    maker:null
+                    maker:null,
+                    is_current:false
                 },
                 query: {
                     page: 1,
@@ -163,6 +165,7 @@
         },
 
         methods: {
+
             changePerPage()
             {
                 this.fetchCurrency();
@@ -192,9 +195,41 @@
                 this.currency = currency;
                 this.mode = 'Вальют засварлах'
             },
+            CurCheck(currency)
+            {
+                var self = this;
+
+                if(currency.is_current === 0 || currency.is_current === null)
+                {
+                    currency.is_current = 1;
+                    axios.patch('api/currency/'+currency.id,currency).then(response => {
+                        if(response.data.result)
+                        {
+                            swal({
+                                title:'Амжилттай',
+                                text: 'Вальют сонгогдлоо',
+                                type: 'success',
+                                timer: 3000
+                            },function () {
+                                self.currency={
+                                    id:0,
+                                    name:null
+                                };
+                                self.errorMessages = {
+                                    name: null
+                                };
+                                self.fetchCurrency();
+                            })
+                        }
+                    }).catch(error =>{
+                        this.errorMessages = error.response.data;
+                    })
+                }
+            },
             save()
             {
                 var self = this;
+
                 axios.post('/api/currency', this.currency).then(response => {
                     if(response.data.result)
                     {
@@ -227,14 +262,14 @@
             next()
             {
                 if(this.model.next_page_url) {
-                    this.query.page++
+                    this.query.page++;
                     this.fetchCurrency()
                 }
             },
             prev()
             {
                 if(this.model.prev_page_url) {
-                    this.query.page--
+                    this.query.page--;
                     this.fetchCurrency()
                 }
             },

@@ -158,8 +158,8 @@ class UserController extends Controller
         {
             $exploded = explode(',',$request->get('image'));
 
-            $decoded= base64_decode($exploded[1]);
-            if(str_contains($exploded[0],'jpeg'))
+            $decoded = base64_decode($exploded[1]);
+            if(str_contains($exploded[0], 'jpeg'))
 
                 $extension = 'jpg';
             else
@@ -167,24 +167,20 @@ class UserController extends Controller
 
             $filename = str_random() . '.' . $extension;
 
-            $destinationPath = public_path() .'/images/profile/'. $filename;
+            $destinationPath = public_path() . '/images/profile/' . $filename;
 
             $parameters['image'] = $filename;
 
             file_put_contents($destinationPath, $decoded);
-        }
-        else
-        {
+        } else {
             unset($parameters['image']);
         }
 
-        if($request->get('user_type') == 'customer')
-        {
+        if ($request->get('user_type') == 'customer') {
             $user->roles()->detach();
         }
 
-        if($user->update($parameters))
-        {
+        if ($user->update($parameters)) {
             event(new UserUpdated($user, 'хэрэглэгчийн мэдээлэл засварлав', 'info'));
             $result = true;
         }
@@ -202,9 +198,8 @@ class UserController extends Controller
     {
         $user = $this->userRepository->findById($id);
 
-        if(!is_null($user->image) && $user->image != '' && file_exists('./'.$user->image))
-        {
-            unlink('./'.$user->image);
+        if (!is_null($user->image) && $user->image != '' && file_exists('./' . $user->image)) {
+            unlink('./' . $user->image);
         }
 
         return response()->json([
@@ -285,25 +280,23 @@ class UserController extends Controller
     public function info(Request $request, $id)
     {
         $user = $this->userRepository->findInfoById($id);
+        view()->share('user', $user);
 
-        view()->share('user',$user);
-
-            $pdf = PDF::loadView('report/cvPDF',$user)->setPaper('a4')->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
-            return $pdf->download('cvPDF.pdf');
-
-//        return view('report/cvPDF');
+        $pdf = PDF::loadView('report/cvPDF', $user)->setPaper('a4')->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        return $pdf->download('cvPDF.pdf');
+//             return view('report/cvPDF');
 
     }
 
     public function findByRegister($register)
     {
 
-        $user=$this->userRepository->findByRegister($register);
+        $user = $this->userRepository->findByRegister($register);
 
         return response()->json([
-           'user'=>$user,
-           'owner_type'=>\Config::get('enums.owner_type'),
-           'relations'=>\Config::get('enums.relation')
+            'user' => $user,
+            'owner_type' => \Config::get('enums.owner_type'),
+            'relations' => \Config::get('enums.relation')
         ]);
     }
 
@@ -335,17 +328,15 @@ class UserController extends Controller
     {
         $rules = [
             'first_name' => 'required',
-            'name'       => 'required',
-            'email'      => 'required|email|unique:users,email,'.$request->segment(3)
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $request->segment(3)
         ];
 
-        if($request->get('user_type') == 'customer')
-        {
-            $rules['register'] = 'required|unique:users,email,'.$request->segment(3);
+        if ($request->get('user_type') == 'customer') {
+            $rules['register'] = 'required|unique:users,email,' . $request->segment(3);
         }
 
-        if($request->method() != 'PATCH' )
-        {
+        if ($request->method() != 'PATCH') {
             $rules['password'] = 'required|same:confirm_password';
         }
 
