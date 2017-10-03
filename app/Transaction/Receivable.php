@@ -48,7 +48,7 @@ class Receivable extends Model
             return true;
         }
 
-        if($this->transactions[0]->otherTransactions()->count() > 1)
+        if($this->transactions()->count() > 0 && $this->transactions[0]->otherTransactions()->count() > 1)
         {
             return true;
         }

@@ -29,7 +29,23 @@ class TransactionDestroyedListener
     {
         if (!is_null($event->transaction->transaction_able))
         {
-            $event->transaction->transactionAble->delete();
+            if($event->transaction->transactionAble instanceof Receivable)
+            {
+                if($event->transaction->account->type == 'active')
+                {
+                    if($event->transaction->type == 'debit')
+                    {
+                        $event->transaction->transactionAble->delete();
+                    }
+                }
+                else
+                {
+                    if($event->transaction->type == 'credit')
+                    {
+                        $event->transaction->transactionAble->delete();
+                    }
+                }
+            }
         }
     }
 }

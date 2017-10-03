@@ -46,7 +46,7 @@
                                     <tbody v-for="(receivable, index) in model.data">
                                     <tr>
                                         <td>
-                                            <button :class="receivable.show ? 'btn btn-danger btn-xs' : 'btn btn-success btn-xs'" @click="showTransaction(receivable)" :disabled="!receivable.showTransaction">
+                                            <button :class="receivable.show ? 'btn btn-danger btn-xs' : 'btn btn-success btn-xs'" @click="showTransaction(receivable)" :disabled="!receivable.showTransaction" data-toggle="tooltip" data-placement="top" data-trigger="focus" title="Гүйлгээний задаргаа" v-tip>
                                                 <i :class="receivable.show ? 'fa fa-minus' : 'fa fa-plus'"></i>
                                             </button>
                                         </td>
@@ -74,6 +74,7 @@
                                                     <th>Дебет</th>
                                                     <th>Кредит</th>
                                                     <th>Үүсэгсэн</th>
+                                                    <th></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody v-for="transaction in receivable.transactions">
@@ -98,6 +99,9 @@
                                                         <td>
                                                             {{ tran.user.name }}
                                                             <div class="text-block">{{ tran.created_at }}</div>
+                                                        </td>
+                                                        <td>
+                                                            <delete-confirm :item="tran" :url="'/api/transaction/' + tran.transaction_number" v-on:destroyed="destroy(tran)"></delete-confirm>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -202,6 +206,10 @@
             formatPrice(amount) {
                 let val = (amount/1).toFixed(2).replace(',', '.')
                 return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            },
+            destroy(transaction)
+            {
+                this.fetchReceivable();
             },
         }
 
