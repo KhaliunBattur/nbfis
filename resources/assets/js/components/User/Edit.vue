@@ -148,6 +148,12 @@
             'masked-input': MaskedInput
         },
 
+        watch: {
+            '$route.params.id': function() {
+                this.getUser();
+            }
+        },
+
         data()
         {
             return {
