@@ -3,11 +3,11 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Вальют
+                Валют
             </h1>
             <ol class="breadcrumb">
                 <li><router-link to="/"><i class="fa fa-dashboard"></i> Удирдлага</router-link></li>
-                <li class="active">Вальют</li>
+                <li class="active">Валют</li>
             </ol>
         </section>
         <section class="content">
@@ -87,7 +87,9 @@
                                                 <button class="btn btn-warning btn-xs" @click="edit(currency)"><i class="fa fa-pencil-square"></i></button>
                                                 <delete-confirm :item="currency" :url="'/api/currency/' + currency.id" v-on:destroyed="destroy(currency)"></delete-confirm>
                                             </td>
-                                            <td><input name="Currency" type="radio" :value="currency.is_current" @change="CurCheck(currency)" /></td>
+                                            <td>
+                                                <input name="Currency" type="radio"  value="1" v-model="currency.is_current"  @change="CurCheck(currency)"/>
+                                            </td>
                                         </tr>
                                         </tbody>
                                         <tfoot>
@@ -125,7 +127,7 @@
         data()
         {
             return {
-                mode:'Вальют нэмэх',
+                mode:'Валют нэмэх',
                 model: [],
                 loading: false,
                 roots: [],
@@ -135,7 +137,7 @@
                     name: null,
                     exchange:null,
                     maker:null,
-                    is_current:false
+                    is_current:0
                 },
                 query: {
                     page: 1,
@@ -163,14 +165,42 @@
             'v-select': vSelect,
             'delete-confirm': DeleteConfirm
         },
-
         methods: {
 
             changePerPage()
             {
                 this.fetchCurrency();
             },
-
+            edit(currency)
+            {
+                this.currency = currency;
+                this.mode = 'Валют засварлах'
+            },
+            CurCheck(currency)
+            {
+                var self = this;
+                if(currency.is_current !== 1)
+                {
+                    axios.patch('api/currency/'+currency.id,currency).then(response => {
+                        if(response.data.result)
+                        {
+                            swal({
+                                title:'Амжилттай',
+                                text: 'Валют сонгогдлоо',
+                                type: 'success',
+                                timer: 3000
+                            },function () {
+                                self.errorMessages = {
+                                    name: null
+                                };
+                                self.fetchCurrency();
+                            })
+                        }
+                    }).catch(error =>{
+                        this.errorMessages = error.response.data;
+                    })
+                }
+            },
             fetchCurrency()
             {
                 this.loading = true;
@@ -185,46 +215,12 @@
                 }).then(response => {
                     this.loading = false;
                     this.model = response.data.model;
+
                 }).catch(errors => {
                     this.loading = false;
-                    swal('Уучлаарай', 'Вальютын мэдээлэл татаж чадсангүй', 'error')
+                    swal('Уучлаарай', 'Валютын мэдээлэл татаж чадсангүй', 'error')
                 })
-            },
-            edit(currency)
-            {
-                this.currency = currency;
-                this.mode = 'Вальют засварлах'
-            },
-            CurCheck(currency)
-            {
-                var self = this;
 
-                if(currency.is_current === 0 || currency.is_current === null)
-                {
-                    currency.is_current = 1;
-                    axios.patch('api/currency/'+currency.id,currency).then(response => {
-                        if(response.data.result)
-                        {
-                            swal({
-                                title:'Амжилттай',
-                                text: 'Вальют сонгогдлоо',
-                                type: 'success',
-                                timer: 3000
-                            },function () {
-                                self.currency={
-                                    id:0,
-                                    name:null
-                                };
-                                self.errorMessages = {
-                                    name: null
-                                };
-                                self.fetchCurrency();
-                            })
-                        }
-                    }).catch(error =>{
-                        this.errorMessages = error.response.data;
-                    })
-                }
             },
             save()
             {
@@ -235,7 +231,7 @@
                     {
                         swal({
                             title: 'Амжилттай',
-                            text: 'Вальют бүртгэгдлээ',
+                            text: 'Валют бүртгэгдлээ',
                             type: 'success',
                             timer: 3000
                         }, function(){

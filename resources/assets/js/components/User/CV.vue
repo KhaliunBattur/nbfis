@@ -42,16 +42,12 @@
                                     </div>
 
                                     <div  v-if="user.imageTemp != '' && user.image == '' " >
-                                        <p>hey 1</p>
                                         <img  :src= "user.imageTemp"  class="cv-picture" />
                                     </div>
-
                                     <div  v-else-if="user.imageTemp == '' && user.image != '' " >
-                                        <p>hey 2</p>
                                         <img  :src= "'images/profile/user/'+user.image"  class="cv-picture" />
                                     </div>
                                     <div  v-else-if="user.imageTemp != '' && user.image != '' " >
-                                        <p>hey 3</p>
                                         <img  :src= "user.image"  class="cv-picture" />
                                     </div>
 
@@ -119,103 +115,215 @@
                                     </table>
                                     <h1>02 ЗЭЭЛИЙН ХҮСЭЛТ</h1>
                                     <table class="cv-table cv-lg" >
-                                        <tbody>
+                                        <tbody >
                                         <tr>
-                                            <td colspan="2" style="width: 100%;">
+                                            <td colspan="3" style="width: 100%;">
                                                 <select class="form-control input-sm" v-model="user.request.pledge_type" >
                                                     <option v-for="(pledge_type, index) in pledge_types" :value="index">{{pledge_type}}</option>
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr >
                                             <td style="width: 30%;">Хүсэж буй зээлийн хэмжээ: </td>
-                                            <td style="width: 70%;"><input class="form-control input-sm" v-model="user.request.loan_term"/></td>
+                                            <td style="width: 65%;"><input class="form-control input-sm" v-model="user.request.loan_term" type="number"/></td>
+                                            <td style="width: 5%"></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 30%;">Зээлийн эргэн төлөх хугацаа:</td>
-                                            <td style="width: 70%;"><input class="form-control input-sm" v-model="user.request.expire_date" type="text" /></td>
+                                            <td style="width: 65%;"><input class="form-control input-sm" v-model="user.request.expire_date" type="text" /></td>
+                                            <td style="width: 5%"></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 30%;">Сар бүрийн эргэн төлөлт хийх өдөр:</td>
-                                            <td style="width: 70%;"><input class="form-control input-sm" v-model="user.request.payment_day" type="number"/></td>
+                                            <td style="width: 65%;"><input class="form-control input-sm" v-model="user.request.payment_day" name="payment_day"
+                                                                           v-validate="'max_value:31|min_value:1'" type="number" />
+                                                <span v-if="errors.has('payment_day')" class="help is-danger">{{ errors.first('payment_day') }}</span>
+                                            </td>
+                                            <td style="width: 5%"></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 30%;">Зээлийн хугацаа дуусах огноо:</td>
-                                            <td style="width: 70%;"><input class="form-control input-sm" v-pick="user.request.period_time" v-model="user.request.period_time" type="text"/></td>
+                                            <td style="width: 65%;"><input class="form-control input-sm" v-model="user.request.period_time" v-pick="user.request.period_time"  /></td>
+                                            <td style="width: 5%"></td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 30%;">Нэмэл тайлбар, тэмдэглэгээ:</td>
-                                            <td style="width: 70%;"><input class="form-control input-sm" v-model="user.request.description" type="text"/></td>
+                                            <td style="width: 30%;">Нэмэлт тайлбар, тэмдэглэгээ:</td>
+                                            <td style="width: 65%;"><input class="form-control input-sm" v-model="user.request.description" type="text"/></td>
+                                            <td style="width: 5%"><button class="btn btn-sm btn-success" @click="addRequest()"><i class="fa fa-plus-circle"></i></button></td>
                                         </tr>
+                                        </tbody >
+                                    </table>
+
+                                    <h3 style="margin-top: 20px">зээлийн хүсэлтүүд</h3>
+
+                                    <table class="cv-table cv-lg" >
+                                        <tbody>
+                                            <tr>
+                                                <td style="width:14%">Барьцаа хөрөнгө</td>
+                                                <td style="width:14%">Зээлийн хэмжээ</td>
+                                                <td style="width:14%">Эргэн төлөх хугацаа</td>
+                                                <td style="width:14%">Төлөлт хийх өдөр</td>
+                                                <td style="width:14%">Хугацаа дуусах огноо</td>
+                                                <td style="width:15%">Тайлбар тэмдэглэгээ</td>
+                                                <td style="width: 3%"></td>
+                                            </tr>
+                                            <tr v-for="(request, index) in user.requests">
+                                                <td style="width: 14%" ><input class="form-control input-sm" type="text"   v-model="request.pledge_type" /></td>
+                                                <td style="width: 14%" ><input class="form-control input-sm" type="number" v-model="request.loan_term"/></td>
+                                                <td style="width: 14%" ><input class="form-control input-sm" type="text"   v-model="request.period_time" /></td>
+                                                <td style="width: 14%" ><input class="form-control input-sm" type="number" v-model="request.payment_day" max="31"  /></td>
+                                                <td style="width: 14%" ><input class="form-control input-sm" type="text"   v-model="request.expire_date" /></td>
+                                                <td style="width: 15%" ><input class="form-control input-sm" type="text"   v-model="request.description" /></td>
+                                                <td style="width: 3%;"><button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyRequest(request)"></button></td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                     <h1>03 БАРЬЦАА ХӨРӨНГИЙН МЭДЭЭЛЭЛ</h1>
+
                                     <table class="cv-table cv-md"  >
                                         <tbody>
                                         <tr>
-                                            <td style="width: 100%;" colspan="2">Байр барьцаалах бол 4%</td>
+                                            <td style="width: 100%;" colspan="3">Байр барьцаалах бол 4%</td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 50%;">Ашиглалтанд орсон огноо:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.apartment.commissioned" type="text" v-pick="user.apartment.commissioned"/></td>
+                                            <td style="width: 45%;">Ашиглалтанд орсон огноо:</td>
+                                            <td style="width: 50%;" colspan="2"><input class="form-control input-sm" v-model="user.apartment.commissioned" type="text" v-pick="user.apartment.commissioned"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 50%;">Хаяг:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.apartment.address" type="text"/></td>
+                                            <td style="width: 45%;">Хаяг:</td>
+                                            <td style="width: 50%;" colspan="2"><input class="form-control input-sm" v-model="user.apartment.address" type="text"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 50%;">Хэдэн М2::<input class="form-control input-sm" v-model="user.apartment.apart_meter" type="number"  placeholder="111"/></td>
-                                            <td style="width: 50%;">Хэдэн өрөө: М2:<input class="form-control input-sm" v-model="user.apartment.room" type="number"  placeholder="11"/></td>
+                                            <td style="width: 45%;">Хэдэн М2:<input class="form-control input-sm" v-model="user.apartment.apart_meter" type="number"  placeholder="111"/></td>
+                                            <td style="width: 50%;" colspan="2">Хэдэн өрөө:<input class="form-control input-sm" v-model="user.apartment.room" type="number"  placeholder="11"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 50%;">Зах зээлийн үнэ:</td>
+                                            <td style="width: 45%;">Зах зээлийн үнэ:</td>
                                             <td style="width: 50%;"><input class="form-control input-sm" v-model="user.apartment.price" /></td>
+                                            <td style="width: 5%"><button class="btn btn-sm btn-success" @click="addApartment()"><i class="fa fa-plus-circle"></i></button></td>
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <table class="cv-table cv-md cv-md-margin-left">
+
+                                    <table class="cv-table cv-md cv-md-margin-left" >
                                         <tbody>
                                         <tr>
-                                            <td colspan="2">Машин барьцаалах бол 3.5-4%</td>
+                                            <td colspan="3">Машин барьцаалах бол 3.5-4%</td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 50%;">Марк/өнгө:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.car.model" type="text"/><input class="form-control input-sm" v-model="user.car.color" type="text"/></td>
+                                            <td style="width: 40%;">Марк:</td>
+                                            <td style="width: 60%" colspan="2"><input class="form-control input-sm" v-model="user.car.model" type="text"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 50%;">Үйлдвэрлэсэн огноо:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.car.manufacture" v-pick="user.car.manufacture" type="text"/></td>
+                                            <td style="width: 40%;">Өнгө:</td>
+                                            <td style="width: 60%;" colspan="2"><input class="form-control input-sm" v-model="user.car.color" type="text"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 50%;">Орж ирсэн огноо:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm" v-model="user.car.entry_date" v-pick="user.car.entry_date" type="text"/></td>
+                                            <td style="width: 40%;">Үйлдвэрлэсэн огноо:</td>
+                                            <td style="width: 60%;" colspan="2"><input class="form-control input-sm" v-model="user.car.manufacture" v-pick="user.car.manufacture" type="text"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 50%;">Зах зээлийн үнэ:</td>
-                                            <td style="width: 50%;"><input class="form-control input-sm"  v-model="user.car.price"   /></td>
+                                            <td style="width: 40%;">Орж ирсэн огноо:</td>
+                                            <td style="width: 60%;" colspan="2"><input class="form-control input-sm" v-model="user.car.entry_date" v-pick="user.car.entry_date" type="text"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 40%;">Зах зээлийн үнэ:</td>
+                                            <td style="width: 60%;"><input class="form-control input-sm"  v-model="user.car.price"   /></td>
+                                            <td><button class="btn btn-sm btn-success" @click="addCar()"><i class="fa fa-plus-circle"></i></button></td>
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <table class="cv-table cv-lg cv-table-margin-top" >
+
+                                    <div  class="col-md-12" style="padding-top: 15px; padding:15px 0 15px 0" >
+
+                                        <div class="col-md-6" style="padding-left: 0">
+                                            <h4>Байр барьцаалах</h4>
+                                            <table class="cv-table"  >
+                                                <tbody>
+                                                <tr>
+                                                    <td style="width: 18%">Ашиглалтанд орсон</td>
+                                                    <td style="width: 18%">Хаяг</td>
+                                                    <td style="width: 18%">М2</td>
+                                                    <td style="width: 18%">Өрөө</td>
+                                                    <td style="width: 18%">З/з Үнэ</td>
+                                                    <td style="width: 10%"></td>
+                                                </tr>
+                                                <tr v-for="(apartment,index) in user.apartments">
+                                                    <td><input class="form-control input-sm" v-model="apartment.commissioned" /></td>
+                                                    <td><input class="form-control input-sm" v-model="apartment.address" /></td>
+                                                    <td><input class="form-control input-sm" v-model="apartment.apart_meter" /></td>
+                                                    <td><input class="form-control input-sm" v-model="apartment.room" /></td>
+                                                    <td><input class="form-control input-sm" v-model="apartment.price" /></td>
+                                                    <td><button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyApartment(apartment)"></button></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+                                        <div class="col-md-6" style="padding-right: 0">
+                                            <h4>Машин барьцаалах</h4>
+                                            <table class="cv-table ">
+                                                <tbody>
+                                                <tr>
+                                                    <td style="width: 18%">Марк</td>
+                                                    <td style="width: 18%">Өнгө</td>
+                                                    <td style="width: 18%">Үйлдвэрлэсэн огноо</td>
+                                                    <td style="width: 18%">орж ирсэн огноо</td>
+                                                    <td style="width: 18%">З/з-ийн үнэ</td>
+                                                    <td style="width: 10%"></td>
+                                                </tr>
+                                                <tr v-for="(car , index) in user.cars">
+                                                    <td><input class="form-control input-sm" v-model="car.model" /></td>
+                                                    <td><input class="form-control input-sm" v-model="car.color" /></td>
+                                                    <td><input class="form-control input-sm" v-model="car.manufacture" /></td>
+                                                    <td><input class="form-control input-sm" v-model="car.entry_date" /></td>
+                                                    <td><input class="form-control input-sm" v-model="car.price" /></td>
+                                                    <td><button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyCar(car)"></button></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+
+                                    <table class="cv-table cv-lg cv-table-margin-top"  >
                                         <tbody>
                                         <tr>
                                             <td style="width: 23.8%;">Бусад</td>
-                                            <td style="width: 75%;"><input class="form-control input-sm" v-model="user.other.name" type="text"/></td>
+                                            <td style="width: 75%;" colspan="3"><input class="form-control input-sm" v-model="user.other.name" type="text"/></td>
                                         </tr>
-                                        </tbody>
-                                    </table>
-                                    <table class="cv-table cv-lg cv-top-border-none">
-                                        <tbody>
                                         <tr>
                                             <td style="width: 23.8%;">Зах зээлийн үнэ:</td>
                                             <td style="width: 10%;"><input class="form-control input-sm" v-model="user.other.price"   /></td>
                                             <td style="width: 65%;">Тайлбар:<input style="width: 90%; float: right" class="form-control input-sm" v-model="user.other.description" type="text"/> </td>
+                                            <td><button class="btn btn-sm btn-success" @click="addOther()"><i class="fa fa-plus-circle"></i></button></td>
                                         </tr>
                                         </tbody>
                                     </table>
+
+                                    <div class="col-md-12" style="padding-top: 15px; padding:15px 0 15px 0">
+                                        <h4>Бусад барьцаа:</h4>
+                                        <table class="cv-table cv-lg">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width: 30%">Бусад</td>
+                                                    <td style="width: 20%">Зах зээлийн үнэ</td>
+                                                    <td style="width: 50%" colspan="2">Тайлбар</td>
+                                                </tr>
+                                            <tr v-for="(other ,index) in user.others">
+                                                <td style="width: 30%"><input class="form-control input-sm" v-model="other.name"   /></td>
+                                                <td style="width: 20%"><input class="form-control input-sm" v-model="other.price"   /></td>
+                                                <td style="width:45%"><input class="form-control input-sm" v-model="other.description"   /></td>
+                                                <td style="width: 5%"><button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyOther(other)"></button></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     <h1>04 АЖЛЫН ГАЗРЫН МЭДЭЭЛЭЛ</h1>
                                     <table class="cv-table cv-lg" >
                                         <tbody>
+
                                         <tr>
                                             <td style="width: 3%">№</td>
                                             <td style="width: 18%">Байгууллагын нэр</td>
@@ -351,26 +459,26 @@
                                     <table   class="cv-table cv-lg">
                                         <tbody>
                                         <tr>
-                                            <td><span class="text text-black">#</span></td>
-                                            <td>
+                                            <td style="width: 3%"><span class="text text-black">#</span></td>
+                                            <td style="width: 46%">
                                                 <input type="text" class="form-control input-sm" v-auto data-type="budged"
                                                        v-model="user.budget.name" data-target="#budget-input" v-on:selected="setDataBudget(user.budget, '#budget-input')">
                                                 <input  type="hidden" v-model="user.budget.name" id="budget-input" />
                                             </td>
-                                            <td><input v-model="user.budget.budget"  class="form-control input-sm" /></td>
-                                            <td>
+                                            <td style="width: 46%"><input v-model="user.budget.budget"  class="form-control input-sm" /></td>
+                                            <td style="width: 3%">
                                                 <button class="btn btn-sm btn-success" @click="addBudget()"><i class="fa fa-plus-circle"></i></button>
                                             </td>
                                         </tr>
                                         <tr v-for="(b, index) in user.budgets">
 
-                                            <td><span class="text text-black">{{ index + 1 }}</span></td>
-                                            <td>
+                                            <td style="width: 3%"><span class="text text-black">{{ index + 1 }}</span></td>
+                                            <td style="width: 46%">
                                                 <input type="text" class="form-control input-sm" v-auto data-type="budget" :data-target="'#budget-input' + b.id" :value="b.name" v-on:selected="setDataBudget(b, '#budget-input' + b.id)">
                                                 <input type="hidden" v-model="b.name" :id="'budget-input' + b.id" />
                                             </td>
-                                            <td><input  v-model="b.budget"  class="form-control input-sm" /></td>
-                                            <td>
+                                            <td style="width: 46%"><input  v-model="b.budget"  class="form-control input-sm" /></td>
+                                            <td style="width: 3%">
                                                 <div class="btn-group ">
                                                     <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyBudget(b)"></button>
                                                 </div>
@@ -382,24 +490,24 @@
                                     <table  class="cv-table cv-lg">
                                         <tbody>
                                         <tr>
-                                            <td><span class="text text-black">#</span></td>
-                                            <td>
+                                            <td style="width: 3%"><span class="text text-black">#</span></td>
+                                            <td style="width: 46%">
                                                 <input type="text" class="form-control input-sm input-sm" v-auto data-type="user.expense" v-model="user.expense.name" data-target="#expense-input" v-on:selected="setDataExpense(user.expense, '#expense-input')">
                                                 <input type="hidden" v-model="user.expense.name" id="expense-input" />
                                             </td>
-                                            <td><input  v-model="user.expense.expense"  class="form-control input-sm" /></td>
-                                            <td>
+                                            <td style="width: 46%"><input  v-model="user.expense.expense"  class="form-control input-sm" /></td>
+                                            <td style="width: 3%">
                                                 <button class="btn btn-sm btn-success" @click="addExpense()"><i class="fa fa-plus-circle"></i></button>
                                             </td>
                                         </tr>
                                         <tr v-for="(b, index) in user.expenses">
-                                            <td><span class="text text-black">{{ index + 1 }}</span></td>
-                                            <td>
+                                            <td style="width: 3%"><span class="text text-black">{{ index + 1 }}</span></td>
+                                            <td style="width: 46%">
                                                 <input type="text" class="form-control input-sm input-sm" v-auto data-type="user.expense" :data-target="'#expense-input' + b.id" :value="b.name" v-on:selected="setDataExpense(b, '#expense-input' + b.id)">
                                                 <input type="hidden" v-model="b.name" :id="'expense-input' + b.id" />
                                             </td>
-                                            <td><input v-model="b.expense"  class="form-control input-sm" /></td>
-                                            <td>
+                                            <td style="width: 46%"><input v-model="b.expense"  class="form-control input-sm" /></td>
+                                            <td style="width: 3%">
                                                 <div class="btn-group">
                                                     <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyExpense(b)"></button>
                                                 </div>
@@ -412,24 +520,24 @@
 
                                         <tbody>
                                         <tr>
-                                            <td><span class="text text-black">#</span></td>
-                                            <td>
+                                            <td style="width: 3%"><span class="text text-black">#</span></td>
+                                            <td style="width: 46%">
                                                 <input type="text" class="form-control input-sm input-sm" v-auto data-type="user.asset" v-model="user.asset.name" data-target="#asset-input" v-on:selected="setDataAsset(user.asset, '#asset-input')">
                                                 <input type="hidden" v-model="user.asset.name" id="asset-input" />
                                             </td>
-                                            <td><input v-model="user.asset.asset" class="form-control input-sm"  /></td>
-                                            <td>
+                                            <td style="width: 46%"><input v-model="user.asset.asset" class="form-control input-sm"  /></td>
+                                            <td style="width: 3%">
                                                 <button class="btn btn-sm btn-success" @click="addAsset()"><i class="fa fa-plus-circle"></i></button>
                                             </td>
                                         </tr>
                                         <tr v-for="(b, index) in user.assets">
-                                            <td><span class="text text-black">{{ index + 1 }}</span></td>
-                                            <td>
+                                            <td style="width: 3%"><span class="text text-black">{{ index + 1 }}</span></td>
+                                            <td style="width: 46%">
                                                 <input type="text" class="form-control input-sm input-sm" v-auto data-type="asset" :data-target="'#asset-input' + b.id" :value="b.name" v-on:selected="setDataAsset(b, '#asset-input' + b.id)">
                                                 <input type="hidden" v-model="b.name" :id="'asset-input' + b.id" />
                                             </td>
-                                            <td><input  v-model="b.asset" class="form-control input-sm"  /></td>
-                                            <td>
+                                            <td style="width: 46%"><input  v-model="b.asset" class="form-control input-sm"  /></td>
+                                            <td style="width: 3%">
                                                 <div class="btn-group">
                                                     <button class="fa fa-trash-o btn btn-sm btn-danger" @click="destroyAsset(b)"></button>
                                                 </div>
@@ -788,6 +896,7 @@
                         name: null,
                         expense: null
                     },
+                    requests: [],
                     request: {
                         pledge_type: null,
                         loan_term: null,
@@ -798,6 +907,7 @@
                         expire_date: null,
                         description: null,
                     },
+                    apartments:[],
                     apartment: {
                         commissioned: null,
                         address: null,
@@ -805,6 +915,7 @@
                         room: null,
                         price:null
                     },
+                    cars:[],
                     car: {
                         model: null,
                         color: null,
@@ -812,6 +923,7 @@
                         entry_date: null,
                         price:null
                     },
+                    others:[],
                     other: {
                         name: null,
                         price: null,
@@ -843,6 +955,10 @@
                 nextFamilyId:1,
                 nextCreditId:1,
                 nextWorkId:1,
+                nextReqId:1,
+                nextApartId:1,
+                nextCarId:1,
+                nextOtherId:1,
                 owner_types:null,
                 pledge_types:null,
                 advertisements:null,
@@ -945,7 +1061,11 @@
                             this.user.asset = response.data.user.assets;
                             this.user.expense = response.data.user.expenses;
                             this.user.credits = response.data.user.active_loans;
-                            this.user.request = response.data.user.request;
+                            this.user.requests = response.data.user.request;
+                            this.user.apartments = response.data.user.apartment;
+                            console.log(response.data.user.apartment);
+                            this.user.cars = response.data.user.car;
+                            this.user.others = response.data.user.other;
                             this.uid = response.data.user.id;
                             this.user.mode = true;
                             Vue.delete(this.user, 'created_at');
@@ -965,8 +1085,9 @@
             },
             update()
             {
+
               axios.patch('/api/cv/'+this.uid,this.user).then(response=> {
-                  if (response.data.result === true){
+                  if (response.data.result) {
                       var self = this;
                       swal({
                           title: 'Ажилттай!',
@@ -1024,7 +1145,7 @@
                         this.nextCreditId = 1;
                         this.nextWorkId = 1;
                         this.owner_types = null;
-//                        pledge_types:null,
+//                        this.pledge_types=null,
                         this.advertisements = null;
                         this.user = {
                             image: '',
@@ -1040,6 +1161,7 @@
                             age: null,
                             confirm_password: '',
                             workplaces: [],
+                            mode:false,
                             works: {
                                 id:null,
                                 organization: null,
@@ -1098,7 +1220,7 @@
                                 expense: null
                             },
                             request: {
-                                pledge_type:null,
+                                pledge_type: null,
                                 loanable: null,
                                 loanable_id: null,
                                 loan_term: null,
@@ -1186,6 +1308,71 @@
             {
                 try {
                     this.user.budgets.splice(this.user.budgets.indexOf(budget), 1);
+                }
+                catch(error)
+                {
+                    swal({
+                        title: 'Уучлаарай',
+                        text: 'Амжилтгүй боллоо! Дахин оролдоно уу',
+                        type: 'error'
+                    }, function(){
+                        self.loading = false;
+                    });
+                }
+            },
+            destroyApartment(apartment)
+            {
+                try
+                {
+                    this.user.apartments.splice(this.user.apartments.indexOf(apartment), 1);
+                }
+                catch(error)
+                {
+                    swal({
+                        title: 'Уучлаарай',
+                        text: 'Амжилтгүй боллоо! Дахин оролдоно уу',
+                        type: 'error'
+                    }, function(){
+                        self.loading = false;
+                    });
+                }
+            },
+            destroyOther(other)
+            {
+                try {
+                    this.user.others.splice(this.user.others.indexOf(other), 1);
+                }
+                catch(error)
+                {
+                    swal({
+                        title: 'Уучлаарай',
+                        text: 'Амжилтгүй боллоо! Дахин оролдоно уу',
+                        type: 'error'
+                    }, function(){
+                        self.loading = false;
+                    });
+                }
+            },
+            destroyCar(car)
+            {
+                try {
+                    this.user.cars.splice(this.user.cars.indexOf(car), 1);
+                }
+                catch(error)
+                {
+                    swal({
+                        title: 'Уучлаарай',
+                        text: 'Амжилтгүй боллоо! Дахин оролдоно уу',
+                        type: 'error'
+                    }, function(){
+                        self.loading = false;
+                    });
+                }
+            },
+            destroyRequest(request)
+            {
+                try {
+                    this.user.requests.splice(this.user.requests.indexOf(request), 1);
                 }
                 catch(error)
                 {
@@ -1305,6 +1492,123 @@
                     }, function(){
                         self.loading = false;
                     });
+                }
+            },
+            addApartment()
+            {
+                this.$validator.validateAll();
+                if(!this.errors.any())
+                {
+                    try {
+                        var self = this;
+                        this.loading = true;
+                        this.user.apartments.push({
+                            id: this.nextApartId++,
+                            commissioned: this.user.apartment.commissioned,
+                            address: this.user.apartment.address,
+                            apart_meter: this.user.apartment.apart_meter,
+                            room: this.user.apartment.room,
+                            price: this.user.apartment.price
+                        });
+                        this.loading = true;
+                    }
+                    catch (error) {
+                        console.log(error);
+                        swal({
+                            title: 'Уучлаарай',
+                            text: 'Амжилтгүй боллоо! Дахин оролдоно уу',
+                            type: 'error'
+                        }, function () {
+                            self.loading = false;
+                        });
+                    }
+                }
+            },
+            addOther()
+            {
+                this.$validator.validateAll();
+                if(!this.errors.any()) {
+                    try {
+                        var self = this;
+                        this.loading = true;
+                        this.user.others.push({
+                            id: this.nextOtherId++,
+                            name: this.user.other.name,
+                            price: this.user.other.price,
+                            description: this.user.other.description
+
+                        });
+                        this.loading = true;
+                    }
+                    catch (error) {
+                        console.log(error);
+                        swal({
+                            title: 'Уучлаарай',
+                            text: 'Амжилтгүй боллоо! Дахин оролдоно уу',
+                            type: 'error'
+                        }, function () {
+                            self.loading = false;
+                        });
+                    }
+                }
+            },
+            addCar()
+            {
+                this.$validator.validateAll();
+                if(!this.errors.any()) {
+                    try {
+                        var self = this;
+                        this.loading = true;
+                        this.user.cars.push({
+                            id: this.nextCarId++,
+                            model: this.user.car.model,
+                            color: this.user.car.model,
+                            manufacture: this.user.car.manufacture,
+                            entry_date: this.user.car.entry_date,
+                            price: this.user.car.price
+                        });
+                        this.loading = true;
+                    }
+                    catch (error) {
+                        console.log(error);
+                        swal({
+                            title: 'Уучлаарай',
+                            text: 'Амжилтгүй боллоо! Дахин оролдоно уу',
+                            type: 'error'
+                        }, function () {
+                            self.loading = false;
+                        });
+                    }
+                }
+            },
+            addRequest()
+            {
+                this.$validator.validateAll();
+                if(!this.errors.any()) {
+                    try {
+                        var self = this;
+                        this.loading = true;
+                        this.user.requests.push({
+                            id: this.nextReqId++,
+                            pledge_type: this.user.request.pledge_type,
+                            loan_term: this.user.request.loan_term,
+                            period_time: this.user.request.period_time,
+                            payment_day: this.user.request.payment_day,
+                            expire_date: this.user.request.expire_date,
+                            description: this.user.request.description
+                        });
+                        this.loading = true;
+                    }
+                    catch (error) {
+                        console.log(error);
+                        swal({
+                            title: 'Уучлаарай',
+                            text: 'Амжилтгүй боллоо! Дахин оролдоно уу',
+                            type: 'error'
+                        }, function () {
+                            self.loading = false;
+                        });
+                    }
                 }
             },
             addMember()

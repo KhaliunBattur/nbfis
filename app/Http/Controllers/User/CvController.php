@@ -110,17 +110,17 @@ class CvController extends Controller
 
         $user = User::create($parameters);
 
-//            $user->assets()->createMany($request->get('assets'));
-//            $user->workplaces()->createMany($request->get('workplaces'));
-//            $user->family()->createMany($request->get('family'));
-//            $user->emergencies()->createMany($request->get('emergencies'));
-//            $user->budgets()->createMany($request->get('budgets'));
-//            $user->expenses()->createMany($request->get('expenses'));
-//            $user->activeLoans()->createMany($request->get('active_loans'));
-//            $user->Request()->create($request->get('request'));
-            $user->Apartment()->create($request->get('apartment'));
-            $user->Car()->create($request->get('car'));
-            $user->Other()->create($request->get('other'));
+            $user->assets()->createMany($request->get('assets'));
+            $user->workplaces()->createMany($request->get('workplaces'));
+            $user->family()->createMany($request->get('family'));
+            $user->emergencies()->createMany($request->get('emergencies'));
+            $user->budgets()->createMany($request->get('budgets'));
+            $user->expenses()->createMany($request->get('expenses'));
+            $user->activeLoans()->createMany($request->get('active_loans'));
+            $user->Request()->createMany($request->get('requests'));
+            $user->Apartment()->createMany($request->get('apartments'));
+            $user->car()->createMany($request->get('cars'));
+            $user->other()->createMany($request->get('others'));
             return $user;
         });
 
@@ -136,6 +136,8 @@ class CvController extends Controller
         if($request->has('filePath'))
         {
             Storage::move($parameters['filePath'],'/files/file_'.$user['id'] );
+            $parameters['filePath']='/files/file_'.$user['id'];
+            $user->update($parameters);
         }
 
         return response()->json([
@@ -178,11 +180,11 @@ class CvController extends Controller
             $emergencies = $request->get('emergencies');
             $budgets = $request->get('budgets');
             $expenses = $request->get('expenses');
-            $activeLoans = $request->get('aLoans');
-            $requests = $request->get('request');
-            $cars = $request->get('car');
-            $apartments = $request->get('apartment');
-            $others = $request->get('other');
+            $activeLoans = $request->get('active_loans');
+            $requests = $request->get('requests');
+            $apartments = $request->get('apartments');
+            $cars = $request->get('cars');
+            $others = $request->get('others');
 
             foreach ($cars as $car)
             {
@@ -223,10 +225,12 @@ class CvController extends Controller
             {
                 $user->expenses()->updateOrcreate($expens);
             }
+
             foreach ($activeLoans as $aloan)
             {
                 $user->activeLoans()->updateOrcreate($aloan);
             }
+
             foreach ($requests as $loanrequest)
             {
                 $user->Request()->updateOrcreate($loanrequest);

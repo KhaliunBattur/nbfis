@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: uugan
- * Date: 9/9/2017
- * Time: 2:30 PM
+ * Date: 9/29/2017
+ * Time: 4:52 PM
  */
 
 namespace App\User\Car;
@@ -23,9 +23,8 @@ class CarRepository implements CarRepositoryInterface
      */
     public function __construct(Car $model)
     {
-        $this->model=$model;
+        $this->model = $model;
     }
-
 
     public function findByUserAll($id)
     {
@@ -37,7 +36,7 @@ class CarRepository implements CarRepositoryInterface
      */
     public function findAll()
     {
-        // TODO: Implement findAll() method.
+        return $this->model->All();
     }
 
     /**
@@ -46,7 +45,7 @@ class CarRepository implements CarRepositoryInterface
      */
     public function findById($id)
     {
-        // TODO: Implement findById() method.
+        return $this->model->findOrFail($id);
     }
 
     /**
@@ -56,7 +55,7 @@ class CarRepository implements CarRepositoryInterface
      */
     public function findByPaginate($howMany, $params = [])
     {
-        // TODO: Implement findByPaginate() method.
+        return $this->model->paginate($howMany);
     }
 
     /**
@@ -67,7 +66,6 @@ class CarRepository implements CarRepositoryInterface
      */
     public function findByList($value, $name, $ignoreId = 0)
     {
-        // TODO: Implement findByList() method.
+       return $this->model->where('id','!=',$ignoreId)->pluck($name,$value);
     }
-
 }

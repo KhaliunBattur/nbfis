@@ -108,32 +108,32 @@ class User extends Authenticatable
     /**
      * @return HasMany
      */
-    public function Apartment()
-    {
-        return $this->hasMany(Request::class,'user_id');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function Car()
-    {
-        return $this->hasMany(Request::class,'user_id');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function Other()
-    {
-        return $this->hasMany(Request::class,'user_id');
-    }
-
-    /**
-     * @return HasMany
-     */
     public function credit()
     {
-        return $this->hasMany(Request::class,'user_id');
+        return $this->hasMany(Credit::class,'user_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function apartment()
+    {
+        return $this->hasMany(Apartment::class,'user_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function car()
+    {
+        return $this->hasMany(Car::class,'user_id' );
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function other()
+    {
+        return $this->hasMany(Other::class,'user_id');
     }
 }
