@@ -269,6 +269,12 @@
             }
         },
 
+        watch: {
+            '$route.params.id': function() {
+                this.fetchUser();
+            }
+        },
+
         components: {
             'familyList' : FamilyList,
             'workplace-list' : WorkplaceList,

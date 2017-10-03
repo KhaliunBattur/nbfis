@@ -119,14 +119,17 @@
                     </li>
                     <li class="treeview">
                         <a href="#">
-                            <i class="fa fa-user"></i> <span>Хэрэглэгч</span> <i class="fa fa-angle-left pull-right"></i>
+                            <i class="fa fa-user"></i> <span>Харилцагч</span> <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
                             <li>
                                 <router-link to="/new/customer"><i class="fa fa-circle-o"></i> Зээлийн хүсэлт бөглөх</router-link>
                             </li>
                             <li>
-                                <router-link to="/users"><i class="fa fa-circle-o"></i> Хэрэглэгчийн бүртгэл</router-link>
+                                <router-link to="/request"><i class="fa fa-circle-o"></i> Зээлийн хүсэлт</router-link>
+                            </li>
+                            <li>
+                                <router-link to="/customers"><i class="fa fa-circle-o"></i> Харилцагч</router-link>
                             </li>
                         </ul>
                     </li>
@@ -181,6 +184,14 @@
                 <div class="tab-pane active" id="control-sidebar-home-tab">
                     <h3 class="control-sidebar-heading">Ерөнхий тохиргоо</h3>
                     <ul class="control-sidebar-menu">
+                        <li>
+                            <router-link to="/users">
+                                <i class="menu-icon fa fa-user-circle bg-fuchsia"></i>
+                                <div class="menu-info">
+                                    <h4 class="control-sidebar-subheading">Хэрэглэгч</h4>
+                                </div>
+                            </router-link>
+                        </li>
                         <li>
                             <router-link to="/journal">
                                 <i class="menu-icon fa fa-file-excel-o bg-red"></i>

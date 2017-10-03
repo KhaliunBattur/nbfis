@@ -12,6 +12,10 @@ import UserEdit from './components/User/Edit.vue'
 import CV from './components/User/CV.vue'
 import UserCv from './components/User/Profile/CV.vue'
 import UserProfile from './components/User/Profile/Profile.vue'
+import Customer from './components/User/Customer.vue';
+
+//Зээл
+import Request from './components/Request.vue';
 
 // Данс
 import Account from './components/Account/Account.vue'
@@ -49,6 +53,14 @@ const router = new VueRouter({
         {
             path: '/new/customer',
             component: CV
+        },
+        {
+            path: '/customers',
+            component: Customer
+        },
+        {
+            path: '/request',
+            component: Request
         },
         {
             path: '/users', component: Users,
