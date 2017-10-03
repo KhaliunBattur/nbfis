@@ -134,6 +134,13 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         ]);
     });
 
+    Route::get('org_types', function(){
+        return response()->json([
+            'org_types' => \Config::get('enums.org_type')
+        ]);
+    });
+
+
     Route::get('pledge_types', function(){
         return response()->json([
             'pledge_types' => \Config::get('enums.pledge_type')

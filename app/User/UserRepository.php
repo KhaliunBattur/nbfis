@@ -75,9 +75,13 @@ class UserRepository implements UserRepositoryInterface
                 $query->where('phone_number', 'LIKE','%'. $search['phone_number'] . '%');
             }
         })->where(function($query) use($params){
-            if($params['type'] != 'all')
+            if($params['type'] != 'all' || $params['type'] != 'allCustomer')
             {
                 $query->where('user_type', $params['type']);
+            }
+            elseif ($params['type'] == 'allCustomer')
+            {
+                $query->whereIn('user_type', [ $params['customer'], $params['organization'] ]);
             }
         })->orderBy($params['column'], $params['direction'])
             ->with('roles')

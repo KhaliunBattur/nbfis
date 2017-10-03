@@ -212,6 +212,7 @@
                         </div>
 
                         <div class="tab-pane" id="family">
+
                             <familyList :user="user"></familyList>
                         </div>
                         <!-- /.tab-pane -->
