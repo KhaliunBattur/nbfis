@@ -24,6 +24,14 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\TransactionDestroyed' => [
             'App\Listeners\TransactionDestroyedListener',
         ],
+
+        'App\Events\AccountCreated' => [
+            'App\Listeners\AccountCreatedListener',
+        ],
+
+        'App\Events\AccountUpdated' => [
+            'App\Listeners\AccountUpdatedListener',
+        ],
     ];
 
     /**

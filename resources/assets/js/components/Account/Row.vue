@@ -35,10 +35,14 @@
                 {{ acc.type == 'active' ? 'Актив' : 'Пассив' }}
             </div>
             <div class="col-lg-1 col-md-1 col-sm-2">
-                {{ acc.currency.name }}
+                <div v-if="account.currency">
+                    {{ acc.currency.name }}
+                </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-2">
-                {{ acc.journal.name }}
+                <div v-if="account.journal">
+                    {{ acc.journal.name }}
+                </div>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-1">
                 <button class="btn btn-xs btn-warning" @click="editAccount(acc)"><i class="fa fa-pencil"></i></button>

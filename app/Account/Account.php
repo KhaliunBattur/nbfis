@@ -161,6 +161,14 @@ class Account extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'account_id');
+    }
+
+    /**
      * @return BelongsTo
      */
     public function group()

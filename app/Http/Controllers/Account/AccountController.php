@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Account;
 use App\Account\Account;
 use App\Account\AccountGroupRepositoryInterface;
 use App\Account\AccountRepositoryInterface;
+use App\Events\AccountCreated;
+use App\Events\AccountUpdated;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -61,37 +63,47 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-
-        $parameters = $request->all();
-
-//        $request->request->add(['account_number' => $parameters['group']['code'] . $parameters['code']]);
-
         $this->valid($request);
 
-        $parameters['account_number'] = $request->get('account_number');
-
-        $parameters['group_id'] = $parameters['group']['id'];
-        $parameters['journal_id'] = $parameters['journal']['id'];
-        $parameters['currency_id'] = $parameters['currency']['id'];
-
-        if($request->has('bank'))
+        try
         {
-            $parameters['bank_id'] = $parameters['bank']['id'];
-        }
+            return response()->json([
+                'result' => \DB::transaction(function() use ($request){
+                    $parameters = $request->all();
 
-        if($parameters['id'] == 0)
-        {
-            $account = Account::create($parameters);
-        }
-        else
-        {
-            $account = $this->accountRepository->findById($parameters['id']);
-            $account->update($parameters);
-        }
+                    $parameters['account_number'] = $request->get('account_number');
 
-        return response()->json([
-            'result' => !is_null($account)
-        ]);
+                    $parameters['group_id'] = $parameters['group']['id'];
+                    $parameters['journal_id'] = $parameters['journal']['id'];
+                    $parameters['currency_id'] = $parameters['currency']['id'];
+
+                    if($request->has('bank'))
+                    {
+                        $parameters['bank_id'] = $parameters['bank']['id'];
+                    }
+
+                    if($parameters['id'] == 0)
+                    {
+                        $account = Account::create($parameters);
+
+                        event(new AccountCreated($account));
+                    }
+                    else
+                    {
+                        $account = $this->accountRepository->findById($parameters['id']);
+
+                        event(new AccountUpdated($account, $request));
+
+                        $account->update($parameters);
+                    }
+
+                    return !is_null($account);
+                })
+            ]);
+        }catch (\Exception $exception)
+        {
+            return response()->json(['message' => $exception->getMessage()], 406);
+        }
     }
 
     /**
