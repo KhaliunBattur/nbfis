@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: uugan
- * Date: 9/9/2017
- * Time: 3:24 PM
+ * Date: 9/29/2017
+ * Time: 5:26 PM
  */
 
 namespace App\User\Other;
@@ -14,17 +14,18 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class OtherRepository implements OtherRepositoryInterface
 {
-
+    /**
+     * @var Other
+     */
     private $model;
 
     /**
-     * CarRepository constructor.
-     * @param Car $model
+     * WorkplaceRepository constructor.
+     * @param Other $model
      */
-
-    public function __construct(Other $model)
+    public function __construct(Workplace $model)
     {
-        $this->model=$model;
+        $this->model = $model;
     }
     /**
      * @return Collection
@@ -61,14 +62,7 @@ class OtherRepository implements OtherRepositoryInterface
      */
     public function findByList($value, $name, $ignoreId = 0)
     {
-        return $this->model->where('id','!=',$ignoreId)->pluck($name,$value);
+        return $this->model->where('id', '!=', $ignoreId)->pluck($name, $value);
     }
-    /**
-     * @param $id
-     * @return Collection|static[]
-     */
-    public function findByUserAll($id)
-    {
-        return $this->model->where('user_id',$id)->get();
-    }
+
 }

@@ -35,4 +35,5 @@ interface UserRepositoryInterface extends Repository
      * @return mixed
      */
     public function findByRegister($register);
+
 }

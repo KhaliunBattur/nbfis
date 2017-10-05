@@ -13,5 +13,10 @@ use App\Core\Repository;
 use Illuminate\Database\Eloquent\Collection;
 interface RequestRepositoryInterface extends Repository
 {
-
+    /**
+     * @param $howMany
+     * @param array $params
+     * @return mixed
+     */
+    public function findByRequestPaginate($howMany, $params = []);
 }
