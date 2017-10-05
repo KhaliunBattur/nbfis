@@ -9,19 +9,24 @@ use App\Events\UserCreated;
 use App\Events\UserUpdated;
 use Illuminate\Support\Facades\Storage;
 use App\Support\FileType;
+use App\User\LoanRequest\Requests;
+use App\User\LoanRequest\RequestRepositoryInterface;
 use App\User\UserRepositoryInterface;
+
 
 class CvController extends Controller
 {
+
     private $userRepository;
 
+    private $requestRepository;
     /**
      * UserController constructor.
      * @param UserRepositoryInterface $userRepository
      */
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(RequestRepositoryInterface $requestRepository, UserRepositoryInterface $userRepository)
     {
-
+        $this->requestRepository = $requestRepository;
         $this->userRepository = $userRepository;
     }
     /**
@@ -33,6 +38,18 @@ class CvController extends Controller
     public function index()
     {
         //
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRequests(Request $request)
+    {
+        $requests = $this->requestRepository->findByRequestPaginate( $request->get('per_page'), $request->all());
+        return response()->json([
+            'requests' => $requests
+        ]);
     }
     public function profileUpload(Request $request)
     {
@@ -233,7 +250,7 @@ class CvController extends Controller
 
             foreach ($requests as $loanrequest)
             {
-                $user->Request()->updateOrcreate($loanrequest);
+                $user->Requests()->updateOrcreate($loanrequest);
             }
 
             $result = true;

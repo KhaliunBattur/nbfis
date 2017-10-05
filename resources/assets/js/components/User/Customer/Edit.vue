@@ -6,7 +6,7 @@
                 <div class="box">
                     <div class="box-header with-border">
                         <div class="box-title">
-                            Засварлах
+                            Шинээр нэмэх
                         </div>
                     </div>
                     <div class="form-horizontal">
@@ -14,21 +14,30 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Зураг</label>
                                 <div class="col-sm-10">
-                                    <input type="file" class="form-control" @change="onFileChange" />
-                                </div>
-                                <div class="col-sm-2 col-sm-offset-2" v-if="profile_picture != ''">
-                                    <img :src="profile_picture " class="profile-user-img img-responsive img-circle" style="margin: 10px 0px" />
+                                    <dropzone
+                                            ref="profUpload"
+                                            id="profile"
+                                            class="margin-bottom-10"
+                                            :headers='csrfHeaders'
+                                            :url="profileUpload"
+                                            :thumbnail-height="100"
+                                            :thumbnail-width="100"
+                                            v-on:vdropzone-success="ProfSuccess"
+                                            v-on:vdropzone-error="onError">
+                                    </dropzone>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Овог <label class="text-danger">*</label></label>
+                                <label v-if="user.user_type=='customer'" class="col-sm-2 control-label">Овог <label class="text-danger">*</label></label>
+                                <label v-else-if="user.user_type=='organization'" class="col-sm-2 control-label">Байгууллагын нэр <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
                                     <input type="text" maxlength="255" class="form-control" v-model="user.first_name" name="fname" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('fname') }"/>
                                     <div v-show="errors.has('fname')" class="help is-danger">{{ errors.first('fname') }}</div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Нэр <label class="text-danger">*</label></label>
+                                <label v-if="user.user_type == 'customer'" class="col-sm-2 control-label">Нэр <label class="text-danger">*</label></label>
+                                <label v-else-if="user.user_type=='organization'" class="col-sm-2 control-label">Товч нэр <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
                                     <input type="text" maxlength="255"  class="form-control" v-model="user.name"  name="oname" v-validate="'required|max:255'" :class="{'form-control': true, 'is-danger': errors.has('oname') }"/>
                                     <div v-show="errors.has('oname')" class="help is-danger">{{ errors.first('oname') }}</div>
@@ -41,23 +50,44 @@
                                     <masked-input v-model="user.register" mask="AA11111111" placeholder="АА00000000" @input="setRegister" class="form-control" />
                                 </div>
                             </div>
+                            <div class="form-group" v-else-if="user.user_type === 'organization'">
+                                <label class="col-sm-2 control-label">Байгууллагын Регистр</label>
+                                <div class="col-sm-10">
+                                    <masked-input v-model="user.org_register" mask="AA11111111" placeholder="АА00000000"  class="form-control" />
+                                </div>
+                            </div>
+
                             <div class="form-group" v-if="user.user_type === 'customer'">
                                 <label class="col-sm-2 control-label">Төрсөн огноо</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" v-model="user.birth_day" readonly="readonly" />
                                 </div>
                             </div>
+
+                            <div class="form-group" v-else-if="user.user_type === 'organization'">
+                                <label class="col-sm-2 control-label">Байгуулагдсан огноо</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" v-model="user.founding_date" v-pick="user.founding_date" />
+                                </div>
+                            </div>
+
                             <div class="form-group" v-if="user.user_type === 'customer'">
                                 <label class="col-sm-2 control-label">Нас</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" v-model="user.age" readonly="readonly" />
                                 </div>
                             </div>
+                            <div class="form-group" v-else-if="user.user_type === 'organization'">
+                                <label class="col-sm-2 control-label">У/Б дугаар</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" v-model="user.state_num"  />
+                                </div>
+                            </div>
                             <hr v-if="user.user_type === 'customer'" />
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Утас</label>
                                 <div class="col-sm-10">
-                                    <masked-input v-model="user.phone_number" mask="\+ (976) 1111-1111" placeholder="1111-1111" class="form-control"  />
+                                    <masked-input v-model="user.phone_number" mask="\+ (976) 1111-1111" class="form-control"  />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -70,26 +100,40 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Email <label class="text-danger">*</label></label>
                                 <div class="col-sm-10">
-                                    <input  type="text" class="form-control" v-model="user.email" name="email" v-validate="'required|email'" :class="{'form-control': true, 'is-danger': errors.has('email') }" placeholder="Email" />
+                                    <input  type="text" class="form-control" v-model="user.email" name="email" v-validate="'required|email'" :class="{'form-control': true, 'is-danger': errors.has('email') }"/>
                                     <div v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-lg-10 col-sm-offset-2">
                                     <div class="radio-inline">
-                                        <input name="type" type="radio" v-model="user.user_type" value="staff" /> Ажилтан
+                                        <input name="type" type="radio" v-model="user.user_type" value="organization" /> Байгууллага
                                     </div>
                                     <div class="radio-inline">
-                                        <input name="type" type="radio" v-model="user.user_type" value="customer" /> Харилцагч
+                                        <input name="type" type="radio" v-model="user.user_type" value="customer" /> Хувь хүн
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group" v-if="user.user_type === 'staff'">
-                                <label class="col-sm-2 control-label">Албан тушаал</label>
+                            <div class="form-group" v-if="user.user_type === 'organization'">
+                                <label class="col-sm-2 control-label">Байгууллагын төрөл</label>
                                 <div class="col-sm-10">
-                                    <select v-model="user.roles" multiple="multiple" class="form-control">
-                                        <option v-for="role in roles" :value="role.id">{{ role.display_name }}</option>
+                                    <select v-model="user.org_types"  class="form-control">
+                                        <option v-for="(org_type,index) in org_types" :value="index">{{org_type}}</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Нууц үг <label class="text-danger">*</label></label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" v-model="user.password" name="pass" v-validate="'required|min:6'" :class="{'form-control': true, 'is-danger': errors.has('pass') }"/>
+                                    <div v-show="errors.has('pass')" class="help is-danger">{{ errors.first('pass') }}</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Нууц үг батлах <label class="text-danger">*</label></label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" v-model="user.confirm_password" @keyup.enter="save()" name="confpass" v-validate="'required|min:6'" :class="{'form-control': true, 'is-danger': errors.has('confpass') }"/>
+                                    <div v-show="errors.has('confpass')" class="help is-danger">{{ errors.first('confpass') }}</div>
                                 </div>
                             </div>
                         </div>
@@ -98,37 +142,9 @@
                         <div class="btn-group">
                             <router-link to="/users" class="btn btn-sm btn-danger">Буцах</router-link>
                         </div>
-                        <div class="btn-group pull-right">
-                            <button type="button" class="btn btn-sm btn-success" @click="save()">Хадгалах</button>
+                        <div class="btn-group pull-right" >
+                            <button type="button" class="btn btn-sm btn-success" @click="save()" onautocomplete="off" >Хадгалах</button>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <div class="box-title">
-                            Нууц үг солих
-                        </div>
-                    </div>
-                    <div class="form-horizontal">
-                        <div class="box-body">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Нууц үг <label class="text-danger">*</label></label>
-                                <div class="col-sm-10">
-                                    <input type="password" class="form-control" v-model="password" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Нууц үг батлах <label class="text-danger">*</label></label>
-                                <div class="col-sm-10">
-                                    <input type="password" class="form-control" v-model="confirm_password" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="box-footer">
-                        <div class="btn-group pull-right"><button type="button" class="btn btn-sm btn-success" @click="changePassword">Хадгалах</button></div>
                     </div>
                 </div>
             </div>
@@ -139,13 +155,14 @@
 <script>
 
     import MaskedInput from 'vue-masked-input'
-
+    import Dropzone from 'vue2-dropzone'
     export default {
 
         props: ['roles'],
 
         components: {
-            'masked-input': MaskedInput
+            'masked-input': MaskedInput,
+            Dropzone
         },
 
         watch: {
@@ -157,6 +174,7 @@
         data()
         {
             return {
+                profileUpload:'/api/cv/profileUpload',
                 user: {
                     image: '',
                     first_name: '',
@@ -168,7 +186,12 @@
                     register: null,
                     birth_day: null,
                     age: null,
-                    roles: []
+                    roles: [],
+                    founding_date:'',
+                    org_types:[],
+                    org_type:'',
+                    org_register:'',
+                    state_num:'',
                 },
                 profile_picture: '',
                 password: '',
@@ -178,11 +201,32 @@
 
         created()
         {
+            this.csrfHeaders = {
+                'X-CSRF-TOKEN': window.Laravel.csrfToken
+            };
+            this.fetchOrgType();
             this.getUser();
         },
 
         methods: {
-
+            fetchOrgType()
+            {
+                axios.get('/api/org_types' ).then(response=>{
+                    this.org_types = response.data.org_types;
+                    this.loading=false;
+                }).catch(errors=>{
+                    this.loading = false;
+                })
+            },
+            ProfSuccess(file,response)
+            {
+                this.user.profilePath = response.tempProfPath;
+                this.user.image = response.profPic;
+            },
+            onError (file, error)
+            {
+                swal('Уучлаарай!', 'Амжилтгүй боллоо!', 'error')
+            },
             setRegister()
             {
                 try {
@@ -216,14 +260,14 @@
             getUser()
             {
                 axios.get('/api/users/' + this.$route.params.id + '/edit').then(response => {
-                    console.log(this.user);
                     this.user = response.data.user;
+                    this.user.org_register = response.data.user.org_register;
                     this.user.roles = response.data.roles;
                     this.profile_picture =  this.user.image;
-                    console.log(this.profile_picture);
                     this.user.image = null;
                     Vue.delete(this.user, 'created_at');
                     Vue.delete(this.user, 'updated_at');
+                    console.log(this.user.org_register);
                     this.setRegister();
                 }).catch(function (response) {
                     swal('Уучлаарай!', 'Хэрэглэгчийн мэдээлэл татаж чадсангүй', 'error')

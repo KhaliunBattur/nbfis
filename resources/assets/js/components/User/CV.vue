@@ -810,8 +810,15 @@
             MaskedInput,
             'masked-input': MaskedInput,
             Dropzone,
-//            'money':VMoney
+
         },
+        watch: {
+            '$route.params.register': function() {
+                console.log(this.$route.params.register);
+                console.log(this.$route);
+            }
+        },
+
         data()
         {
             return {
@@ -1061,9 +1068,8 @@
                             this.user.asset = response.data.user.assets;
                             this.user.expense = response.data.user.expenses;
                             this.user.credits = response.data.user.active_loans;
-                            this.user.requests = response.data.user.request;
+                            this.user.request = response.data.user.requests;
                             this.user.apartments = response.data.user.apartment;
-                            console.log(response.data.user.apartment);
                             this.user.cars = response.data.user.car;
                             this.user.others = response.data.user.other;
                             this.uid = response.data.user.id;
@@ -1082,6 +1088,7 @@
                 {
                     console.log('Шинэ хэрэглэгч');
                 }
+
             },
             update()
             {
@@ -1145,7 +1152,7 @@
                         this.nextCreditId = 1;
                         this.nextWorkId = 1;
                         this.owner_types = null;
-//                        this.pledge_types=null,
+                        this.pledge_types=null,
                         this.advertisements = null;
                         this.user = {
                             image: '',
@@ -1591,7 +1598,7 @@
                         this.user.requests.push({
                             id: this.nextReqId++,
                             pledge_type: this.user.request.pledge_type,
-                            loan_term: this.user.request.loan_term,
+                            loan_term:   this.user.request.loan_term,
                             period_time: this.user.request.period_time,
                             payment_day: this.user.request.payment_day,
                             expire_date: this.user.request.expire_date,
@@ -1772,6 +1779,11 @@
 
             fetchOwnerType()
             {
+                if(this.$route.params.register != null )
+                {
+                    this.findByRegister(this.$route.params.register);
+                }
+
                 axios.get('/api/owner_types' ).then(response=>{
                     this.owner_types = response.data.owner_types;
                     this.loading=false;
@@ -1779,6 +1791,7 @@
                     this.loading = false;
                 })
             },
+
             fetchLoanPledgeType()
             {
                 axios.get('/api/pledge_types' ).then(response=>{

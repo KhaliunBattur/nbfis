@@ -46,6 +46,7 @@ class UserRepository implements UserRepositoryInterface
         return $this->model->findOrFail($id);
     }
 
+
     /**
      * @param $howMany
      * @param array $params
@@ -75,13 +76,13 @@ class UserRepository implements UserRepositoryInterface
                 $query->where('phone_number', 'LIKE','%'. $search['phone_number'] . '%');
             }
         })->where(function($query) use($params){
-            if($params['type'] != 'all' || $params['type'] != 'allCustomer')
+            if($params['type'] != 'all' or $params['type'] != 'allCustomer')
             {
                 $query->where('user_type', $params['type']);
             }
-            elseif ($params['type'] == 'allCustomer')
+            elseif($params['type'] == 'allCustomer')
             {
-                $query->whereIn('user_type', [ $params['customer'], $params['organization'] ]);
+                $query->whereIn('user_type', ['customer','organization']);
             }
         })->orderBy($params['column'], $params['direction'])
             ->with('roles')
@@ -106,7 +107,7 @@ class UserRepository implements UserRepositoryInterface
     public function findInfoById($id)
     {
         return $this->model->where('id', $id)->with([
-            'family', 'workplaces', 'emergencies', 'activeLoans', 'budgets', 'assets', 'expenses','Request','Apartment','Car','Other','Credit'
+            'family', 'workplaces', 'emergencies', 'activeLoans', 'budgets', 'assets', 'expenses','Requests','Apartment','Car','Other','Credit'
         ])->first();
     }
 
@@ -117,7 +118,7 @@ class UserRepository implements UserRepositoryInterface
     public  function findByRegister($register)
     {
         return $this->model->where('register',$register)->with([
-            'family','workplaces','emergencies','activeLoans','budgets','assets','expenses','Request','Apartment','Car','Other','Credit'
+            'family','workplaces','emergencies','activeLoans','budgets','assets','expenses','Requests','Apartment','Car','Other','Credit'
         ])->first();
     }
 

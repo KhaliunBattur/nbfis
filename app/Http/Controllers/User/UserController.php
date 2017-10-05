@@ -36,7 +36,6 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-
         $users = $this->userRepository->findByPaginate($request->get('per_page'), $request->all());
         return response()->json([
             'model' => $users

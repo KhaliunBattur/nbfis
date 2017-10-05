@@ -10,7 +10,7 @@ namespace App\User\LoanRequest;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Request extends Model
+class Requests extends Model
 {
 
     /**

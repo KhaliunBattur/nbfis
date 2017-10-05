@@ -72,6 +72,8 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::post('cv/filesUpload','CvController@fileUpload');
         Route::post('cv/profileUpload','CvController@profileUpload');
 
+//        loan request route
+        Route::get('request','CvController@getRequests');
 
         Route::get('user/{id}/family', ['as' => 'user.family.index', 'uses' => 'FamilyController@index']);
         Route::post('user/{id}/family', ['as' => 'user.family.store', 'uses' => 'FamilyController@store']);

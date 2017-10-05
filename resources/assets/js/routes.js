@@ -16,7 +16,8 @@ import Customer from './components/User/Customer.vue';
 import CustomerList from './components/User/CustomerList.vue';
 import CustomerEdit from './components/User/Customer/Edit.vue';
 import CustomerCreate from './components/User/Customer/Create.vue';
-
+import CustomerProfile from  './components/User/Customer/Profile.vue';
+import CvRequest from './components/User/CV.vue';
 //Зээл
 import Request from './components/Request.vue';
 
@@ -55,7 +56,12 @@ const router = new VueRouter({
         },
         {
             path: '/new/customer',
-            component: CV
+            component: CV,
+            children: [
+                {
+                    path:':register' ,component: CvRequest
+                }
+            ]
         },
         {
             path: '/customers', component: Customer,
@@ -67,13 +73,15 @@ const router = new VueRouter({
                     path: 'create', component: CustomerCreate
                 },
                 {
-                    path: 'id/edit', component: CustomerEdit
+                    path: ':id/edit', component: CustomerEdit
+                },
+                {
+                    path: ':id/profile', component: CustomerProfile
                 }
             ]
         },
         {
-            path: '/request',
-            component: Request
+            path: '/request', component: Request
         },
         {
             path: '/users', component: Users,

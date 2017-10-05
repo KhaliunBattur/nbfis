@@ -8,7 +8,7 @@ use App\User\Contact\Contact;
 use App\User\Credit\Credit;
 use App\User\Expense\Expense;
 use App\User\Family\Family;
-use App\User\LoanRequest\Request;
+use App\User\LoanRequest\Requests;
 use App\User\Workplace\Workplace;
 use App\User\Apartment\Apartment;
 use App\User\Car\Car;
@@ -100,9 +100,9 @@ class User extends Authenticatable
     /**
      * @return HasMany
      */
-    public function Request()
+    public function Requests()
     {
-        return $this->hasMany(Request::class,'user_id');
+        return $this->hasMany(Requests::class,'user_id');
     }
 
     /**
