@@ -36,6 +36,7 @@ import Roles from './components/Role/Roles.vue'
 import Season from './components/Season/Season.vue'
 import BalanceList from './components/Season/List.vue'
 import Balance from './components/Season/Balance.vue'
+import BalanceAll from './components/Season/Balance/Balance.vue'
 
 //Гүйлгээ
 import Transaction from './components/Transaction/Transaction.vue';
@@ -102,6 +103,9 @@ const router = new VueRouter({
                 },
                 {
                     path: ':id/balance', component: Balance
+                },
+                {
+                    path: ':id/balance/final', component: BalanceAll
                 }
             ]
         },

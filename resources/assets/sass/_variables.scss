@@ -224,3 +224,7 @@ $panel-default-heading-bg: #fff;
 .table-sm-text {
   font-size: 12px !important
 }
+
+.account-row:nth-of-type(2n) {
+  background: #f5fff4;
+}

@@ -153,6 +153,28 @@ class Account extends Model
 
     /**
      * @param $season_id
+     * @return $this
+     */
+    public function creditTransaction($season_id)
+    {
+        return $this->hasMany(Transaction::class, 'account_id')
+            ->where('season_id', $season_id)
+            ->where('type', 'credit');
+    }
+
+    /**
+     * @param $season_id
+     * @return $this
+     */
+    public function debitTransaction($season_id)
+    {
+        return $this->hasMany(Transaction::class, 'account_id')
+            ->where('season_id', $season_id)
+            ->where('type', 'debit');
+    }
+
+    /**
+     * @param $season_id
      * @return HasMany
      */
     public function transaction($season_id)

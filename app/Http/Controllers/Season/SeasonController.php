@@ -89,7 +89,7 @@ class SeasonController extends Controller
     {
         $this->validate($request, ['name' => 'required']);
 
-        $season = \DB::transaction(function() use($request){
+        $season = \DB::transaction(function () use ($request) {
             $parameters = $request->all();
             $parameters['open_user_id'] = \Auth::user()->getKey();
             $parameters['open_date'] = Carbon::now();
@@ -102,8 +102,7 @@ class SeasonController extends Controller
 
             $season_key = $is_first ? $season->getKey() : $this->seasonRepository->findLastClose();
 
-            foreach ($accounts as $account)
-            {
+            foreach ($accounts as $account) {
                 $season->accounts()->attach($account->getKey(), [
                     'exchange' => $account->currency->exchange,
                     'balance' => $account->balance($season_key)
@@ -121,7 +120,7 @@ class SeasonController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -134,26 +133,28 @@ class SeasonController extends Controller
 
         $array = [];
 
-        foreach ($groups as $key => $group)
-        {
+        foreach ($groups as $key => $group) {
             $groupArray = $group->toArray();
             $groupArray['balance'] = 0;
             $groupArray['active'] = 0;
             $groupArray['passive'] = 0;
+            $groupArray['credit'] = 0;
+            $groupArray['debit'] = 0;
+            $groupArray['active_total'] = 0;
+            $groupArray['passive_total'] = 0;
             $array[$key] = $groupArray;
-            if($group->children->count())
-            {
+            if ($group->children->count()) {
                 $array[$key]['children'] = $this->recursive($group->children, $accounts, $season);
             }
-            if($group->accounts->count())
-            {
+            if ($group->accounts->count()) {
                 $array[$key]['accounts'] = [];
-                foreach ($group->accounts()->with(['currency', 'journal', 'group', 'bank', 'breakdown'])->get() as $account)
-                {
-                    if(array_key_exists($account->getKey(), $accounts))
-                    {
+                foreach ($group->accounts()->with(['currency', 'journal', 'group', 'bank', 'breakdown'])->get() as $account) {
+                    if (array_key_exists($account->getKey(), $accounts)) {
                         $accountArray = $account->toArray();
                         $accountArray['balance'] = $account->balance($season->getKey());
+                        $accountArray['total'] = $account->present()->balance($season->getKey());
+                        $accountArray['general_credit'] = $account->creditTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_debit'] = $account->debitTransaction($season->getKey())->sum('amount');
                         $accountArray['exchange'] = $accounts[$account->getKey()];
                         array_push($array[$key]['accounts'], $accountArray);
                     }
@@ -176,27 +177,26 @@ class SeasonController extends Controller
     private function recursive($children, $accounts, $season)
     {
         $array = [];
-        foreach ($children as $key => $child)
-        {
+        foreach ($children as $key => $child) {
             $groupArray = $child->toArray();
             $groupArray['balance'] = 0;
             $groupArray['active'] = 0;
             $groupArray['passive'] = 0;
             $array[$key] = $groupArray;
-            if($child->children->count())
-            {
+            if ($child->children->count()) {
                 $array[$key]['children'] = $this->recursive($child->children, $accounts, $season);
             }
-            if($child->accounts->count())
-            {
+            if ($child->accounts->count()) {
                 $array[$key]['accounts'] = [];
-                foreach ($child->accounts()->with(['currency', 'journal', 'group', 'bank', 'breakdown', 'breakdown.transactionAble'])->get() as $account)
-                {
-                    if(array_key_exists($account->getKey(), $accounts))
-                    {
+                foreach ($child->accounts()->with(['currency', 'journal', 'group', 'bank', 'breakdown', 'breakdown.transactionAble'])->get() as $account) {
+                    if (array_key_exists($account->getKey(), $accounts)) {
                         $accountArray = $account->toArray();
                         $accountArray['balance'] = $account->balance($season->getKey());
+                        $accountArray['total'] = $account->present()->balance($season->getKey());
+                        $accountArray['general_credit'] = $account->creditTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_debit'] = $account->debitTransaction($season->getKey())->sum('amount');
                         $accountArray['exchange'] = $accounts[$account->getKey()];
+                        $accountArray['final_exchange'] = $account->currency->exchange;
                         array_push($array[$key]['accounts'], $accountArray);
                     }
                 }
@@ -215,21 +215,19 @@ class SeasonController extends Controller
      */
     public function saveBalance($id, Request $request)
     {
-        \DB::transaction(function() use($request, $id) {
+        \DB::transaction(function () use ($request, $id) {
             $accounts = [];
 
             $accounts = $this->getAccounts($request->all(), $accounts);
 
             $season = $this->seasonRepository->findById($id);
 
-            foreach ($accounts as $account)
-            {
+            foreach ($accounts as $account) {
                 $season->accounts()->updateExistingPivot($account['id'], ['balance' => $account['balance']]);
 
                 $syncAccount = $this->accountRepository->findById($account['id']);
 
-                if(array_key_exists('breakdown', $account))
-                {
+                if (array_key_exists('breakdown', $account)) {
                     $syncAccount->syncBreakDowns($account['breakdown'], $season, $account);
                 }
             }
@@ -247,23 +245,65 @@ class SeasonController extends Controller
      */
     private function getAccounts($groups, $accounts)
     {
-        foreach ($groups as $group)
-        {
-            if(array_key_exists('accounts', $group))
-            {
-                foreach ($group['accounts'] as $account)
-                {
+        foreach ($groups as $group) {
+            if (array_key_exists('accounts', $group)) {
+                foreach ($group['accounts'] as $account) {
                     array_push($accounts, $account);
                 }
             }
 
-            if(array_key_exists('children', $group))
-            {
+            if (array_key_exists('children', $group)) {
                 $accounts = $this->getAccounts($group['children'], $accounts);
             }
         }
 
         return $accounts;
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function finalBalance(Request $request, $id)
+    {
+        $season = $this->seasonRepository->findById($id);
+
+        $groups = $this->groupRepository->findParents();
+
+        $accounts = $season->accounts()->pluck('exchange', 'id')->toArray();
+
+        $array = [];
+
+        foreach ($groups as $key => $group) {
+            $groupArray = $group->toArray();
+            $groupArray['balance'] = 0;
+            $groupArray['active'] = 0;
+            $groupArray['passive'] = 0;
+            $array[$key] = $groupArray;
+            if ($group->children->count()) {
+                $array[$key]['children'] = $this->recursive($group->children, $accounts, $season);
+            }
+            if ($group->accounts->count()) {
+                $array[$key]['accounts'] = [];
+                foreach ($group->accounts()->with(['currency', 'journal', 'group', 'bank', 'breakdown'])->get() as $account) {
+                    if (array_key_exists($account->getKey(), $accounts)) {
+                        $accountArray = $account->toArray();
+                        $accountArray['balance'] = $account->balance($season->getKey());
+                        $accountArray['total'] = $account->present()->balance($season->getKey());
+                        $accountArray['general_credit'] = $account->creditTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_debit'] = $account->debitTransaction($season->getKey())->sum('amount');
+                        $accountArray['exchange'] = $accounts[$account->getKey()];
+                        $accountArray['final_exchange'] = $account->currency->exchange;
+                        array_push($array[$key]['accounts'], $accountArray);
+                    }
+                }
+            }
+        }
+
+        return response()->json([
+            'model' => $array
+        ]);
     }
 
     /**
