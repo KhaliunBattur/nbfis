@@ -4,6 +4,7 @@
 /public/js/*
 /public/images/profile/*
 /public/temp_files/*
+/public/files/*
 /public/storage
 /storage/*.key
 /vendor

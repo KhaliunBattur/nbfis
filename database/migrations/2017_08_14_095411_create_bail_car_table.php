@@ -18,6 +18,7 @@ class CreateBailCarTable extends Migration
             $table->integer('user_id')->index()->unsigned();
             $table->string('model');
             $table->string('color');
+            $table->string('manufacture');
             $table->date('entry_date');
             $table->decimal('price',18,2);
             $table->timestamps();

@@ -90,7 +90,6 @@
                     }, function(){
                         $('#groupForm' + self.group.id).modal('hide');
                         self.$emit('saved');
-
                         this.errors.clear();
                     })
                 }).catch(errors => {

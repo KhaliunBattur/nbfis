@@ -16,9 +16,10 @@ class CreateBailApartmentTable extends Migration
         Schema::create('bail_apartment', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->index()->unsigned();
-            $table->date('address');
+            $table->date('commissioned');
+            $table->string('address');
             $table->string('apart_meter');
-            $table->string('rooms');
+            $table->string('room');
             $table->decimal('price',18,2);
             $table->timestamps();
 

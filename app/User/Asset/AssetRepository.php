@@ -16,7 +16,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class AssetRepository implements AssetRepositoryInterface
 {
     /**
-     * @var Budget
+     * @var asset
      */
     private $model;
 

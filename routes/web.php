@@ -73,6 +73,8 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::post('cv/filesUpload','CvController@fileUpload');
         Route::post('cv/profileUpload','CvController@profileUpload');
 
+//        loan request route
+        Route::get('request','CvController@getRequests');
 
         Route::get('user/{id}/family', ['as' => 'user.family.index', 'uses' => 'FamilyController@index']);
         Route::post('user/{id}/family', ['as' => 'user.family.store', 'uses' => 'FamilyController@store']);
@@ -134,6 +136,13 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
             'owner_types' => \Config::get('enums.owner_type')
         ]);
     });
+
+    Route::get('org_types', function(){
+        return response()->json([
+            'org_types' => \Config::get('enums.org_type')
+        ]);
+    });
+
 
     Route::get('pledge_types', function(){
         return response()->json([

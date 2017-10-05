@@ -8,7 +8,11 @@ return [
         'relative' => 'Хамаатан',
         'other' => 'Бусад'
     ],
-
+    'org_type'=>[
+      'information technology'=>'Мэдээлэл технологи',
+      'finance'=>'Банк санхүү',
+      'factory'=>'Үйлдвэр'
+    ],
     'relation' => [
         'father' => 'Аав',
         'mother' => 'Ээж',
