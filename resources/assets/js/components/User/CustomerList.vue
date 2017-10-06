@@ -209,7 +209,6 @@
                 axios.get('/api/users?search='+ JSON.stringify(this.query.search) +'&type=' + this.query.user_type + '&per_page=' + this.query.per_page + '&column='+this.query.column+'&direction='+this.query.direction+'&page='+this.query.page).then(response => {
                     this.model = response.data.model;
                     this.loading = false;
-                    console.log(this.model);
                 }).catch(errors => {
                     this.$router.push('/')
                 })

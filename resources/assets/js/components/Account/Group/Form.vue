@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="groupForm" tabindex="-1" role="dialog" aria-labelledby="groupFormLabel">
+    <div class="modal fade" id="groupForm" tabindex="-1" role="dialog" aria-labelledby="groupFormLabel" v-modal v-on:hideModal="reset()">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -78,6 +78,15 @@
                     loading(false)
                 })
             },
+            reset()
+            {
+                this.groups = [];
+                this.selected = null;
+                this.errorMessages = {
+                    code: null,
+                    name: null
+                };
+            },
             save()
             {
                 var self = this;
@@ -90,12 +99,10 @@
                     }, function(){
                         $('#groupForm' + self.group.id).modal('hide');
                         self.$emit('saved');
-                        this.errors.clear();
                     })
                 }).catch(errors => {
                     this.errorMessages = errors.response.data;
                     swal('Уучлаарай', 'Амжилтгүй боллоо! Та дахин оролдоно уу', 'error')
-                    this.errors.clear();
                 })
             }
         }

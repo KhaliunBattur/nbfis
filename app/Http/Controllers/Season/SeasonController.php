@@ -153,8 +153,10 @@ class SeasonController extends Controller
                         $accountArray = $account->toArray();
                         $accountArray['balance'] = $account->balance($season->getKey());
                         $accountArray['total'] = $account->present()->balance($season->getKey());
-                        $accountArray['general_credit'] = $account->creditTransaction($season->getKey())->sum('amount');
-                        $accountArray['general_debit'] = $account->debitTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_credit'] = $account->sumOfCreditTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_credit_currency'] = $account->creditTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_debit'] = $account->sumOfDebitTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_debit_currency'] = $account->debitTransaction($season->getKey())->sum('amount');
                         $accountArray['exchange'] = $accounts[$account->getKey()];
                         array_push($array[$key]['accounts'], $accountArray);
                     }
@@ -182,6 +184,10 @@ class SeasonController extends Controller
             $groupArray['balance'] = 0;
             $groupArray['active'] = 0;
             $groupArray['passive'] = 0;
+            $groupArray['credit'] = 0;
+            $groupArray['debit'] = 0;
+            $groupArray['active_total'] = 0;
+            $groupArray['passive_total'] = 0;
             $array[$key] = $groupArray;
             if ($child->children->count()) {
                 $array[$key]['children'] = $this->recursive($child->children, $accounts, $season);
@@ -193,8 +199,10 @@ class SeasonController extends Controller
                         $accountArray = $account->toArray();
                         $accountArray['balance'] = $account->balance($season->getKey());
                         $accountArray['total'] = $account->present()->balance($season->getKey());
-                        $accountArray['general_credit'] = $account->creditTransaction($season->getKey())->sum('amount');
-                        $accountArray['general_debit'] = $account->debitTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_credit'] = $account->sumOfCreditTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_credit_currency'] = $account->creditTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_debit'] = $account->sumOfDebitTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_debit_currency'] = $account->debitTransaction($season->getKey())->sum('amount');
                         $accountArray['exchange'] = $accounts[$account->getKey()];
                         $accountArray['final_exchange'] = $account->currency->exchange;
                         array_push($array[$key]['accounts'], $accountArray);
@@ -280,6 +288,10 @@ class SeasonController extends Controller
             $groupArray['balance'] = 0;
             $groupArray['active'] = 0;
             $groupArray['passive'] = 0;
+            $groupArray['credit'] = 0;
+            $groupArray['debit'] = 0;
+            $groupArray['active_total'] = 0;
+            $groupArray['passive_total'] = 0;
             $array[$key] = $groupArray;
             if ($group->children->count()) {
                 $array[$key]['children'] = $this->recursive($group->children, $accounts, $season);
@@ -291,8 +303,10 @@ class SeasonController extends Controller
                         $accountArray = $account->toArray();
                         $accountArray['balance'] = $account->balance($season->getKey());
                         $accountArray['total'] = $account->present()->balance($season->getKey());
-                        $accountArray['general_credit'] = $account->creditTransaction($season->getKey())->sum('amount');
-                        $accountArray['general_debit'] = $account->debitTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_credit'] = $account->sumOfCreditTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_credit_currency'] = $account->creditTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_debit'] = $account->sumOfDebitTransaction($season->getKey())->sum('amount');
+                        $accountArray['general_debit_currency'] = $account->debitTransaction($season->getKey())->sum('amount');
                         $accountArray['exchange'] = $accounts[$account->getKey()];
                         $accountArray['final_exchange'] = $account->currency->exchange;
                         array_push($array[$key]['accounts'], $accountArray);

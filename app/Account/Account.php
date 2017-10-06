@@ -162,6 +162,16 @@ class Account extends Model
             ->where('type', 'credit');
     }
 
+    public function sumOfCreditTransaction($season_id)
+    {
+        return $this->creditTransaction($season_id)->select(\DB::raw('SUM(amount * exchange) as amount'))->get();
+    }
+
+    public function sumOfDebitTransaction($season_id)
+    {
+        return $this->debitTransaction($season_id)->select(\DB::raw('SUM(amount * exchange) as amount'))->get();
+    }
+
     /**
      * @param $season_id
      * @return $this

@@ -39,7 +39,7 @@
                                 {{ formatPrice(acc.balance) }}
                             </div>
                             <div v-if="!acc.currency.is_current">
-                                {{ formatPrice(acc.balance) + acc.currency.marker + ' = ' + formatPrice(parseFloat(acc.balance) * parseFloat(acc.final_exchange)) }}
+                                {{ formatPrice(acc.balance) + acc.currency.marker + ' = ' + formatPrice(parseFloat(acc.balance) * parseFloat(acc.exchange)) }}
                             </div>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                                 {{ formatPrice(acc.balance) }}
                             </div>
                             <div v-if="!acc.currency.is_current">
-                                {{ formatPrice(acc.balance) + acc.currency.marker + ' = ' + formatPrice(parseFloat(acc.balance) * parseFloat(acc.final_exchange)) }}
+                                {{ formatPrice(acc.balance) + acc.currency.marker + ' = ' + formatPrice(parseFloat(acc.balance) * parseFloat(acc.exchange)) }}
                             </div>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                                 {{ formatPrice(acc.general_debit) }}
                             </div>
                             <div v-if="!acc.currency.is_current">
-                                {{ acc.general_debit > 0 ? formatPrice(acc.general_debit) + acc.currency.marker + ' = ' + formatPrice(parseFloat(acc.general_debit) * parseFloat(acc.final_exchange)) : formatPrice(0) }}
+                                {{ acc.general_debit > 0 ? formatPrice(acc.general_debit_currency) + acc.currency.marker + ' = ' + formatPrice(parseFloat(acc.general_debit)) : formatPrice(0) }}
                             </div>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                                 {{ formatPrice(acc.general_credit) }}
                             </div>
                             <div v-if="!acc.currency.is_current">
-                                {{ acc.general_credit > 0 ? formatPrice(acc.general_credit) + acc.currency.marker + ' = ' + formatPrice(parseFloat(acc.general_credit) * parseFloat(acc.final_exchange)) : formatPrice(0) }}
+                                {{ acc.general_credit > 0 ? formatPrice(acc.general_credit_currency) + acc.currency.marker + ' = ' + formatPrice(parseFloat(acc.general_credit)) : formatPrice(0) }}
                             </div>
                         </div>
                     </div>
@@ -219,19 +219,19 @@
                 if(this.account.accounts)
                 {
                     this.account['active'] = this.account.accounts.reduce(function(prev, account){
-                        return parseFloat(prev) + (account.type == 'active' ? parseFloat(account.balance) * parseFloat(account.final_exchange) : 0);
+                        return parseFloat(prev) + (account.type == 'active' ? parseFloat(account.balance) * parseFloat(account.exchange) : 0);
                     }, 0);
 
                     this.account['passive'] = this.account.accounts.reduce(function(prev, account){
-                        return parseFloat(prev) + (account.type == 'passive' ? parseFloat(account.balance) * parseFloat(account.final_exchange) : 0);
+                        return parseFloat(prev) + (account.type == 'passive' ? parseFloat(account.balance) * parseFloat(account.exchange) : 0);
                     }, 0);
 
                     this.account['credit'] = this.account.accounts.reduce(function(prev, account){
-                        return parseFloat(prev) + (parseFloat(account.general_credit) * parseFloat(account.final_exchange));
+                        return parseFloat(prev) + (parseFloat(account.general_credit));
                     }, 0);
 
                     this.account['debit'] = this.account.accounts.reduce(function(prev, account){
-                        return parseFloat(prev) + (parseFloat(account.general_debit) * parseFloat(account.final_exchange));
+                        return parseFloat(prev) + (parseFloat(account.general_debit));
                     }, 0);
 
                     this.account['active_total'] = this.account.accounts.reduce(function(prev, account){
