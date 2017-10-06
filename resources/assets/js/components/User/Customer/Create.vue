@@ -197,7 +197,7 @@
         {
             this.csrfHeaders = {
                 'X-CSRF-TOKEN': window.Laravel.csrfToken
-            }
+            };
             this.fetchOrgType();
         },
         methods: {

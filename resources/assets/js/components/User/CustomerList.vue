@@ -129,7 +129,7 @@
                     page: 1,
                     column: 'first_name',
                     direction: 'asc',
-                    per_page: 10,
+                    per_page: 50,
                     user_type: 'allCustomer',
                     search: {
                         first_name: null,
@@ -209,7 +209,6 @@
                 axios.get('/api/users?search='+ JSON.stringify(this.query.search) +'&type=' + this.query.user_type + '&per_page=' + this.query.per_page + '&column='+this.query.column+'&direction='+this.query.direction+'&page='+this.query.page).then(response => {
                     this.model = response.data.model;
                     this.loading = false;
-                    console.log(this.model);
                 }).catch(errors => {
                     this.$router.push('/')
                 })

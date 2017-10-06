@@ -44,10 +44,10 @@
                                     <div class="col-lg-1 col-md-1 col-sm-1"></div>
                                 </div>
                                 <!--<div class="list-group-item list-group-tree">-->
-                                    <!--<div class="col-lg-2 col-md-2 col-sm-3">-->
-                                        <!--<input type="text" class="form-control input-sm" v-model="search.code" />-->
-                                        <!--<button class="btn btn-sm" @click="filter"></button>-->
-                                    <!--</div>-->
+                                <!--<div class="col-lg-2 col-md-2 col-sm-3">-->
+                                <!--<input type="text" class="form-control input-sm" v-model="search.code" />-->
+                                <!--<button class="btn btn-sm" @click="filter"></button>-->
+                                <!--</div>-->
                                 <!--</div>-->
                                 <account-row v-for="account in accounts" v-bind:key="account.id" v-bind:account="account" :number="15" v-on:destroyedGroup="deleteGroup" v-on:saveGroup="saveGroup" v-on:saveAccount="saveAccount"></account-row>
                             </div>
@@ -156,7 +156,6 @@
             createAccount()
             {
                 $('#accountForm' + this.account.id).modal('show',function () {
-                    this.$on('clear');
                     console.log('emit');
                 });
 
@@ -216,16 +215,16 @@
             {
                 this.account= {
                     id: 0,
-                        name: null,
-                        code: null,
-                        account_number: null,
-                        group: null,
-                        journal: null,
-                        currency: null,
-                        bank: null,
-                        bank_account_number: null,
-                        is_temporary: false,
-                        type: 'active'
+                    name: null,
+                    code: null,
+                    account_number: null,
+                    group: null,
+                    journal: null,
+                    currency: null,
+                    bank: null,
+                    bank_account_number: null,
+                    is_temporary: false,
+                    type: 'active'
                 };
                 this.group = {
                     id: 0,

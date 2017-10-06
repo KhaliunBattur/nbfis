@@ -283,6 +283,7 @@ class UserController extends Controller
         view()->share('user', $user);
 
         $pdf = PDF::loadView('report/cvPDF', $user)->setPaper('a4')->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
         return $pdf->download('cvPDF.pdf');
 //             return view('report/cvPDF');
 

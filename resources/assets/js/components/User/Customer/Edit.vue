@@ -261,13 +261,13 @@
             {
                 axios.get('/api/users/' + this.$route.params.id + '/edit').then(response => {
                     this.user = response.data.user;
-                    this.user.org_register = response.data.user.org_register;
+
                     this.user.roles = response.data.roles;
                     this.profile_picture =  this.user.image;
                     this.user.image = null;
                     Vue.delete(this.user, 'created_at');
                     Vue.delete(this.user, 'updated_at');
-                    console.log(this.user.org_register);
+
                     this.setRegister();
                 }).catch(function (response) {
                     swal('Уучлаарай!', 'Хэрэглэгчийн мэдээлэл татаж чадсангүй', 'error')

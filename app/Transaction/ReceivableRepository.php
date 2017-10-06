@@ -55,7 +55,34 @@ class ReceivableRepository implements ReceivableRepositoryInterface
      */
     public function findByPaginate($howMany, $params = [])
     {
-        return $this->model->with(['transactions', 'customer'])->paginate($howMany);
+//        return $this->model->with(['transactions', 'customer'])->paginate($howMany);
+        $query=$this->model->with(['transactions','customer']);
+
+        $search = json_decode($params['search'],true);
+
+        return $query->join('users','users.id','=','receivable.customer_id')
+            ->where(function ($query) use($search){
+            if(array_key_exists('name', $search) && !is_null($search['name']))
+            {
+                $query->where('name', 'LIKE', '%' . $search['name'] . '%');
+            }
+            if(array_key_exists('start_date', $search) && !is_null($search['start_date']))
+            {
+                $query->where('start_date', 'LIKE', '%' . $search['start_date'] . '%');
+            }
+            if(array_key_exists('closing_date', $search) && !is_null($search['closing_date']))
+            {
+                $query->where('closing_date', 'LIKE', '%' . $search['closing_date'] . '%');
+            }
+            if(array_key_exists('amount', $search) && !is_null($search['amount']))
+            {
+                $query->where('amount', 'LIKE', '%' . $search['amount'] . '%');
+            }
+            if(array_key_exists('created_at', $search) && !is_null($search['created_at']))
+            {
+                $query->where('receivable.created_at', 'LIKE', '%' . $search['created_at'] . '%');
+            }
+        })->paginate($howMany);
     }
 
     /**

@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="groupForm" tabindex="-1" role="dialog" aria-labelledby="groupFormLabel">
+    <div class="modal fade" id="groupForm" tabindex="-1" role="dialog" aria-labelledby="groupFormLabel" v-modal v-on:hideModal="reset()">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -97,6 +97,15 @@
                     swal('Уучлаарай', 'Амжилтгүй боллоо! Та дахин оролдоно уу', 'error')
                     this.errors.clear();
                 })
+            },
+            reset()
+            {
+                this.groups = [];
+                this.selected = null;
+                this.errorMessages= {
+                    code: null,
+                    name: null
+                };
             }
         }
 

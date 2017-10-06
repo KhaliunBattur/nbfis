@@ -11,11 +11,23 @@
                     </div>
                     <div class="form-horizontal">
                         <div class="box-body">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <dropzone
+                                        ref="profUpload"
+                                        id="profile"
+                                        class="margin-bottom-10"
+                                        :headers='csrfHeaders'
+                                        :url="profileUpload"
+                                        :thumbnail-height="100"
+                                        :thumbnail-width="100"
+                                        v-on:vdropzone-success="ProfSuccess"
+                                        v-on:vdropzone-error="onError">
+                                </dropzone>
+                            </div>
+                        </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Зураг</label>
-                                <div class="col-sm-10">
-                                    <input type="file" class="form-control" @change="onFileChange" />
-                                </div>
                                 <div class="col-sm-2 col-sm-offset-2" v-if="profile_picture != ''">
                                     <img :src="profile_picture " class="profile-user-img img-responsive img-circle" style="margin: 10px 0px" />
                                 </div>
@@ -96,7 +108,8 @@
                     </div>
                     <div class="box-footer">
                         <div class="btn-group">
-                            <router-link to="/users" class="btn btn-sm btn-danger">Буцах</router-link>
+                            <!--<router-link to="/users" class="btn btn-sm btn-danger">Буцах</router-link>-->
+                            <button type="button" class="btn btn-sm btn-danger" @click="back()">Буцах</button>
                         </div>
                         <div class="btn-group pull-right">
                             <button type="button" class="btn btn-sm btn-success" @click="save()">Хадгалах</button>
@@ -139,13 +152,14 @@
 <script>
 
     import MaskedInput from 'vue-masked-input'
-
+    import Dropzone from 'vue2-dropzone'
     export default {
 
         props: ['roles'],
 
         components: {
-            'masked-input': MaskedInput
+            'masked-input': MaskedInput,
+            Dropzone,
         },
 
         watch: {
@@ -157,6 +171,7 @@
         data()
         {
             return {
+                profileUpload:'/api/cv/profileUpload',
                 user: {
                     image: '',
                     first_name: '',
@@ -175,10 +190,12 @@
                 confirm_password: '',
             }
         },
-
         created()
         {
             this.getUser();
+            this.csrfHeaders = {
+                'X-CSRF-TOKEN': window.Laravel.csrfToken
+            }
         },
 
         methods: {
@@ -216,11 +233,9 @@
             getUser()
             {
                 axios.get('/api/users/' + this.$route.params.id + '/edit').then(response => {
-                    console.log(this.user);
                     this.user = response.data.user;
                     this.user.roles = response.data.roles;
                     this.profile_picture =  this.user.image;
-                    console.log(this.profile_picture);
                     this.user.image = null;
                     Vue.delete(this.user, 'created_at');
                     Vue.delete(this.user, 'updated_at');
@@ -270,7 +285,7 @@
 
             back()
             {
-                this.$router.push('/users')
+                this.$router.push('/users/' + this.user.id +'/profile')
             },
 
             reset()
@@ -286,29 +301,14 @@
                     confirm_password: '',
                 }
             },
-
-            onFileChange(e)
+            ProfSuccess(file,response)
             {
-                var files = e.target.files || e.dataTransfer.files;
-                if (!files.length)
-                    return;
-                this.createImage(files[0]);
+                this.user.profilePath = response.tempProfPath;
+                this.user.image = response.profPic;
             },
-
-            createImage(file) {
-                var image = new Image();
-                var reader = new FileReader();
-                var vm = this;
-
-                reader.onload = (e) => {
-                    vm.user.image = e.target.result;
-                    vm.profile_picture = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            },
-
-            removeImage: function (e) {
-                this.user.image = '';
+            onError (file, error)
+            {
+                swal('Уучлаарай!', 'Амжилтгүй боллоо!', 'error')
             },
 
             isSelected(role)
