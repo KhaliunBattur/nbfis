@@ -104,6 +104,15 @@
                     this.errorMessages = errors.response.data;
                     swal('Уучлаарай', 'Амжилтгүй боллоо! Та дахин оролдоно уу', 'error')
                 })
+            },
+            reset()
+            {
+                this.groups = [];
+                this.selected = null;
+                this.errorMessages= {
+                    code: null,
+                    name: null
+                };
             }
         }
 

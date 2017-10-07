@@ -6,7 +6,7 @@
                 <div class="box" v-if="journal">
                     <div class="box-header with-border">
                         <div class="box-title">
-                            {{ journal.name }}
+                            {{journal.name }}
                         </div>
                     </div>
                     <div class="box-body">
@@ -34,13 +34,44 @@
                                     <thead>
                                     <tr>
                                         <th style="width: 20px"></th>
-                                        <th>Харилцагч</th>
-                                        <th>Огноо</th>
-                                        <th>Хаах огноо</th>
-                                        <th>Хэмжээ</th>
-                                        <th>Үлдэгдэл</th>
-                                        <th>Үүсэгсэн</th>
+                                        <sort :column="'name'"   :query="query" :text="'Харилцагч'" v-on:sorted="sort"></sort>
+                                        <sort :column="'start_date'"   :query="query" :text="'Огноо'" v-on:sorted="sort"></sort>
+                                        <sort :column="'closing_date'" :query="query" :text="'Хаах огноо'" v-on:sorted="sort"></sort>
+                                        <sort :column="'amount'"  :query="query" :text="'Хэмжээ'" v-on:sorted="sort"></sort>
+                                        <th >Үлдэгдэл</th>
+                                        <sort :column="'created_at'" :query="query" :text="'Үүсгэсэн'" v-on:sorted="sort"></sort>
+                                        <th class="action-controls-sm" v-if="!advancedSearch">
+                                            <button class="btn btn-info btn-sm" @click="toggleAdvancedSearch">Дэлгэрэнгүй хайлт</button>
+                                        </th>
+                                    </tr>
+                                    <tr v-if="advancedSearch">
                                         <th></th>
+                                        <th>
+                                            <input type="text" class="form-control input-sm" v-model="query.search.name" @keyup.enter="search()"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" class="form-control input-sm" v-model="query.search.start_date" @keyup.enter="search()"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" class="form-control input-sm" v-model="query.search.closing_date" @keyup.enter="search()"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" class="form-control input-sm" v-model="query.search.amount" @keyup.enter="search()"/>
+                                        </th>
+                                        <th>
+                                            <input readonly type="text" class="form-control input-sm" />
+                                        </th>
+                                        <th>
+                                            <input type="text" class="form-control input-sm" v-model="query.search.created_at" @keyup.enter="search()"/>
+                                        </th>
+                                        <th colspan="2">
+                                            <button class="btn btn-sm btn-info" @click="search()">
+                                                <i class="fa fa-search"></i> Хайх
+                                            </button>
+                                            <button class="btn btn-sm btn-danger">
+                                                <i class="fa fa-close" @click="toggleAdvancedSearch"></i>
+                                            </button>
+                                        </th>
                                     </tr>
                                     </thead>
                                     <tbody v-for="(receivable, index) in model.data">
@@ -56,7 +87,7 @@
                                         <td>{{ receivable.transactions.length > 0 ? formatPrice(receivable.transactions[0].amount) : 0 }}</td>
                                         <td></td>
                                         <td>
-                                            {{ receivable.transactions[0].user.name }}
+                                            <!--{{ receivable.transactions[0].customer}}-->
                                             <div class="text-block">{{ receivable.created_at }}</div>
                                         </td>
                                         <td></td>
@@ -67,14 +98,51 @@
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
-                                                    <th>Гүйлгээний дугаар</th>
-                                                    <th>Данс</th>
-                                                    <th>Огноо</th>
-                                                    <th>Гүйлгээний утга</th>
-                                                    <th>Дебет</th>
-                                                    <th>Кредит</th>
-                                                    <th>Үүсэгсэн</th>
-                                                    <th></th>
+                                                    <sort :column="'transaction_number'" :query="query" :text="'Гүйлгээний дугаар'" v-on:sorted="sort"></sort>
+                                                    <sort :column="'account_number'"   :query="query" :text="'Данс'" v-on:sorted="sort"></sort>
+                                                    <sort :column="'transaction_date'"   :query="query" :text="'Огноо'" v-on:sorted="sort"></sort>
+                                                    <sort :column="'transaction_value'" :query="query" :text="'Гүйлгээний утга'" v-on:sorted="sort"></sort>
+                                                    <sort :column="'type'"  :query="query" :text="'Дебет'" v-on:sorted="sort"></sort>
+                                                    <sort :column="'type'" :query="query" :text="'Кредит'" v-on:sorted="sort"></sort>
+                                                    <sort :column="'name'" :query="query" :text="'Харилцагч'" v-on:sorted="sort"></sort>
+                                                    <sort :column="'created_at'" :query="query" :text="'Үүсгэсэн'" v-on:sorted="sort"></sort>
+                                                    <th class="action-controls-sm" v-if="!advancedSearch">
+                                                        <button class="btn btn-info btn-sm" @click="toggleAdvancedSearch">Дэлгэрэнгүй хайлт</button>
+                                                    </th>
+                                                </tr>
+                                                <tr v-if="advancedSearch">
+                                                    <th>
+                                                        <input type="text" class="form-control input-sm" v-model="query.search.transaction_number" @keyup.enter="search()"/>
+                                                    </th>
+                                                    <th>
+                                                        <input type="text" class="form-control input-sm" v-model="query.search.account_number" @keyup.enter="search()"/>
+                                                    </th>
+                                                    <th>
+                                                        <input type="text" class="form-control input-sm" v-model="query.search.transaction_date" @keyup.enter="search()"/>
+                                                    </th>
+                                                    <th>
+                                                        <input type="text" class="form-control input-sm" v-model="query.search.transaction_value" @keyup.enter="search()"/>
+                                                    </th>
+                                                    <th>
+                                                        <input readonly type="text" class="form-control input-sm" />
+                                                    </th>
+                                                    <th>
+                                                        <input readonly type="text" class="form-control input-sm" />
+                                                    </th>
+                                                    <th>
+                                                        <input type="text" class="form-control input-sm" v-model="query.search.name" @keyup.enter="search()"/>
+                                                    </th>
+                                                    <th>
+                                                        <input type="text" class="form-control input-sm" v-model="query.search.created_at" @keyup.enter="search()"/>
+                                                    </th>
+                                                    <th colspan="2">
+                                                        <button class="btn btn-sm btn-info" @click="search()">
+                                                            <i class="fa fa-search"></i> Хайх
+                                                        </button>
+                                                        <button class="btn btn-sm btn-danger">
+                                                            <i class="fa fa-close" @click="toggleAdvancedSearch"></i>
+                                                        </button>
+                                                    </th>
                                                 </tr>
                                                 </thead>
                                                 <tbody v-for="transaction in receivable.transactions">
@@ -186,9 +254,60 @@
         },
 
         methods: {
+            search()
+            {
+                this.fetchReceivable();
+            },
+            toggleAdvancedSearch()
+            {
+                if(this.advancedSearch)
+                {
+                    this.advancedSearch = false;
+                    this.query.search = {
+                        transaction_number:null,
+                        account_number:null,
+                        transaction_date: null,
+                        transaction_value:null,
+                        type:null,
+                        name:null,
+                        created_at:null,
+                        start_date:null,
+                        closing_date:null,
+                        amount:null
+                    };
+                    this.fetchReceivable();
+                }
+                else {
+                    this.advancedSearch = true
+                }
+            },
             showModal(journal)
             {
                 $('#form_' + journal).modal('show');
+            },
+            changePerPage()
+            {
+                this.fetchReceivable();
+            },
+            sort(query)
+            {
+                this.query = query;
+
+                this.fetchReceivable();
+            },
+            next()
+            {
+                if(this.model.next_page_url) {
+                    this.query.page++;
+                    this.fetchReceivable()
+                }
+            },
+            prev()
+            {
+                if(this.model.prev_page_url) {
+                    this.query.page--;
+                    this.fetchReceivable()
+                }
             },
             showTransaction(receivable)
             {
@@ -200,7 +319,7 @@
                     params: this.query
                 }).then(response => {
                     this.model = response.data.receivables;
-                    this.loading = false
+                    this.loading = false;
                 }).catch(errors => {});
             },
             formatPrice(amount) {

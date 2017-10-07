@@ -129,7 +129,7 @@
                     page: 1,
                     column: 'first_name',
                     direction: 'asc',
-                    per_page: 10,
+                    per_page: 50,
                     user_type: 'allCustomer',
                     search: {
                         first_name: null,
