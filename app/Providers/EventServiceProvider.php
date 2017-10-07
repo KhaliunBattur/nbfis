@@ -32,6 +32,10 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\AccountUpdated' => [
             'App\Listeners\AccountUpdatedListener',
         ],
+
+        'App\Events\AccountDestroyed' => [
+            'App\Listeners\AccountDestroyedListener',
+        ],
     ];
 
     /**

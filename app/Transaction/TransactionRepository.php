@@ -62,13 +62,13 @@ class TransactionRepository implements TransactionRepositoryInterface
             $query = $this->model
                 ->whereNotNull('type')
                 ->whereIn('account_id', $params['accounts'])
-                ->with(['account', 'toAccount', 'customer', 'user']);
+                ->with(['account', 'toAccount', 'customer', 'user', 'account.currency']);
         }
         else
         {
             $query = $this->model
                 ->whereNotNull('type')
-                ->with(['account', 'toAccount', 'customer', 'user']);
+                ->with(['account', 'toAccount', 'customer', 'user', 'account.currency']);
         }
 
         return $query->paginate($howMany);

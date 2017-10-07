@@ -6,6 +6,7 @@ use App\Account\Account;
 use App\Account\AccountGroupRepositoryInterface;
 use App\Account\AccountRepositoryInterface;
 use App\Events\AccountCreated;
+use App\Events\AccountDestroyed;
 use App\Events\AccountUpdated;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -113,6 +114,8 @@ class AccountController extends Controller
     public function destroy($id)
     {
         $account = $this->accountRepository->findById($id);
+
+        event(new AccountDestroyed($account));
 
         return response()->json([
             'result' => $account->delete()

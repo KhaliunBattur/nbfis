@@ -37,10 +37,11 @@
                                 self.$emit('destroyed');
                             })
                         }
-                    }).catch(function(error) {
+                    }).catch(error => {
+                        let errors = error.response.data;
                         swal(
                             'Уучлаарай',
-                            'Хүсэлт амжилтгүй боллоо! Та дахин оролдоно уу.',
+                            errors.message,
                             'error'
                         );
                     });

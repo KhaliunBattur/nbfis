@@ -35,12 +35,12 @@
                 {{ acc.type == 'active' ? 'Актив' : 'Пассив' }}
             </div>
             <div class="col-lg-1 col-md-1 col-sm-2">
-                <div v-if="account.currency">
+                <div v-if="acc.currency">
                     {{ acc.currency.name }}
                 </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-2">
-                <div v-if="account.journal">
+                <div v-if="acc.journal">
                     {{ acc.journal.name }}
                 </div>
             </div>

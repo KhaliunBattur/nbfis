@@ -152,6 +152,14 @@ class Account extends Model
     }
 
     /**
+     * @return bool
+     */
+    public function haveBalance()
+    {
+        return ($this->seasons()->count() ? $this->seasons()->sum('balance') : 0) > 0;
+    }
+
+    /**
      * @param $season_id
      * @return $this
      */
