@@ -60,18 +60,47 @@ class TransactionRepository implements TransactionRepositoryInterface
         if(array_key_exists('accounts', $params))
         {
             $query = $this->model
-                ->whereNotNull('type')
+                ->whereNotNull('transaction.type')
                 ->whereIn('account_id', $params['accounts'])
                 ->with(['account', 'toAccount', 'customer', 'user']);
         }
         else
         {
             $query = $this->model
-                ->whereNotNull('type')
+                ->whereNotNull('transaction.type')
                 ->with(['account', 'toAccount', 'customer', 'user']);
         }
-
-        return $query->paginate($howMany);
+        $search = json_decode($params['search'],true);
+        return $query->join('account','account.id','=','transaction.account_id')
+            ->join('users','users.id','=','transaction.user_id')
+            ->where(function ($query) use($search){
+                if(array_key_exists('transaction_number', $search) && !is_null($search['transaction_number']))
+                {
+                    $query->where('transaction_number', 'LIKE', '%' . $search['transaction_number'] . '%');
+                }
+                if(array_key_exists('account_number', $search) && !is_null($search['account_number']))
+                {
+                    $query->where('account_number', 'LIKE', $search['account_number'] . '%');
+                }
+                if(array_key_exists('transaction_date', $search) && !is_null($search['transaction_date']))
+                {
+                    $query->where('transaction_date', 'LIKE', $search['transaction_date'] . '%');
+                }
+                if(array_key_exists('transaction_value', $search) && !is_null($search['transaction_value']))
+                {
+                    $query->where('description', 'LIKE', '%' . $search['transaction_value'] . '%');
+                }
+                if(array_key_exists('created_at', $search) && !is_null($search['created_at']))
+                {
+                    $query->where('transaction.created_at', 'LIKE', '%' . $search['created_at'] . '%');
+                }
+                if(array_key_exists('name', $search) && !is_null($search['name']))
+                {
+                    $query->where('account.name', 'LIKE', '%'. $search['name'] );
+                }
+        })->orderBy($params['column'], $params['direction'])
+        ->paginate($howMany);
+//        return $query->paginate($howMany);
     }
 
     /**

@@ -33,16 +33,54 @@
                                 <table class="table table-bordered table-hover" style="font-size: 12px">
                                     <thead>
                                     <tr>
-                                        <th>Гүйлгээний дугаар</th>
-                                        <th>Данс</th>
-                                        <th>Огноо</th>
-                                        <th>Гүйлгээний утга</th>
-                                        <th>Дебет</th>
-                                        <th>Кредит</th>
-                                        <th>Харилцагч</th>
-                                        <th>Үүсэгсэн</th>
-                                        <th></th>
+
+                                        <sort :column="'transaction_number'" :query="query" :text="'Гүйлгээний дугаар'" v-on:sorted="sort"></sort>
+                                        <sort :column="'account_number'"   :query="query" :text="'Данс'" v-on:sorted="sort"></sort>
+                                        <sort :column="'transaction_date'"   :query="query" :text="'Огноо'" v-on:sorted="sort"></sort>
+                                        <sort :column="'transaction_value'" :query="query" :text="'Гүйлгээний утга'" v-on:sorted="sort"></sort>
+                                        <sort :column="'type'"  :query="query" :text="'Дебет'" v-on:sorted="sort"></sort>
+                                        <sort :column="'type'" :query="query" :text="'Кредит'" v-on:sorted="sort"></sort>
+                                        <sort :column="'name'" :query="query" :text="'Харилцагч'" v-on:sorted="sort"></sort>
+                                        <sort :column="'created_at'" :query="query" :text="'Үүсгэсэн'" v-on:sorted="sort"></sort>
+                                        <th class="action-controls-sm" v-if="!advancedSearch">
+                                            <button class="btn btn-info btn-sm" @click="toggleAdvancedSearch">Дэлгэрэнгүй хайлт</button>
+                                        </th>
                                     </tr>
+                                    <tr v-if="advancedSearch">
+                                        <th>
+                                            <input type="text" class="form-control input-sm" v-model="query.search.transaction_number" @keyup.enter="search()"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" class="form-control input-sm" v-model="query.search.account_number" @keyup.enter="search()"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" class="form-control input-sm" v-model="query.search.transaction_date" @keyup.enter="search()"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" class="form-control input-sm" v-model="query.search.transaction_value" @keyup.enter="search()"/>
+                                        </th>
+                                        <th>
+                                            <input readonly type="text" class="form-control input-sm" />
+                                        </th>
+                                        <th>
+                                            <input readonly type="text" class="form-control input-sm" />
+                                        </th>
+                                        <th>
+                                            <input type="text" class="form-control input-sm" v-model="query.search.name" @keyup.enter="search()"/>
+                                        </th>
+                                        <th>
+                                            <input type="text" class="form-control input-sm" v-model="query.search.created_at" @keyup.enter="search()"/>
+                                        </th>
+                                        <th colspan="2">
+                                            <button class="btn btn-sm btn-info" @click="search()">
+                                                <i class="fa fa-search"></i> Хайх
+                                            </button>
+                                            <button class="btn btn-sm btn-danger">
+                                                <i class="fa fa-close" @click="toggleAdvancedSearch"></i>
+                                            </button>
+                                        </th>
+                                    </tr>
+
                                     </thead>
                                     <tbody>
                                     <tr v-for="tran in model.data">
@@ -200,6 +238,30 @@
         },
 
         methods: {
+            search()
+            {
+                this.fetchTransaction();
+            },
+            toggleAdvancedSearch()
+            {
+                if(this.advancedSearch)
+                {
+                    this.advancedSearch = false;
+                    this.query.search = {
+                     transaction_number:null,
+                     account_number:null,
+                     transaction_date: null,
+                     transaction_value:null,
+                     type:null,
+                     name:null,
+                     created_at:null
+                    };
+                    this.fetchTransaction();
+                }
+                else {
+                    this.advancedSearch = true
+                }
+            },
             showModal(journal)
             {
                 if(journal === null)
@@ -223,14 +285,14 @@
             next()
             {
                 if(this.model.next_page_url) {
-                    this.query.page++
+                    this.query.page++;
                     this.fetchTransaction()
                 }
             },
             prev()
             {
                 if(this.model.prev_page_url) {
-                    this.query.page--
+                    this.query.page--;
                     this.fetchTransaction()
                 }
             },
@@ -241,7 +303,7 @@
             fetchJournal()
             {
                 axios.get('/api/codes/transaction').then(response => {
-                    this.journals = response.data.codes
+                    this.journals = response.data.codes;
                 })
             },
             fetchTransaction()
