@@ -90,6 +90,10 @@
                                                     <label class="control-label">Ханш</label>
                                                     <money type="text" class="form-control input-sm" v-model="tran.to_exchange" v-bind="money" @input="calculate"></money>
                                                 </td>
+                                                <td class="form-group" v-if="transaction.currency_id != tran.currency_id">
+                                                    <label class="control-label">Ханш</label>
+                                                    <money type="text" class="form-control input-sm" v-model="tran.to_exchange" v-bind="money" @input="calculate"></money>
+                                                </td>
                                                 <td class="form-group" :colspan="transaction.currency_id == tran.currency_id ? '2' : '1'">
                                                     <label class="control-label">Нэгж дүн</label>
                                                     <money type="text" class="form-control input-sm" v-model="tran.amount" v-bind="money" @input="calculate"></money>

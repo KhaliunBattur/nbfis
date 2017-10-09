@@ -25,8 +25,8 @@
                                     <div class="form-group">
                                         <label class="control-label">Данс</label>
                                         <select2-group v-if="accounts.length > 0" :options="accounts" :value="transaction.account_id" :selected="transaction" v-on:input="selectAccount"></select2-group>
-                                        <div class="text-danger" v-if="errorMessages.transaction_date">
-                                            {{ errorMessages.transaction_date[0] }}
+                                        <div class="text-danger" v-if="errorMessages.account_id">
+                                            {{ errorMessages.account_id[0] }}
                                         </div>
                                     </div>
                                 </td>
@@ -70,8 +70,8 @@
                                     <div class="form-group">
                                         <label class="control-label">Харилцагч</label>
                                         <select2 v-if="customers.length > 0" :options="customers" :value="transaction.customer_id" :selected="transaction" v-on:input="selectCustomer"></select2>
-                                        <div class="text-danger" v-if="errorMessages.transaction_date">
-                                            {{ errorMessages.transaction_date[0] }}
+                                        <div class="text-danger" v-if="errorMessages.customer_id">
+                                            {{ errorMessages.customer_id[0] }}
                                         </div>
                                     </div>
                                 </td>

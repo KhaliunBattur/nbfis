@@ -38,7 +38,7 @@
                                         <sort :column="'start_date'"   :query="query" :text="'Огноо'" v-on:sorted="sort"></sort>
                                         <sort :column="'closing_date'" :query="query" :text="'Хаах огноо'" v-on:sorted="sort"></sort>
                                         <sort :column="'amount'"  :query="query" :text="'Хэмжээ'" v-on:sorted="sort"></sort>
-                                        <th >Үлдэгдэл</th>
+                                        <th>Үлдэгдэл</th>
                                         <sort :column="'created_at'" :query="query" :text="'Үүсгэсэн'" v-on:sorted="sort"></sort>
                                     </tr>
                                     </thead>
