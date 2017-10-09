@@ -6,6 +6,7 @@ use App\Account\AccountGroupRepositoryInterface;
 use App\Account\AccountRepositoryInterface;
 use App\Season\Season;
 use App\Season\SeasonRepositoryInterface;
+use App\Support\CurrencyRepositoryInterface;
 use App\Transaction\Transaction;
 use App\Transaction\TransactionRepositoryInterface;
 use Carbon\Carbon;
@@ -30,6 +31,10 @@ class SeasonController extends Controller
      * @var TransactionRepositoryInterface
      */
     private $transactionRepository;
+    /**
+     * @var CurrencyRepositoryInterface
+     */
+    private $currencyRepository;
 
     /**
      * SeasonController constructor.
@@ -37,13 +42,15 @@ class SeasonController extends Controller
      * @param AccountRepositoryInterface $accountRepository
      * @param AccountGroupRepositoryInterface $groupRepository
      * @param TransactionRepositoryInterface $transactionRepository
+     * @param CurrencyRepositoryInterface $currencyRepository
      */
-    public function __construct(SeasonRepositoryInterface $seasonRepository, AccountRepositoryInterface $accountRepository, AccountGroupRepositoryInterface $groupRepository, TransactionRepositoryInterface $transactionRepository)
+    public function __construct(SeasonRepositoryInterface $seasonRepository, AccountRepositoryInterface $accountRepository, AccountGroupRepositoryInterface $groupRepository, TransactionRepositoryInterface $transactionRepository, CurrencyRepositoryInterface $currencyRepository)
     {
         $this->seasonRepository = $seasonRepository;
         $this->accountRepository = $accountRepository;
         $this->groupRepository = $groupRepository;
         $this->transactionRepository = $transactionRepository;
+        $this->currencyRepository = $currencyRepository;
     }
 
     /**
@@ -98,6 +105,8 @@ class SeasonController extends Controller
 
             $accounts = $this->accountRepository->findAll();
 
+            $currencies = $this->currencyRepository->findAll();
+
             $is_first = $this->seasonRepository->findAll()->count() == 0 ? true : false;
 
             $season_key = $is_first ? $season->getKey() : $this->seasonRepository->findLastClose();
@@ -106,6 +115,13 @@ class SeasonController extends Controller
                 $season->accounts()->attach($account->getKey(), [
                     'exchange' => $account->currency->exchange,
                     'balance' => $account->balance($season_key)
+                ]);
+            }
+
+            foreach ($currencies as $currency)
+            {
+                $season->currencies()->attach($currency->getKey(), [
+                    'exchange' => $currency->exchange
                 ]);
             }
 
@@ -244,6 +260,29 @@ class SeasonController extends Controller
         return response()->json([
             'result' => true
         ]);
+    }
+
+    public function saveCurrency($id, Request $request)
+    {
+        $season = $this->seasonRepository->findById($id);
+
+        $season->currencies()->detach();
+
+        $new_currency = [];
+
+        foreach ($request->all() as $currency)
+        {
+            $season->currencies()->attach($currency['id'], [
+                'exchange' => $currency['pivot']['exchange']
+            ]);
+
+            $new_currency[$currency['id']] = $currency['pivot']['exchange'];
+        }
+
+        foreach ($season->accounts as $account)
+        {
+            $season->accounts()->updateExistingPivot($account->getKey(), ['exchange' => $new_currency[$account->currency_id]]);
+        }
     }
 
     /**

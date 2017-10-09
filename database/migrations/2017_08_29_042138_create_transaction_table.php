@@ -30,7 +30,7 @@ class CreateTransactionTable extends Migration
             $table->integer('user_id')->index()->unsigned();
             $table->timestamps();
 
-            $table->foreign('season_id')->references('id')->on('season');
+            $table->foreign('season_id')->references('id')->on('season')->onDelete('cascade');
             $table->foreign('customer_id')->references('id')->on('users');
             $table->foreign('account_id')->references('id')->on('account');
             $table->foreign('to_account_id')->references('id')->on('account');

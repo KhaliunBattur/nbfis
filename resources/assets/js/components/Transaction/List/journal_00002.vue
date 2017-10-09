@@ -40,7 +40,6 @@
                                         <sort :column="'amount'"  :query="query" :text="'Хэмжээ'" v-on:sorted="sort"></sort>
                                         <th >Үлдэгдэл</th>
                                         <sort :column="'created_at'" :query="query" :text="'Үүсгэсэн'" v-on:sorted="sort"></sort>
-                                        <th class="action-controls-sm"></th>
                                     </tr>
                                     </thead>
                                     <tbody v-for="(receivable, index) in model.data">
@@ -56,14 +55,13 @@
                                         <td>{{ receivable.transactions.length > 0 ? formatPrice(receivable.transactions[0].amount) : 0 }}</td>
                                         <td></td>
                                         <td>
-                                            <!--{{ receivable.transactions[0].customer}}-->
+                                            {{ receivable.transactions[0].user.name}}
                                             <div class="text-block">{{ receivable.created_at }}</div>
                                         </td>
-                                        <td></td>
                                     </tr>
                                     <tr v-if="receivable.showTransaction" v-show="receivable.show">
                                         <td></td>
-                                        <td colspan="7">
+                                        <td colspan="6">
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
@@ -96,6 +94,9 @@
                                                             <div v-if="tran.type == 'credit'">
                                                                 {{ formatPrice(tran.amount * tran.exchange) }}
                                                             </div>
+                                                        </td>
+                                                        <td>
+                                                            {{ receivable.customer.first_name + ' ' + receivable.customer.name }}
                                                         </td>
                                                         <td>
                                                             {{ tran.user.name }}
