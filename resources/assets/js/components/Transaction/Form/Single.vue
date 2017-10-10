@@ -64,7 +64,7 @@
                     <tr>
                         <td colspan="2">
                             <div class="form-group">
-                                <label class="control-label">Харицах данс</label>
+                                <label class="control-label">Харьцсан данс</label>
                                 <select2-group v-if="accounts.length > 0" :options="accounts" :value="transaction.to_account_id" :selected="transaction" v-on:input="selectToAccount"></select2-group>
                                 <div class="text-danger" v-if="errorMessages.to_account_id">
                                     {{ errorMessages.to_account_id[0] }}
@@ -127,7 +127,7 @@
             <div class="pull-left text-danger text-sm">
                 {{ errorMessages.message }}
             </div>
-            <button type="button" class="btn btn-primary btn-sm" @click="saveTransaction">Хадгалах</button>
+            <button type="button" class="btn btn-primary btn-sm" @click="saveTransaction">Гүйлгээ хийх</button>
         </div>
     </div>
 </template>

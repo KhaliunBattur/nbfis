@@ -42,7 +42,7 @@ class Transaction extends Model
      */
     public function otherTransactions()
     {
-        return $this->hasMany(Transaction::class, 'transaction_number', 'transaction_number')->with('account', 'user');
+        return $this->hasMany(Transaction::class, 'transaction_number', 'transaction_number')->with('account', 'user', 'account.currency');
     }
 
     /**

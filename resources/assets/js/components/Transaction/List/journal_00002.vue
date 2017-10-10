@@ -87,12 +87,20 @@
                                                         <td>{{ tran.description }}</td>
                                                         <td>
                                                             <div v-if="tran.type == 'debit'">
-                                                                {{ formatPrice(tran.amount * tran.exchange) }}
+                                                                <div style="width: 100%">
+                                                                    {{ formatPrice(tran.amount * tran.exchange) }}
+                                                                </div>
+                                                                <div class="text-block pull-left" v-if="tran.account.currency.is_current == 0">{{ tran.amount }}{{ tran.account.currency.marker }}</div>
+                                                                <div class="text-block pull-right" v-if="tran.account.currency.is_current == 0">Ханш: {{ tran.exchange }}</div>
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div v-if="tran.type == 'credit'">
-                                                                {{ formatPrice(tran.amount * tran.exchange) }}
+                                                                <div style="width: 100%">
+                                                                    {{ formatPrice(tran.amount * tran.exchange) }}
+                                                                </div>
+                                                                <div class="text-block pull-left" v-if="tran.account.currency.is_current == 0">{{ tran.amount }}{{ tran.account.currency.marker }}</div>
+                                                                <div class="text-block pull-right" v-if="tran.account.currency.is_current == 0">Ханш: {{ tran.exchange }}</div>
                                                             </div>
                                                         </td>
                                                         <td>

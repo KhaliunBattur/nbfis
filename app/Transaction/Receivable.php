@@ -69,7 +69,7 @@ class Receivable extends Model
      */
     public function transactions()
     {
-        return $this->morphMany(Transaction::class, 'transactionAble', 'transaction_able', 'transaction_able_id')->with('account', 'otherTransactions', 'user');
+        return $this->morphMany(Transaction::class, 'transactionAble', 'transaction_able', 'transaction_able_id')->with('account', 'otherTransactions', 'user', 'account.currency');
     }
 
     /**

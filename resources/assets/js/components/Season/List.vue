@@ -157,8 +157,7 @@
                             };
                         })
                     }).catch(error => {
-                        console.log(error.response);
-                        swal('Уучлаарай', 'Алдаа гарлаа', 'error');
+                        swal('Уучлаарай', error.response.data.name[0], 'error');
                     });
                 })
             },
