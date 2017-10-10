@@ -44,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('App\User\LoanRequest\RequestRepositoryInterface','App\User\LoanRequest\RequestRepository');
         $this->app->singleton('App\Transaction\TransactionRepositoryInterface','App\Transaction\TransactionRepository');
         $this->app->singleton('App\Transaction\ReceivableRepositoryInterface','App\Transaction\ReceivableRepository');
+        $this->app->singleton('App\Transaction\PropertyRepositoryInterface','App\Transaction\PropertyRepository');
         $this->app->singleton('App\Branch\BranchRepositoryInterface','App\Branch\BranchRepository');
         $this->app->singleton('App\User\Apartment\ApartmentRepositoryInterface','App\User\Apartment\ApartmentRepository');
         $this->app->singleton('App\User\Car\CarRepositoryInterface','App\User\Car\CarRepository');

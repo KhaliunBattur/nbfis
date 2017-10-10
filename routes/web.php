@@ -50,14 +50,18 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
     Route::group(['namespace' => 'Transaction', 'as' => 'transaction.'], function (){
        Route::resource('transaction', 'TransactionController');
        Route::get('receivable', ['as' => 'receivable.index', 'uses' => 'ReceivableController@index']);
+       Route::get('property', ['as' => 'property.index', 'uses' => 'PropertyController@index']);
        Route::get('account/list', ['as' => 'list', 'uses' => 'TransactionController@lists']);
        Route::get('receivable/list/open', ['as' => 'list', 'uses' => 'ReceivableController@openList']);
     });
 
-    Route::resource('season', 'Season\SeasonController', ['expect' => ['create']]);
-    Route::patch('season/{id}/balance', ['as' => 'season.balance.save', 'uses' => 'Season\SeasonController@saveBalance']);
-    Route::get('season/{id}/balance', ['as' => 'season.balance.final', 'uses' => 'Season\SeasonController@finalBalance']);
-    Route::patch('season/{id}/currency', ['as' => 'season.balance.currency', 'uses' => 'Season\SeasonController@saveCurrency']);
+    Route::group(['namespace' => 'Season'], function(){
+        Route::resource('season', 'SeasonController', ['expect' => ['create']]);
+        Route::patch('season/{id}/balance', ['as' => 'season.balance.save', 'uses' => 'SeasonController@saveBalance']);
+        Route::get('season/{id}/balance', ['as' => 'season.balance.final', 'uses' => 'SeasonController@finalBalance']);
+        Route::patch('season/{id}/currency', ['as' => 'season.balance.currency', 'uses' => 'SeasonController@saveCurrency']);
+        Route::patch('season/{id}/lock', ['as' => 'season.lock', 'uses' => 'SeasonController@lock']);
+    });
 
     Route::group(['namespace' => 'User'], function (){
         Route::resource('users', 'UserController', ['except' => ['create']]);

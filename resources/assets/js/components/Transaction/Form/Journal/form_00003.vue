@@ -253,7 +253,7 @@
             calculateProperty()
             {
                 const dateformat = require('dateformat');
-                var date1 = new Date(dateformat(new Date(), 'yyyy-mm-dd'));
+                var date1 = new Date(this.transaction.start_date);
                 var date2 = new Date(this.transaction.start_date);
                 var timeDiff = Math.abs(date2.getTime() - date1.getTime());
                 var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));

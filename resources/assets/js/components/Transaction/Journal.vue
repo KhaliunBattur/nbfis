@@ -2,6 +2,7 @@
     <section class="content">
         <journal-00001 :journals="journals" :journal="journal" v-if="journal && journal.form_code === '00001'"></journal-00001>
         <journal-00002 :journals="journals" :journal="journal" v-if="journal && journal.form_code === '00002'"></journal-00002>
+        <journal-00003 :journals="journals" :journal="journal" v-if="journal && journal.form_code === '00003'"></journal-00003>
     </section>
 </template>
 
@@ -9,6 +10,7 @@
 
     import Journal00001 from './List/journal_00001.vue';
     import Journal00002 from './List/journal_00002.vue';
+    import Journal00003 from './List/journal_00003.vue';
 
     export default {
 
@@ -34,7 +36,8 @@
 
         components: {
             'journal-00001': Journal00001,
-            'journal-00002': Journal00002
+            'journal-00002': Journal00002,
+            'journal-00003': Journal00003
         },
 
         methods: {

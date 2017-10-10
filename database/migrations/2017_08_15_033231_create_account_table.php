@@ -20,7 +20,7 @@ class CreateAccountTable extends Migration
             $table->string('account_number')->unique();
             $table->string('name');
             $table->integer('currency_id')->index()->unsigned();
-            $table->integer('journal_id')->index()->unsigned();
+            $table->integer('journal_id')->index()->unsigned()->nullable()->default(null);
             $table->enum('type', ['active', 'passive'])->default('active');
             $table->boolean('is_temporary')->default(false);
             $table->integer('bank_id')->index()->unsigned()->nullable()->default(null);

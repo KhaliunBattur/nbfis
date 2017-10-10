@@ -94,12 +94,11 @@ class SeasonController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, ['name' => 'required']);
+        $this->validate($request, ['name' => 'required', 'open_date' => 'required']);
 
         $season = \DB::transaction(function () use ($request) {
             $parameters = $request->all();
             $parameters['open_user_id'] = \Auth::user()->getKey();
-            $parameters['open_date'] = Carbon::now();
 
             $season = Season::create($parameters);
 
@@ -262,6 +261,10 @@ class SeasonController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @param Request $request
+     */
     public function saveCurrency($id, Request $request)
     {
         $season = $this->seasonRepository->findById($id);
@@ -360,6 +363,21 @@ class SeasonController extends Controller
     }
 
     /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function lock($id)
+    {
+        $season = $this->seasonRepository->findById($id);
+
+        $season->lock = $season->lock == 1 ? 0 : 1;
+
+        $season->save();
+
+        return response()->json(['result' => $season->lock]);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -374,15 +392,29 @@ class SeasonController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy($id)
     {
-        $season = $this->seasonRepository->findById($id);
+        try
+        {
+            $season = $this->seasonRepository->findById($id);
 
-        return response()->json([
-            'result' => $season->delete()
-        ]);
+            if($season->lock == 1)
+            {
+                throw new \Exception('Улирал түгжигдсэн байна! Устгах боломжгүй', 403);
+            }
+
+            return response()->json([
+                'result' => $season->delete()
+            ]);
+        }catch (\Exception $exception)
+        {
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 403);
+        }
     }
 }

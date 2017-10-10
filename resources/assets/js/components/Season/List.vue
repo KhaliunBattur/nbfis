@@ -29,11 +29,14 @@
                                     </tr>
                                     <tr v-if="closed">
                                         <td>
-                                            <div class="input-group-sm input-group">
-                                                <input type="text" v-model="season.name" class="form-control" />
-                                                <div class="input-group-btn">
-                                                    <button class="btn btn-sm btn-success" @click="create">Нээх</button>
+                                            <div class="form-inline">
+                                                <div class="form-group">
+                                                    <input type="text" v-model="season.name" class="form-control input-sm" placeholder="Нэр..." />
                                                 </div>
+                                                <div class="form-group">
+                                                    <input type="text" v-model="season.open_date" class="form-control input-sm" v-pick placeholder="Нээх огноо..." />
+                                                </div>
+                                                <button class="btn btn-sm btn-success" @click="create">Нээх</button>
                                             </div>
                                         </td>
                                         <td></td>
@@ -55,6 +58,9 @@
                                             <i class="fa fa-pencil-square"></i> Эхлэл баланс
                                         </router-link>
                                         <delete-confirm :item="season" :url="'/api/season/' + season.id" v-on:destroyed="destroy(season)"></delete-confirm>
+                                        <button :class="season.lock == 0 ? 'btn btn-danger btn-xs' : 'btn btn-success btn-xs'" @click="setLock(season)" data-toggle="tooltip" data-placement="top" title="Улирал түгжих" v-tip>
+                                            <i :class="season.lock == 0 ? 'fa fa-unlock' : 'fa fa-lock'"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -98,7 +104,8 @@
                     open_user: null,
                     open_date: null,
                     close_user: null,
-                    close_date: null
+                    close_date: null,
+                    lock: 0
                 },
                 model: {},
                 query: {
@@ -153,11 +160,12 @@
                                 open_user: null,
                                 open_date: null,
                                 close_user: null,
-                                close_date: null
+                                close_date: null,
+                                lock: 0
                             };
                         })
                     }).catch(error => {
-                        swal('Уучлаарай', error.response.data.name[0], 'error');
+                        swal('Уучлаарай', 'Нэр болон нээх огноо оруулна уу', 'error');
                     });
                 })
             },
@@ -200,6 +208,14 @@
                     this.loading = false;
                 }).catch(errors => {
                     this.$router.push('/')
+                })
+            },
+            setLock(season)
+            {
+                axios.patch('/api/season/' + season.id + '/lock').then(response => {
+                    season.lock = response.data.result;
+                }).catch(errors => {
+                    swal('Уучлаарай', 'Үйлдэлийг гүйцэтгэх боломжгүй байна', 'error');
                 })
             },
             destroy(season)

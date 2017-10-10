@@ -41,6 +41,9 @@ class Receivable extends Model
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function getShowTransactionAttribute()
     {
         if($this->transactions()->count() > 1)
