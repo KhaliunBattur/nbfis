@@ -16,11 +16,11 @@ class CreateAccountTable extends Migration
         Schema::create('account', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('group_id')->index()->unsigned();
-            $table->string('code');
+            $table->string('code')->nullable()->default(null);
             $table->string('account_number')->unique();
             $table->string('name');
             $table->integer('currency_id')->index()->unsigned();
-            $table->integer('journal_id')->index()->unsigned();
+            $table->integer('journal_id')->index()->unsigned()->nullable()->default(null);
             $table->enum('type', ['active', 'passive'])->default('active');
             $table->boolean('is_temporary')->default(false);
             $table->integer('bank_id')->index()->unsigned()->nullable()->default(null);

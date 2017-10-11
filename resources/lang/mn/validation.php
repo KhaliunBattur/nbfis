@@ -142,7 +142,8 @@ return [
         'receipt_number' => 'баримтын дугаар',
         'to_account_id' => 'харьцах данс',
         'transaction_date' => 'гүйлгээний огноо',
-        'receivable_id' => 'өглөг авлага'
+        'receivable_id' => 'өглөг авлага',
+        'open_date' => 'нээх огноо'
     ],
 
 ];

@@ -34,7 +34,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function findAll()
     {
-
+        return $this->model->all();
     }
 
     /**

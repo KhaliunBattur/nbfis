@@ -81,7 +81,7 @@
                                     <tbody>
                                     <tr v-for="(tran, index) in transaction.to_transaction">
                                         <td class="form-group">
-                                            <label class="control-label">Харицах данс</label>
+                                            <label class="control-label">Харьцсан данс</label>
                                             <select2-group v-if="accounts.length > 0" :options="accounts" :value="tran.to_account_id" :selected="tran" v-on:input="selectToAccount"></select2-group>
                                         </td>
                                         <td class="form-group" v-if="transaction.currency_id != tran.currency_id">
@@ -110,7 +110,7 @@
                 {{ errorMessages.message }}
             </div>
             <button type="button" class="btn btn-default btn-sm" @click="addToTransaction">Харицах данс нэмэх</button>
-            <button type="button" class="btn btn-primary btn-sm" @click="saveTransaction">Хадгалах</button>
+            <button type="button" class="btn btn-primary btn-sm" @click="saveTransaction">Гүйлгээ хийх</button>
         </div>
     </div>
 </template>

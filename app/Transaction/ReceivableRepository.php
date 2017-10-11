@@ -55,7 +55,8 @@ class ReceivableRepository implements ReceivableRepositoryInterface
      */
     public function findByPaginate($howMany, $params = [])
     {
-        return $this->model->paginate($howMany);
+        return $this->model->with(['transactions', 'customer'])->paginate($howMany);
+//        $search = json_decode($params['search'],true);
     }
 
     /**
@@ -70,12 +71,36 @@ class ReceivableRepository implements ReceivableRepositoryInterface
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @return Collection
      */
-    public function findOpen()
+    public function findOpen($request)
     {
-        return $this->model->whereHas('transaction', function($query){
-            $query->where('type', '!=', 'debit')->orWhereNull('type');
-        })->with(['transaction', 'customer'])->get();
+        return $this->model->whereHas('transaction', function($query) use($request) {
+            if($request->get('type') == 'passive')
+            {
+                $query->where(function($query){
+                    $query->whereHas('account', function($query){
+                        $query->where('type', 'passive');
+                    });
+                })->orWhere(function($query){
+                    $query->whereNull('type')->whereHas('account', function($query){
+                        $query->where('type', 'passive');
+                    });
+                });
+            }
+            else
+            {
+                $query->where(function($query){
+                    $query->whereHas('account', function($query){
+                        $query->where('type', 'active');
+                    });
+                })->orWhere(function($query){
+                    $query->whereNull('type')->whereHas('account', function($query){
+                        $query->where('type', 'active');
+                    });
+                });
+            }
+        })->where('is_closed', 0)->with(['transaction', 'customer'])->get();
     }
 }

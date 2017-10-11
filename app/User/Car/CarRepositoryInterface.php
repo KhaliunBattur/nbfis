@@ -2,14 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: uugan
- * Date: 9/9/2017
- * Time: 2:31 PM
+ * Date: 9/29/2017
+ * Time: 4:53 PM
  */
 
 namespace App\User\Car;
 
 use App\Core\Repository;
-use illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 interface CarRepositoryInterface extends Repository
 {

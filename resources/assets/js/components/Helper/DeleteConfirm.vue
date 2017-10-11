@@ -1,5 +1,5 @@
 <template>
-    <a :class="styleClass === undefined ? 'btn btn-xs btn-danger' : styleClass" @click="destroy(item)">
+    <a :class="styleClass === undefined ? 'btn btn-xs btn-danger' : styleClass" @click="destroy(item)" data-toggle="tooltip" data-placement="top" title="Устгах" v-tip>
         <i class="fa fa-trash-o"></i>
     </a>
 </template>
@@ -37,10 +37,11 @@
                                 self.$emit('destroyed');
                             })
                         }
-                    }).catch(function(error) {
+                    }).catch(error => {
+                        let errors = error.response.data;
                         swal(
                             'Уучлаарай',
-                            'Хүсэлт амжилтгүй боллоо! Та дахин оролдоно уу.',
+                            errors.message,
                             'error'
                         );
                     });

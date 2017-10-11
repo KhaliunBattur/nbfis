@@ -36,7 +36,8 @@
                                 <tr>
                                     <sort :column="'first_name'" :query="query" :text="'Овог'" v-on:sorted="sort"></sort>
                                     <sort :column="'name'" :query="query" :text="'Нэр'" v-on:sorted="sort"></sort>
-                                    <sort :column="'register'" :query="query" :text="'Регистерийн дугаар'" v-on:sorted="sort"></sort>
+                                    <sort :column="'register'" :query="query" :text="'Регистер'" v-on:sorted="sort"></sort>
+                                    <sort :column="'email'" :query="query" :text="'Email'" v-on:sorted="sort"></sort>
                                     <sort :column="'phone_number'" :query="query" :text="'Утас'" v-on:sorted="sort"></sort>
                                     <sort :column="'email'" :query="query" :text="'Email'" v-on:sorted="sort"></sort>
                                     <th class="action-controls-sm" v-if="!advancedSearch">
@@ -52,6 +53,9 @@
                                     </th>
                                     <th>
                                         <input type="text" class="form-control input-sm" v-model="query.search.register" @keyup.enter="search()"/>
+                                    </th>
+                                    <th>
+                                        <input type="text" class="form-control input-sm" v-model="query.search.email" @keyup.enter="search()"/>
                                     </th>
                                     <th>
                                         <input type="text" class="form-control input-sm" v-model="query.search.phone_number" @keyup.enter="search()"/>
@@ -73,8 +77,11 @@
                                 <tr v-for="user in model.data">
                                     <td>{{ user.first_name }}</td>
                                     <td>{{ user.name }}</td>
-                                    <td >{{ user.register }}
-                                        <!--<label class="text" v-for="role in user.roles">{{ role.display_name + ', ' }}</label>-->
+                                    <td>{{ user.register }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.phone_number }}</td>
+                                    <td >
+                                        <label class="text" v-for="role in user.roles">{{ role.display_name + ', ' }}</label>
                                     </td>
                                     <td>{{ user.phone_number }}</td>
                                     <td>{{ user.email }}</td>
@@ -132,11 +139,12 @@
                     page: 1,
                     column: 'first_name',
                     direction: 'asc',
-                    per_page: 10,
+                    per_page: 50,
                     user_type: 'all',
                     search: {
                         first_name: null,
                         name: null,
+                        register:null,
                         email: null,
                         phone_number: null,
                         register: null,
@@ -178,6 +186,7 @@
                     this.query.search = {
                         first_name: null,
                         name: null,
+                        register:null,
                         email: null,
                         phone_number: null,
                         register: null,

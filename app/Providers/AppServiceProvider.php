@@ -41,12 +41,13 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('App\Support\CurrencyRepositoryInterface', 'App\Support\CurrencyRepository');
         $this->app->singleton('App\Support\BankRepositoryInterface', 'App\Support\BankRepository');
         $this->app->singleton('App\Season\SeasonRepositoryInterface', 'App\Season\SeasonRepository');
-        $this->app->singleton('App\User\LoanRequest\RequestRepositoryInterface','App\User\RequestRepository');
+        $this->app->singleton('App\User\LoanRequest\RequestRepositoryInterface','App\User\LoanRequest\RequestRepository');
         $this->app->singleton('App\Transaction\TransactionRepositoryInterface','App\Transaction\TransactionRepository');
         $this->app->singleton('App\Transaction\ReceivableRepositoryInterface','App\Transaction\ReceivableRepository');
+        $this->app->singleton('App\Transaction\PropertyRepositoryInterface','App\Transaction\PropertyRepository');
         $this->app->singleton('App\Branch\BranchRepositoryInterface','App\Branch\BranchRepository');
-        $this->app->singleton('App\Apartment\ApartRepositoryInterface','App\Apartment\ApartRepository');
-        $this->app->singleton('App\Car\CarRepositoryInterface','App\Car\CarRepository');
-        $this->app->singleton('App\Other\OtherRepositoryInterface','App\Other\OtherRepository');
+        $this->app->singleton('App\User\Apartment\ApartmentRepositoryInterface','App\User\Apartment\ApartmentRepository');
+        $this->app->singleton('App\User\Car\CarRepositoryInterface','App\User\Car\CarRepository');
+        $this->app->singleton('App\User\Other\OtherRepositoryInterface','App\User\Other\OtherRepository');
     }
 }

@@ -133,6 +133,11 @@ class JournalRepository implements JournalRepositoryInterface
         return $journal_ids;
     }
 
+    /**
+     * @param $array
+     * @param $children
+     * @return mixed
+     */
     private function recursive($array, $children)
     {
         foreach ($children as $child)
@@ -143,5 +148,22 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return $array;
+    }
+
+    /**
+     * @param $get
+     * @return array
+     */
+    public function findByIdUse($get)
+    {
+        $journal_ids = [];
+
+        $journal = $this->model->findOrFail($get);
+
+        array_push($journal_ids, $journal->getKey());
+
+        $journal_ids = $this->recursive($journal_ids, $journal->children);
+
+        return $journal_ids;
     }
 }

@@ -27,7 +27,7 @@ class Season extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'open_user_id', 'close_user_id', 'open_date', 'close_date'];
+    protected $fillable = ['name', 'open_user_id', 'close_user_id', 'open_date', 'close_date', 'lock'];
 
     /**
      * @return BelongsToMany

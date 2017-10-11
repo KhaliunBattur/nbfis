@@ -33,15 +33,15 @@
                                 <table class="table table-bordered table-hover" style="font-size: 12px">
                                     <thead>
                                     <tr>
-                                        <th>Гүйлгээний дугаар</th>
-                                        <th>Данс</th>
-                                        <th>Огноо</th>
-                                        <th>Гүйлгээний утга</th>
-                                        <th>Дебет</th>
-                                        <th>Кредит</th>
-                                        <th>Харилцагч</th>
-                                        <th>Үүсэгсэн</th>
-                                        <th></th>
+                                        <sort :column="'transaction_number'" :query="query" :text="'Гүйлгээний дугаар'" v-on:sorted="sort"></sort>
+                                        <sort :column="'account_number'"   :query="query" :text="'Данс'" v-on:sorted="sort"></sort>
+                                        <sort :column="'transaction_date'"   :query="query" :text="'Огноо'" v-on:sorted="sort"></sort>
+                                        <sort :column="'transaction_value'" :query="query" :text="'Гүйлгээний утга'" v-on:sorted="sort"></sort>
+                                        <sort :column="'type'"  :query="query" :text="'Дебет'" v-on:sorted="sort"></sort>
+                                        <sort :column="'type'" :query="query" :text="'Кредит'" v-on:sorted="sort"></sort>
+                                        <sort :column="'name'" :query="query" :text="'Харилцагч'" v-on:sorted="sort"></sort>
+                                        <sort :column="'created_at'" :query="query" :text="'Үүсгэсэн'" v-on:sorted="sort"></sort>
+                                        <th class="action-controls-sm"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -55,12 +55,20 @@
                                         <td>{{ tran.description }}</td>
                                         <td>
                                             <div v-if="tran.type == 'debit'">
-                                                {{ formatPrice(tran.amount * tran.exchange) }}
+                                                <div style="width: 100%">
+                                                    {{ formatPrice(tran.amount * tran.exchange) }}
+                                                </div>
+                                                <div class="text-block pull-left" v-if="tran.account.currency.is_current == 0">{{ tran.amount }}{{ tran.account.currency.marker }}</div>
+                                                <div class="text-block pull-right" v-if="tran.account.currency.is_current == 0">Ханш: {{ tran.exchange }}</div>
                                             </div>
                                         </td>
                                         <td>
                                             <div v-if="tran.type == 'credit'">
-                                                {{ formatPrice(tran.amount * tran.exchange) }}
+                                                <div style="width: 100%">
+                                                    {{ formatPrice(tran.amount * tran.exchange) }}
+                                                </div>
+                                                <div class="text-block pull-left" v-if="tran.account.currency.is_current == 0">{{ tran.amount }}{{ tran.account.currency.marker }}</div>
+                                                <div class="text-block pull-right" v-if="tran.account.currency.is_current == 0">Ханш: {{ tran.exchange }}</div>
                                             </div>
                                         </td>
                                         <td>{{ tran.customer.first_name + ' ' + tran.customer.name }}</td>
@@ -223,14 +231,14 @@
             next()
             {
                 if(this.model.next_page_url) {
-                    this.query.page++
+                    this.query.page++;
                     this.fetchTransaction()
                 }
             },
             prev()
             {
                 if(this.model.prev_page_url) {
-                    this.query.page--
+                    this.query.page--;
                     this.fetchTransaction()
                 }
             },
@@ -241,7 +249,7 @@
             fetchJournal()
             {
                 axios.get('/api/codes/transaction').then(response => {
-                    this.journals = response.data.codes
+                    this.journals = response.data.codes;
                 })
             },
             fetchTransaction()

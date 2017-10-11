@@ -12,6 +12,14 @@ import UserEdit from './components/User/Edit.vue'
 import CV from './components/User/CV.vue'
 import UserCv from './components/User/Profile/CV.vue'
 import UserProfile from './components/User/Profile/Profile.vue'
+import Customer from './components/User/Customer.vue';
+import CustomerList from './components/User/CustomerList.vue';
+import CustomerEdit from './components/User/Customer/Edit.vue';
+import CustomerCreate from './components/User/Customer/Create.vue';
+import CustomerProfile from  './components/User/Customer/Profile.vue';
+import CvRequest from './components/User/CV.vue';
+//Зээл
+import Request from './components/Request.vue';
 
 // Данс
 import Account from './components/Account/Account.vue'
@@ -32,10 +40,12 @@ import Roles from './components/Role/Roles.vue'
 import Season from './components/Season/Season.vue'
 import BalanceList from './components/Season/List.vue'
 import Balance from './components/Season/Balance.vue'
+import BalanceAll from './components/Season/Balance/Balance.vue'
 
 //Гүйлгээ
 import Transaction from './components/Transaction/Transaction.vue';
-import General from './components/Transaction/General.vue'
+import General from './components/Transaction/General.vue';
+import JournalTransaction from './components/Transaction/Journal.vue';
 
 Vue.use(VueRouter)
 
@@ -47,7 +57,32 @@ const router = new VueRouter({
         },
         {
             path: '/new/customer',
-            component: CV
+            component: CV,
+            children: [
+                {
+                    path:':register' ,component: CvRequest
+                }
+            ]
+        },
+        {
+            path: '/customers', component: Customer,
+            children: [
+                {
+                    path: '', component: CustomerList
+                },
+                {
+                    path: 'create', component: CustomerCreate
+                },
+                {
+                    path: ':id/edit', component: CustomerEdit
+                },
+                {
+                    path: ':id/profile', component: CustomerProfile
+                }
+            ]
+        },
+        {
+            path: '/request', component: Request
         },
         {
             path: '/users', component: Users,
@@ -89,6 +124,9 @@ const router = new VueRouter({
                 },
                 {
                     path: ':id/balance', component: Balance
+                },
+                {
+                    path: ':id/balance/final', component: BalanceAll
                 }
             ]
         },
@@ -99,7 +137,7 @@ const router = new VueRouter({
                     path: '', component: General
                 },
                 {
-                    path: ':id', component: General
+                    path: ':id', component: JournalTransaction
                 }
             ]
         },

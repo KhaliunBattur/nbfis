@@ -212,6 +212,7 @@
                         </div>
 
                         <div class="tab-pane" id="family">
+
                             <familyList :user="user"></familyList>
                         </div>
                         <!-- /.tab-pane -->
@@ -266,6 +267,12 @@
                 show_owner: false,
                 download: 'download',
                 href:''
+            }
+        },
+
+        watch: {
+            '$route.params.id': function() {
+                this.fetchUser();
             }
         },
 
@@ -342,7 +349,6 @@
                     this.user.birth_day = null;
                     this.user.age = null;
                     this.setRegister();
-                    console.log(this.user);
                 }).catch(function (response) {
                     swal('Уучлаарай!', 'Хэрэглэгчийн мэдээлэл татаж чадсангүй', 'error')
                 })

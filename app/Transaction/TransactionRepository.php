@@ -9,6 +9,8 @@
 namespace App\Transaction;
 
 
+use App\Account\Account;
+use App\Account\AccountGroup;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -54,9 +56,20 @@ class TransactionRepository implements TransactionRepositoryInterface
      */
     public function findByPaginate($howMany, $params = [])
     {
-        $query = $this->model
-            ->whereNotNull('type')
-            ->with(['account', 'toAccount', 'customer', 'user']);
+
+        if(array_key_exists('accounts', $params))
+        {
+            $query = $this->model
+                ->whereNotNull('transaction.type')
+                ->whereIn('account_id', $params['accounts'])
+                ->with(['account', 'toAccount', 'customer', 'user', 'account.currency']);
+        }
+        else
+        {
+            $query = $this->model
+                ->whereNotNull('transaction.type')
+                ->with(['account', 'toAccount', 'customer', 'user', 'account.currency']);
+        }
 
         return $query->paginate($howMany);
     }

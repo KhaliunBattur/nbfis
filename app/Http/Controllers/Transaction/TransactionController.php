@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Transaction;
 use App\Account\AccountGroupRepositoryInterface;
 use App\Account\AccountRepositoryInterface;
 use App\Account\JournalRepositoryInterface;
+use App\Events\TransactionDestroyed;
 use App\Season\Season;
 use App\Season\SeasonRepositoryInterface;
 use App\Support\AccountBalanceChecker;
 use App\Transaction\Property;
 use App\Transaction\Receivable;
+use App\Transaction\ReceivableRepositoryInterface;
 use App\Transaction\Transaction;
 use App\Transaction\TransactionRepositoryInterface;
 use Dompdf\Exception;
@@ -42,6 +44,10 @@ class TransactionController extends Controller
      * @var AccountBalanceChecker
      */
     private $checker;
+    /**
+     * @var ReceivableRepositoryInterface
+     */
+    private $receivableRepository;
 
     /**
      * TransactionController constructor.
@@ -51,8 +57,9 @@ class TransactionController extends Controller
      * @param SeasonRepositoryInterface $seasonRepository
      * @param JournalRepositoryInterface $journalRepository
      * @param AccountBalanceChecker $checker
+     * @param ReceivableRepositoryInterface $receivableRepository
      */
-    public function __construct(TransactionRepositoryInterface $transactionRepository, AccountGroupRepositoryInterface $groupRepository, AccountRepositoryInterface $accountRepository, SeasonRepositoryInterface $seasonRepository, JournalRepositoryInterface $journalRepository, AccountBalanceChecker $checker)
+    public function __construct(TransactionRepositoryInterface $transactionRepository, AccountGroupRepositoryInterface $groupRepository, AccountRepositoryInterface $accountRepository, SeasonRepositoryInterface $seasonRepository, JournalRepositoryInterface $journalRepository, AccountBalanceChecker $checker, ReceivableRepositoryInterface $receivableRepository)
     {
         $this->transactionRepository = $transactionRepository;
         $this->groupRepository = $groupRepository;
@@ -60,6 +67,7 @@ class TransactionController extends Controller
         $this->seasonRepository = $seasonRepository;
         $this->journalRepository = $journalRepository;
         $this->checker = $checker;
+        $this->receivableRepository = $receivableRepository;
     }
 
     /**
@@ -70,6 +78,13 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
+        if($request->has('journal_id'))
+        {
+            $journal_ids = $this->journalRepository->findByIdUse($request->get('journal_id'));
+
+            $request->request->add(['accounts' => $this->accountRepository->findIdsListByJournal($journal_ids)]);
+        }
+
         $transaction = $this->transactionRepository->findByPaginate($request->get('per_page'), $request->all());
 
         return response()->json([
@@ -118,7 +133,7 @@ class TransactionController extends Controller
     {
         $season = $this->seasonRepository->findCurrentByObject();
 
-        if(date_create($season->open_date) < date_create($request->get('transaction_date')))
+        if(date_create($season->open_date) <= date_create($request->get('transaction_date')))
         {
             if($request->get('journal') == 0)
             {
@@ -309,19 +324,26 @@ class TransactionController extends Controller
 
                 $this->checker->can_transaction($season->getKey(), $account, $parameters);
 
-                if($parameters['type'] == 'debit')
+                if(($parameters['type'] == 'debit' && $account->type == 'passive') || ($parameters['type'] == 'credit' && $account->type == 'active'))
                 {
+                    $receivable = $this->receivableRepository->findById($parameters['receivable_id']);
+                    $receivable->update(['is_closed' => 1]);
                     $parameters['transaction_able'] = 'App\Transaction\Receivable';
                     $parameters['transaction_able_id'] = $parameters['receivable_id'];
                 }
-                else
+                else if(($parameters['type'] == 'debit' && $account->type == 'active') || ($parameters['type'] == 'credit' && $account->type == 'passive'))
                 {
                     $receivable = Receivable::create([
                         'customer_id' => $parameters['customer_id'],
+                        'start_date' => $parameters['transaction_date'],
                         'closing_date' => $parameters['closing_date']
                     ]);
                     $parameters['transaction_able'] = 'App\Transaction\Receivable';
                     $parameters['transaction_able_id'] = $receivable->getKey();
+                }
+                else
+                {
+                    throw new \Exception('Алдаа танигдсангүй! Дахин оролдоно уу', 403);
                 }
 
                 Transaction::create($parameters);
@@ -392,7 +414,7 @@ class TransactionController extends Controller
 
                 foreach ($request->get('to_transaction') as $transaction)
                 {
-                    $parameters['amount'] += ($transaction['amount'] * $transaction['to_exchange']);
+                    $parameters['amount'] += (($transaction['amount'] * $transaction['to_exchange']) / $parameters['exchange']);
                 }
 
                 $this->checker->can_transaction($season->getKey(), $account, $parameters);
@@ -552,10 +574,20 @@ class TransactionController extends Controller
      */
     public function destroy($id)
     {
-        $transaction = $this->transactionRepository->findByNumber($id);
+        $transactions = $this->transactionRepository->findByNumber($id);
 
         return response()->json([
-            'result' => $transaction->delete()
+            'result' => \DB::transaction(function() use($transactions) {
+
+                foreach ($transactions->get() as $transaction)
+                {
+                    event(new TransactionDestroyed($transaction));
+                }
+
+                return $transactions->delete();
+            })
         ]);
+
+
     }
 }

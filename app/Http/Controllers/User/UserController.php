@@ -37,10 +37,10 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = $this->userRepository->findByPaginate($request->get('per_page'), $request->all());
-
         return response()->json([
             'model' => $users
         ]);
+
     }
 
     /**
@@ -283,6 +283,7 @@ class UserController extends Controller
         view()->share('user', $user);
 
         $pdf = PDF::loadView('report/cvPDF', $user)->setPaper('a4')->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
         return $pdf->download('cvPDF.pdf');
 //             return view('report/cvPDF');
 

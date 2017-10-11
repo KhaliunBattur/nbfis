@@ -44,16 +44,24 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::get('journal/lists/root', ['as' => 'journal.lists', 'uses' => 'JournalController@rootLists']);
         Route::get('journal/lists/have/account', ['as' => 'journal.lists.have.account', 'uses' => 'JournalController@listHaveAccount']);
         Route::get('journal/{id}/group', ['as' => 'journal.lists', 'uses' => 'GroupController@journalGroups']);
+        Route::get('journal/{id}', ['as' => 'journal.get', 'uses' => 'JournalController@getJournal']);
     });
 
     Route::group(['namespace' => 'Transaction', 'as' => 'transaction.'], function (){
        Route::resource('transaction', 'TransactionController');
+       Route::get('receivable', ['as' => 'receivable.index', 'uses' => 'ReceivableController@index']);
+       Route::get('property', ['as' => 'property.index', 'uses' => 'PropertyController@index']);
        Route::get('account/list', ['as' => 'list', 'uses' => 'TransactionController@lists']);
        Route::get('receivable/list/open', ['as' => 'list', 'uses' => 'ReceivableController@openList']);
     });
 
-    Route::resource('season', 'Season\SeasonController', ['expect' => ['create']]);
-    Route::patch('season/{id}/balance', ['as' => 'season.balance.save', 'uses' => 'Season\SeasonController@saveBalance']);
+    Route::group(['namespace' => 'Season'], function(){
+        Route::resource('season', 'SeasonController', ['expect' => ['create']]);
+        Route::patch('season/{id}/balance', ['as' => 'season.balance.save', 'uses' => 'SeasonController@saveBalance']);
+        Route::get('season/{id}/balance', ['as' => 'season.balance.final', 'uses' => 'SeasonController@finalBalance']);
+        Route::patch('season/{id}/currency', ['as' => 'season.balance.currency', 'uses' => 'SeasonController@saveCurrency']);
+        Route::patch('season/{id}/lock', ['as' => 'season.lock', 'uses' => 'SeasonController@lock']);
+    });
 
     Route::group(['namespace' => 'User'], function (){
         Route::resource('users', 'UserController', ['except' => ['create']]);
@@ -70,6 +78,8 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         Route::post('cv/filesUpload','CvController@fileUpload');
         Route::post('cv/profileUpload','CvController@profileUpload');
 
+//        loan request route
+        Route::get('request','CvController@getRequests');
 
         Route::get('user/{id}/family', ['as' => 'user.family.index', 'uses' => 'FamilyController@index']);
         Route::post('user/{id}/family', ['as' => 'user.family.store', 'uses' => 'FamilyController@store']);
@@ -132,6 +142,13 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
         ]);
     });
 
+    Route::get('org_types', function(){
+        return response()->json([
+            'org_types' => \Config::get('enums.org_type')
+        ]);
+    });
+
+
     Route::get('pledge_types', function(){
         return response()->json([
             'pledge_types' => \Config::get('enums.pledge_type')
@@ -139,18 +156,36 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth', 'role:admin'], 'as' =>
     });
 
     Route::get('codes', function(){
-        return response()->json([
-            'codes' => \Config::get('enums.codes')
-        ]);
-    });
-
-    Route::get('codes/transaction', function(){
 
         $array = [];
 
-        foreach (\Config::get('enums.codes_transaction') as $key => $codes)
+        foreach (\Config::get('enums.codes') as $key => $codes)
         {
             $array[$key] = $codes['name'];
+        }
+
+        return response()->json([
+            'codes' => $array
+        ]);
+    });
+
+    Route::get('codes/transaction', function(Request $request){
+
+        $array = [];
+
+        foreach (\Config::get('enums.codes') as $key => $codes)
+        {
+            if($request->has('form_code'))
+            {
+                if($request->get('form_code') != $key)
+                {
+                    continue;
+                }
+            }
+            foreach($codes['forms'] as $key1 => $code)
+            {
+                $array[$key1] = $code['name'];
+            }
         }
 
         return response()->json([

@@ -29,19 +29,23 @@
                         </td>
                         <td>
                             <div class="form-group">
-                                <label class="control-label">Харилцагч</label>
-                                <select2 v-if="customers.length > 0" :options="customers" :value="transaction.customer_id" :selected="transaction" v-on:input="selectCustomer"></select2>
-                                <div class="text-danger" v-if="errorMessages.customer_id">
-                                    {{ errorMessages.customer_id[0] }}
+                                <label class="control-label">Данс</label>
+                                <select2-group v-if="accounts.length > 0" :options="accounts" :value="transaction.account_id" :selected="transaction" v-on:input="selectAccount"></select2-group>
+                                <div class="text-danger" v-if="errorMessages.account_id">
+                                    {{ errorMessages.account_id[0] }}
                                 </div>
                             </div>
+
                         </td>
                         <td>
                             <div class="form-group">
-                                <label class="control-label">Харицах данс</label>
-                                <select2-group v-if="accounts.length > 0" :options="accounts" :value="transaction.to_account_id" :selected="transaction" v-on:input="selectToAccount"></select2-group>
-                                <div class="text-danger" v-if="errorMessages.to_account_id">
-                                    {{ errorMessages.to_account_id[0] }}
+                                <label class="control-label">Гүйлгээний төрөл</label>
+                                <br />
+                                <div class="radio-inline">
+                                    <input name="type" type="radio" v-model="transaction.type" value="credit" checked="checked"> Кредит
+                                </div>
+                                <div class="radio-inline">
+                                    <input name="type" type="radio" v-model="transaction.type" value="debit"> Дебит
                                 </div>
                             </div>
                         </td>
@@ -60,10 +64,10 @@
                     <tr>
                         <td colspan="2">
                             <div class="form-group">
-                                <label class="control-label">Данс</label>
-                                <select2-group v-if="accounts.length > 0" :options="accounts" :value="transaction.account_id" :selected="transaction" v-on:input="selectAccount"></select2-group>
-                                <div class="text-danger" v-if="errorMessages.account_id">
-                                    {{ errorMessages.account_id[0] }}
+                                <label class="control-label">Харьцсан данс</label>
+                                <select2-group v-if="accounts.length > 0" :options="accounts" :value="transaction.to_account_id" :selected="transaction" v-on:input="selectToAccount"></select2-group>
+                                <div class="text-danger" v-if="errorMessages.to_account_id">
+                                    {{ errorMessages.to_account_id[0] }}
                                 </div>
                             </div>
                         </td>
@@ -71,13 +75,10 @@
                     <tr>
                         <td>
                             <div class="form-group">
-                                <label class="control-label">Гүйлгээний төрөл</label>
-                                <br />
-                                <div class="radio-inline">
-                                    <input name="type" type="radio" v-model="transaction.type" value="credit" checked="checked"> Кредит
-                                </div>
-                                <div class="radio-inline">
-                                    <input name="type" type="radio" v-model="transaction.type" value="debit"> Дебит
+                                <label class="control-label">Харилцагч</label>
+                                <select2 v-if="customers.length > 0" :options="customers" :value="transaction.customer_id" :selected="transaction" v-on:input="selectCustomer"></select2>
+                                <div class="text-danger" v-if="errorMessages.customer_id">
+                                    {{ errorMessages.customer_id[0] }}
                                 </div>
                             </div>
                         </td>
@@ -126,7 +127,7 @@
             <div class="pull-left text-danger text-sm">
                 {{ errorMessages.message }}
             </div>
-            <button type="button" class="btn btn-primary btn-sm" @click="saveTransaction">Хадгалах</button>
+            <button type="button" class="btn btn-primary btn-sm" @click="saveTransaction">Гүйлгээ хийх</button>
         </div>
     </div>
 </template>

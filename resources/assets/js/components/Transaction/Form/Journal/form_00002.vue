@@ -97,16 +97,24 @@
                                             <tbody>
                                             <tr v-for="(tran, index) in transaction.to_transaction">
                                                 <td class="form-group">
-                                                    <label class="control-label">Харицах данс</label>
+                                                    <label class="control-label">Харьцсан данс</label>
                                                     <select2-group v-if="to_accounts.length > 0" :options="to_accounts" :value="tran.to_account_id" :selected="tran" v-on:input="selectToAccount"></select2-group>
                                                 </td>
-                                                <td class="form-group" v-if="transaction.currency_id != tran.currency_id">
+                                                <td class="form-group" v-if="(transaction.currency_id != tran.currency_id && tran.is_current === 0) || (transaction.is_current === 0 && tran.is_current === 0)">
                                                     <label class="control-label">Ханш</label>
                                                     <money type="text" class="form-control input-sm" v-model="tran.to_exchange" v-bind="money" @input="calculate"></money>
                                                 </td>
+                                                <td class="form-group" v-if="(transaction.currency_id != tran.currency_id && tran.is_current === 1) || (transaction.is_current === 0 && tran.is_current === 0)">
+                                                    <label class="control-label">Ханш ({{ transaction.marker }})</label>
+                                                    <money type="text" class="form-control input-sm" v-model="transaction.exchange" v-bind="money" @input="calculate"></money>
+                                                </td>
                                                 <td class="form-group" :colspan="transaction.currency_id == tran.currency_id ? '2' : '1'">
                                                     <label class="control-label">Нэгж дүн</label>
-                                                    <money type="text" class="form-control input-sm" v-model="tran.amount" v-bind="money" @input="calculate"></money>
+                                                    <money type="text" class="form-control input-sm" v-model="tran.amount" v-bind="money" @input="inputSubTotal(tran)"></money>
+                                                </td>
+                                                <td class="form-group" :colspan="transaction.currency_id == tran.currency_id ? '2' : '1'" v-show="transaction.is_current === 0 || tran.is_current === 0">
+                                                    <label class="control-label">Дүн</label>
+                                                    <money type="text" class="form-control input-sm" v-model="tran.subTotal" v-bind="money" @input="calculate"></money>
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-xs btn-danger" style="margin-top: 24px" v-if="index > 0" @click="deleteTransaction(tran)"><i class="fa fa-trash-o"></i></button>
@@ -114,8 +122,8 @@
                                             </tr>
                                             </tbody>
                                         </table>
-                                        <div class="pull-right">
-                                            Нийт дүн: {{ formatPrice(total / transaction.exchange) }} {{transaction.marker}}
+                                        <div class="pull-right" v-if="transaction">
+                                            Нийт дүн: {{ formatPrice(total) }}
                                         </div>
                                     </div>
                                 </td>
@@ -129,7 +137,7 @@
                         {{ errorMessages.message }}
                     </div>
                     <button type="button" class="btn btn-default btn-sm" @click="addToTransaction">Харицах данс нэмэх</button>
-                    <button type="button" class="btn btn-primary btn-sm" @click="saveTransaction">Хадгалах</button>
+                    <button type="button" class="btn btn-primary btn-sm" @click="saveTransaction">Гүйлгээ хийх</button>
                 </div>
             </div>
         </div>
@@ -148,6 +156,9 @@
             'transaction.to_transaction': function() {
                 this.calculate();
             },
+            'transaction.account_id': function() {
+                this.fetchReceivable();
+            },
             'transaction.to_transaction.to_exchange': function() {
                 this.calculate();
             },
@@ -159,7 +170,10 @@
             },
             'transaction.type': function()
             {
-                this.fetchReceivable();
+                if(this.transaction.account_id !== null)
+                {
+                    this.fetchReceivable();
+                }
                 this.calculate();
             }
         },
@@ -187,12 +201,14 @@
                     exchange: 1,
                     marker: '₮',
                     currency_id: null,
+                    is_current: 0,
                     to_transaction: [
                         {
                             to_account_id: null,
                             to_exchange: 0,
                             amount: 0,
-                            currency_id: null
+                            currency_id: null,
+                            is_current: 0
                         }
                     ]
                 },
@@ -222,6 +238,17 @@
         },
 
         methods: {
+            inputSubTotal(tran)
+            {
+                if(tran.is_current === 1)
+                {
+                    tran.subTotal = (tran.amount * this.transaction.exchange) / tran.to_exchange;
+                }
+                else
+                {
+                    tran.subTotal = (tran.amount * tran.to_exchange) / this.transaction.exchange;
+                }
+            },
             addToTransaction()
             {
                 this.transaction.to_transaction.push({
@@ -270,6 +297,7 @@
 
                 this.transaction.to_transaction[index].currency_id = account.currency_id;
                 this.transaction.to_transaction[index].to_exchange = parseFloat(account.currency.exchange);
+                this.transaction.to_transaction[index].is_current = account.currency.is_current;
             },
             selectAccount(data)
             {
@@ -286,6 +314,7 @@
                 this.transaction.exchange = parseFloat(account.currency.exchange);
                 this.transaction.currency_id = account.currency_id;
                 this.transaction.marker = account.currency.marker;
+                this.transaction.is_current = account.currency.is_current;
                 this.account_type = account.type
                 if(this.account_type === 'active')
                 {
@@ -361,12 +390,14 @@
                 axios.get('/api/account/list').then(response => {
                     this.to_accounts = response.data.model
                 }).catch(errors => {})
-
-                this.fetchReceivable();
             },
             fetchReceivable()
             {
-                axios.get('/api/receivable/list/open').then(response => {
+                axios.get('/api/receivable/list/open', {
+                    params: {
+                        type: this.account_type
+                    }
+                }).then(response => {
                     this.receivables = response.data.list
                 }).catch(errors => {})
             },
@@ -374,12 +405,59 @@
             {
                 var sum = 0;
                 this.transaction.to_transaction.forEach(entry => {
-                    sum += (parseFloat(entry.amount) * parseFloat(entry.to_exchange))
+                    sum += parseFloat(entry.subTotal)
                 });
                 this.total = sum;
             },
             hiddenModal()
             {
+                Object.assign(this.$data, {
+                    accounts: [],
+                    customers: [],
+                    to_accounts: [],
+                    total: 0,
+                    receivables: [],
+                    label_credit: 'Үүсгэх',
+                    label_debit: 'Хаах',
+                    account_type: 'passive',
+                    transaction: {
+                        receipt_number: null,
+                        transaction_date: null,
+                        customer_id: null,
+                        account_id: null,
+                        description: null,
+                        receivable_id: null,
+                        closing_date: null,
+                        type: 'credit',
+                        exchange: 1,
+                        marker: '₮',
+                        currency_id: null,
+                        to_transaction: [
+                            {
+                                to_account_id: null,
+                                to_exchange: 0,
+                                amount: 0,
+                                currency_id: null
+                            }
+                        ]
+                    },
+                    errorMessages: {
+                        account_id: null,
+                        customer_id: null,
+                        description: null,
+                        receipt_number: null,
+                        to_account_id: null,
+                        receivable_id: null,
+                        transaction_date: null,
+                        closing_date: null
+                    },
+                    money:{
+                        decimal:'.',
+                        thousands:',',
+                        precision:2,
+                        masked:false
+                    },
+                });
                 this.$emit('modalHided');
             },
             formatPrice(amount) {

@@ -152,12 +152,60 @@ class Account extends Model
     }
 
     /**
+     * @return bool
+     */
+    public function haveBalance()
+    {
+        return ($this->seasons()->count() ? $this->seasons()->sum('balance') : 0) > 0;
+    }
+
+    /**
+     * @param $season_id
+     * @return $this
+     */
+    public function creditTransaction($season_id)
+    {
+        return $this->hasMany(Transaction::class, 'account_id')
+            ->where('season_id', $season_id)
+            ->where('type', 'credit');
+    }
+
+    public function sumOfCreditTransaction($season_id)
+    {
+        return $this->creditTransaction($season_id)->select(\DB::raw('SUM(amount * exchange) as amount'))->get();
+    }
+
+    public function sumOfDebitTransaction($season_id)
+    {
+        return $this->debitTransaction($season_id)->select(\DB::raw('SUM(amount * exchange) as amount'))->get();
+    }
+
+    /**
+     * @param $season_id
+     * @return $this
+     */
+    public function debitTransaction($season_id)
+    {
+        return $this->hasMany(Transaction::class, 'account_id')
+            ->where('season_id', $season_id)
+            ->where('type', 'debit');
+    }
+
+    /**
      * @param $season_id
      * @return HasMany
      */
     public function transaction($season_id)
     {
         return $this->hasMany(Transaction::class, 'account_id')->where('season_id', $season_id);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'account_id');
     }
 
     /**

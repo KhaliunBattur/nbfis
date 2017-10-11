@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -44,6 +45,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($exception->getCode() == 23000)
+        {
+            return response()->json(['message' => 'Үйлдэлийг гүйцэтгэх боломжгүй'], 500);
+        }
         return parent::render($request, $exception);
     }
 

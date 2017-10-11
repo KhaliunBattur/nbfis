@@ -11,12 +11,14 @@ namespace App\Transaction;
 
 use App\Core\Repository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 
 interface ReceivableRepositoryInterface extends Repository
 {
 
     /**
+     * @param Request $request
      * @return Collection
      */
-    public function findOpen();
+    public function findOpen($request);
 }

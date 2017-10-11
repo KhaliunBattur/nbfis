@@ -15,7 +15,10 @@
                     <div class="box-body">
                         <ul class="list-inline">
                             <li><b>Валютын ханш </b></li>
-                            <li v-for="currency in season.currencies">{{ currency.name + ': ' + currency.pivot.exchange + '₮' }}</li>
+                            <li v-for="currency in season.currencies">
+                                <div>{{ currency.name}} : <input type="text" class="form-control input-sm" v-model="currency.pivot.exchange" /> </div>
+                            </li>
+                            <li><button class="btn btn-warning btn-xs" data-placement="top" title="Валют засварлах" v-tip @click="saveCurrency()"><i class="fa fa-save"></i></button></li>
                         </ul>
                         <div class="list-tree-view" v-if="accounts">
                             <div class="list-group-item list-group-header">
@@ -222,7 +225,14 @@
                     root_id: null,
                     root: null
                 };
-                this.fetchAccounts();
+            },
+            saveCurrency()
+            {
+                axios.patch('/api/season/' + this.$route.params.id + '/currency', this.season.currencies).then(response => {
+                    swal('Амжилттай', 'Валют амжилттай солигдлоо', 'success');
+                }).catch(errors => {
+
+                });
             },
             saveAccount()
             {

@@ -167,7 +167,7 @@
     <h1>02 ЗЭЭЛИЙН ХҮСЭЛТ</h1>
     <table class="cv-table cv-lg" >
         <tbody>
-        @foreach($user->Request as  $request)
+        @foreach($user->Requests as  $request)
         <tr>
             <td colspan="2" style="width: 100%;">
                     {{$request->pledge_type}}
@@ -194,6 +194,7 @@
         <div class="cv-lg">
             <table class="cv-md">
                 <tbody>
+                @foreach($user->Apartment as $bail_apart)
                 <tr>
                     <td style="width: 50%;">
                         <table class="cv-table cv-md" >
@@ -203,57 +204,61 @@
                             </tr>
                             <tr>
                                 <td style="width: 50%;">Ашиглалтанд орсон огноо:</td>
-                                <td style="width: 50%;">&nbsp;</td>
+                                <td style="width: 50%;">{{$bail_apart->commissioned}}</td>
                             </tr>
                             <tr>
                                 <td style="width: 50%;">Хаяг:</td>
-                                <td style="width: 50%;">&nbsp;</td>
+                                <td style="width: 50%;">&nbsp;{{$bail_apart->address}}</td>
                             </tr>
                             <tr>
-                                <td style="width: 50%;">Хэдэн М2::</td>
-                                <td style="width: 50%;">Хэдэн өрөө: М2:</td>
+                                <td style="width: 50%;">Хэдэн М2:{{$bail_apart->apart_meter}}</td>
+                                <td style="width: 50%;">Хэдэн өрөө: М2:{{$bail_apart->room}}</td>
                             </tr>
                             <tr>
                                 <td style="width: 50%;">Зах зээлийн үнэ:</td>
-                                <td style="width: 50%;">&nbsp;</td>
+                                <td style="width: 50%;">{{$bail_apart->price}}</td>
                             </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </td>
                     <td style="width: 50%;">
                         <table class="cv-table cv-md cv-md-margin-left" >
                             <tbody>
+                            @foreach($user->Car as $bail_car)
                             <tr>
                                 <td colspan="2">Машин барьцаалах бол 3.5-4%</td>
                             </tr>
                             <tr>
                                 <td style="width: 50%;">Марк/өнгө:</td>
-                                <td style="width: 50%;">&nbsp;</td>
+                                <td style="width: 50%;">{{$bail_car->model}}/{{$bail_car->color}}</td>
                             </tr>
                             <tr>
                                 <td style="width: 50%;">Үйлдвэрлэсэн огноо:</td>
-                                <td style="width: 50%;">&nbsp;</td>
+                                <td style="width: 50%;">{{$bail_car->manufacture}}</td>
                             </tr>
                             <tr>
                                 <td style="width: 50%;">Орж ирсэн огноо:</td>
-                                <td style="width: 50%;">&nbsp;</td>
+                                <td style="width: 50%;">{{$bail_car->entry_date}}</td>
                             </tr>
                             <tr>
                                 <td style="width: 50%;">Зах зээлийн үнэ:</td>
-                                <td style="width: 50%;">&nbsp;</td>
+                                <td style="width: 50%;">{{$bail_car->price}}</td>
                             </tr>
                             </tbody>
                         </table>
                     </td>
                 </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
     <table class="cv-table cv-lg cv-table-margin-top" >
         <tbody>
+        @foreach($user->Other as $bail_other)
         <tr>
             <td style="width: 23.8%;">Бусад</td>
-            <td style="width: 75%;"></td>
+            <td style="width: 75%;">{{$bail_other->name}}</td>
         </tr>
         </tbody>
     </table>
@@ -261,9 +266,10 @@
         <tbody>
         <tr>
             <td style="width: 23.8%;">Зах зээлийн үнэ:</td>
-            <td style="width: 10%;"></td>
-            <td style="width: 65%;">Тайлбар: </td>
+            <td style="width: 10%;">{{$bail_other->price}}</td>
+            <td style="width: 65%;">Тайлбар:{{$bail_other->description}}</td>
         </tr>
+        @endforeach
         </tbody>
     </table>
     <h1>04 АЖЛЫН ГАЗРЫН МЭДЭЭЛЭЛ</h1>
@@ -277,23 +283,24 @@
             <td style="width: 16%;">Хаяг</td>
             <td style="width: 16%;">Ажилчдын тоо</td>
         </tr>
+        @foreach($user->workplaces as $work)
         <tr>
-            <td style="width: 18%;">&nbsp;</td>
-            <td style="width: 16%;">&nbsp;</td>
-            <td style="width: 16%;">&nbsp;</td>
-            <td style="width: 16%;">&nbsp;</td>
-            <td style="width: 16%;">&nbsp;</td>
-            <td style="width: 16%;">&nbsp;</td>
+            <td style="width: 18%;">{{$work->organization}}</td>
+            <td style="width: 16%;">{{$work->date_employment}}</td>
+            <td style="width: 16%;">&nbsp{{$work->position}}</td>
+            <td style="width: 16%;">{{$work->activity}}</td>
+            <td style="width: 16%;">{{$work->address}}</td>
+            <td style="width: 16%;">{{$work->worker_count}}</td>
         </tr>
-
+        @endforeach
         </tbody>
     </table>
-    <p class="left">
-        <span>Ажлын байр нь :</span>
-        <span>А.Өөрийн байр</span>
-        <span>Б.Түрээс</span>
-        <span>В.Улаанбаатар хотоос : километр</span>
-    </p>
+    {{--<p class="left">--}}
+        {{--<span>Ажлын байр нь :</span>--}}
+        {{--<span>А.Өөрийн байр</span>--}}
+        {{--<span>Б.Түрээс</span>--}}
+        {{--<span>В.Улаанбаатар хотоос : километр</span>--}}
+    {{--</p>--}}
     <h1>05 ГЭР БҮЛИЙН МЭДЭЭЛЭЛ</h1>
     <table class="cv-table cv-lg" >
         <tbody>
