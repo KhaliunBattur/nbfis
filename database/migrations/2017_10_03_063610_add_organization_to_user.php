@@ -15,8 +15,8 @@ class AddOrganizationToUser extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->date('founding_date')->after('register')->nullable()->default(null);
-            $table->string('org_types')->after('founding_date')->nullable()->default(null);
-            $table->string('org_register')->after('org_types')->nullable()->default(null);
+            $table->string('org_type')->after('founding_date')->nullable()->default(null);
+            $table->string('org_register')->after('org_type')->nullable()->default(null);
             $table->string('state_num')->after('org_register')->nullable()->default(null);
         });
     }
